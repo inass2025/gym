@@ -1,0 +1,212 @@
+/* ── Variables ── */
+:root {
+  --red: #cf478b;
+  --black: #0a0a0a;
+  --card-bg: #1e1e1e;
+  --white: #ffffff;
+  --gray: #999999;
+  --gold: #f5a623;
+}
+
+/* ── Section principale ── */
+.testimonials-section {
+  position: relative;
+  min-height: 600px;
+  background: linear-gradient(135deg, #292727 0%, #292727 40%, #292727 100%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  font-family: 'Barlow', sans-serif;
+}
+
+/* ── Image athlète à gauche ── */
+.athlete-img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  width: 38%;
+  object-fit: cover;
+  object-position: top center;
+  z-index: 1;
+  -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
+  mask-image: linear-gradient(to right, black 60%, transparent 100%);
+}
+
+/* ── Décorations ── */
+.deco {
+  position: absolute;
+  pointer-events: none;
+}
+.deco-line {
+  top: 0;
+  right: 260px;
+  width: 3px;
+  height: 220px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 2px;
+}
+.deco-circle {
+  bottom: 20px;
+  right: 40px;
+  width: 120px;
+  height: 120px;
+  border: 3px solid rgba(0, 0, 0, 0.4);
+  border-radius: 50% 0 50% 0;
+  transform: rotate(20deg);
+}
+
+/* ── Contenu à droite ── */
+.content {
+  position: relative;
+  z-index: 2;
+  margin-left: 38%;
+  padding: 60px 40px 60px 30px;
+  flex: 1;
+}
+
+/* ── Titre fantôme ── */
+.ghost-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.25);
+  line-height: 1;
+  margin-bottom: -6px;
+}
+
+/* ── Titre principal ── */
+.main-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1.05;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.accent-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: var(--white);
+  flex-shrink: 0;
+  margin-top: 9px;
+}
+
+/* ── Slider ── */
+.slider-wrapper {
+  overflow: hidden;
+}
+
+.slider-track {
+  display: flex;
+  gap: 18px;
+  transition: transform 0.5s ease;
+}
+
+/* ── Carte commentaire ── */
+.card {
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 28px 26px 24px;
+  min-width: 280px;
+  max-width: 300px;
+  flex-shrink: 0;
+}
+
+/* ── Étoiles ── */
+.stars {
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+/* ── Texte du commentaire ── */
+.review-text {
+  font-size: 0.88rem;
+  color: var(--white);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+/* ── Profil reviewer ── */
+.reviewer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--white);
+}
+
+.since {
+  font-size: 0.78rem;
+  color: var(--gray);
+}
+
+/* ── Flèches ── */
+.arrows {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.arrow-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: var(--white);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.arrow-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Responsive mobile ── */
+@media (max-width: 768px) {
+  .athlete-img {
+    display: none;
+  }
+  .content {
+    margin-left: 0;
+    padding: 50px 24px;
+  }
+  .card {
+    min-width: 260px;
+  }
+}

@@ -1,0 +1,97 @@
+.heroCoach {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: #eae8e3;
+}
+
+/* pile */
+.pile {
+  position: relative;
+  width: 200px;
+  height: 290px;
+}
+
+/* cards */
+.card {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  transition: 0.4s;
+}
+.card-photo img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+/* positions */
+.card[data-pos="1"] { transform: translateY(0) scale(1); opacity: 1; z-index: 3; }
+.card[data-pos="2"] { transform: translateY(10px) scale(0.95) rotate(6deg); opacity: 0.6; z-index: 2; }
+.card[data-pos="3"] { transform: translateY(20px) scale(0.9) rotate(11deg); opacity: 0.3; z-index: 1; }
+.card[data-pos="4"] { opacity: 0; }
+
+/* arrows */
+.arrows {
+  display: flex;
+  gap: 15px;
+}
+
+.arrow {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #6e81ec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* dots */
+.dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #6e81ec;
+  border-radius: 50%;
+}
+
+.dot.active {
+  width: 20px;
+  background: #f9d423;
+}
+
+.heroCoach .h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #cf478b, #f9d423, #6e81ec);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  margin-bottom: 15px;
+}
+
+.heroCoach .p {
+  max-width: 600px;
+  font-size: 1.1rem;
+  color: #292323;
+  line-height: 1.6;
+}
+h4{
+     font-size: 3rem;
+ 
+  background: linear-gradient(90deg, #cf478b, #b95788, #a36b87);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+ 
+}

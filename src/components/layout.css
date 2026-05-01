@@ -1,0 +1,13 @@
+/* ── LAYOUT ── */
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Le contenu principal prend tout l'espace sous la navbar fixe */
+.layout__outlet {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

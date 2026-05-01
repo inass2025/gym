@@ -1,0 +1,18 @@
+:root {
+  --pink: #cf478b;
+  --blue: #6e81ec;
+  --dark: #0d0d0d;
+  --white: hwb(0 100% 0%);
+  --gris: #f7f4f4;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+    background: rgb(41, 39, 39);
+}
