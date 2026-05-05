@@ -1,55 +1,80 @@
 import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { User, Lock, Mail } from "lucide-react";
 import "./LoginPage.css";
 
 export default function Login() {
-  const [mode, setMode] = useState("login"); // "login" | "register"
+  const [mode, setMode] = useState("login");
+  const navigate = useNavigate();
 
-  // Login fields
-  const [loginEmail, setLoginEmail]       = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginErrors, setLoginErrors]     = useState({});
+  // login
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // Register fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName]   = useState("");
-  const [regEmail, setRegEmail]   = useState("");
-  const [regPassword, setRegPassword] = useState("");
-  const [regErrors, setRegErrors] = useState({});
+  // register
+  const [prenom, setPrenom] = useState("");
+  const [nom, setNom] = useState("");
+  const [emailReg, setEmailReg] = useState("");
+  const [passReg, setPassReg] = useState("");
 
+  // ================= LOGIN =================
   const handleLogin = (e) => {
     e.preventDefault();
-    const errors = {};
-    if (!loginEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginEmail))
-      errors.email = "Email invalide";
-    if (!loginPassword)
-      errors.password = "Mot de passe requis";
-    setLoginErrors(errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("Login →", { loginEmail, loginPassword });
+    if (email === "" || password === "") {
+      alert("Remplir les champs");
+      return;
     }
+    axios.post("http://localhost:8000/api/login", {
+      email: email,
+      password: password,
+    })
+    .then((res) => {
+      const role = res.data.role;
+      localStorage.setItem("token", res.data.token);
+      
+      localStorage.setItem("role", role);
+      if (role === "admin") {
+        navigate("/admin");
+      } else if (role === "coach") {
+        navigate("/coach");
+      } else {
+        navigate("/adherent");
+      }
+    })
+    .catch(() => {
+      alert("Email ou mot de passe incorrect");
+    });
   };
 
+  // ================= REGISTER =================
   const handleRegister = (e) => {
     e.preventDefault();
-    const errors = {};
-    if (!firstName.trim()) errors.firstName = "Prénom requis";
-    if (!lastName.trim())  errors.lastName  = "Nom requis";
-    if (!regEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regEmail))
-      errors.email = "Email invalide";
-    if (!regPassword || regPassword.length < 6)
-      errors.password = "Minimum 6 caractères";
-    setRegErrors(errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("Register →", { firstName, lastName, regEmail, regPassword });
+    if (prenom === "" || nom === "" || emailReg === "" || passReg === "") {
+      alert("Remplir tous les champs");
+      return;
     }
+    axios.post("http://localhost:8000/api/register", {
+      prenom: prenom,
+      nom: nom,
+      email: emailReg,
+      password: passReg,
+    })
+    .then((res) => {
+        localStorage.setItem("token", res.data.token)
+      alert("Compte créé !");
+      setMode("login");
+    })
+    .catch(() => {
+      alert("Erreur lors de l'inscription");
+    });
   };
 
   return (
     <div className="login-page">
       <div className="login-card">
 
-        {/* ── GAUCHE : photo gym ── */}
+        {/* ── GAUCHE ── */}
         <div className="login-left">
           <img src="/login.jpeg" alt="photo login" />
           <div className="login-overlay" />
@@ -57,19 +82,17 @@ export default function Login() {
             <strong>GymMaster</strong>
             <span>FITNESS CLUB</span>
           </div>
-
-          {/* ── TAB SWITCH : LOGIN | CREATE ACCOUNT ── */}
           <div className="login-tab">
             <span
               className={mode === "login" ? "tab-active" : "tab-inactive"}
-              onClick={() => { setMode("login"); setLoginErrors({}); }}
+              onClick={() => setMode("login")}
             >
               LOGIN
             </span>
             <span className="tab-separator">|</span>
             <span
               className={mode === "register" ? "tab-active" : "tab-inactive"}
-              onClick={() => { setMode("register"); setRegErrors({}); }}
+              onClick={() => setMode("register")}
             >
               CREATE ACCOUNT
             </span>
@@ -78,196 +101,80 @@ export default function Login() {
 
         {/* ── DROITE ── */}
         <div className="login-right">
-
           <div className="login-avatar">
             <User size={30} color="#fff" />
           </div>
-
           <h1 className="login-title">
             {mode === "login" ? "LOGIN" : "CREATE ACCOUNT"}
           </h1>
 
-          {/* ════ LOGIN ════ */}
+          {/* ===== LOGIN ===== */}
           {mode === "login" && (
-            <form className="login-form" onSubmit={handleLogin} noValidate>
-
-              <div className="input-wrap" style={{
-                flexDirection: "column", alignItems: "flex-start",
-                borderBottom: loginErrors.email ? "1.5px solid #e24b4a" : undefined
-              }}>
-                <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-                  <Mail size={18} className="input-icon" />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    value={loginEmail}
-                    onChange={e => setLoginEmail(e.target.value)}
-                  />
-                </div>
-                {loginErrors.email && (
-                  <span style={{ fontSize: 11, color: "#e24b4a", paddingBottom: 4 }}>{loginErrors.email}</span>
-                )}
+            <form className="login-form" onSubmit={handleLogin}>
+              <div className="input-wrap">
+                <Mail size={18} className="input-icon" />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
-
-              <div className="input-wrap" style={{
-                flexDirection: "column", alignItems: "flex-start",
-                borderBottom: loginErrors.password ? "1.5px solid #e24b4a" : undefined
-              }}>
-                <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-                  <Lock size={18} className="input-icon" />
-                  <input
-                    type="password"
-                    placeholder="Mot de passe"
-                    value={loginPassword}
-                    onChange={e => setLoginPassword(e.target.value)}
-                  />
-                </div>
-                {loginErrors.password && (
-                  <span style={{ fontSize: 11, color: "#e24b4a", paddingBottom: 4 }}>{loginErrors.password}</span>
-                )}
+              <div className="input-wrap">
+                <Lock size={18} className="input-icon" />
+                <input
+                  type="password"
+                  placeholder="Mot de passe"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-
               <div className="login-row">
                 <span className="forgot">Mot de passe oublié ?</span>
                 <button type="submit" className="btn-login">LOGIN</button>
               </div>
-
-              <div className="or-row">Ou se connecter avec</div>
-
-              <div className="socials">
-                <button type="button" className="soc-btn">
-                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="18" height="18" />
-                  Google
-                </button>
-                <button type="button" className="soc-btn">
-                  <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" width="18" height="18" />
-                  Facebook
-                </button>
-              </div>
-
-              <p className="signup-text">
-                Pas encore de compte ?{" "}
-                <span
-                  style={{ color: "#cf478b", fontWeight: 600, cursor: "pointer" }}
-                  onClick={() => { setMode("register"); setRegErrors({}); }}
-                >
-                  S'inscrire
-                </span>
-              </p>
-
             </form>
           )}
 
-          {/* ════ CREATE ACCOUNT ════ */}
+          {/* ===== REGISTER ===== */}
           {mode === "register" && (
-            <form className="login-form" onSubmit={handleRegister} noValidate>
-
-              {/* Prénom + Nom côte à côte */}
+            <form className="login-form" onSubmit={handleRegister}>
               <div style={{ display: "flex", gap: 16 }}>
-                <div style={{ flex: 1 }}>
-                  <div className="input-wrap" style={{
-                    flexDirection: "column", alignItems: "flex-start",
-                    borderBottom: regErrors.firstName ? "1.5px solid #e24b4a" : undefined
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <User size={18} className="input-icon" />
-                      <input
-                        type="text"
-                        placeholder="Prénom"
-                        value={firstName}
-                        onChange={e => setFirstName(e.target.value)}
-                      />
-                    </div>
-                    {regErrors.firstName && (
-                      <span style={{ fontSize: 11, color: "#e24b4a", paddingBottom: 4 }}>{regErrors.firstName}</span>
-                    )}
-                  </div>
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div className="input-wrap" style={{
-                    flexDirection: "column", alignItems: "flex-start",
-                    borderBottom: regErrors.lastName ? "1.5px solid #e24b4a" : undefined
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-                      <User size={18} className="input-icon" />
-                      <input
-                        type="text"
-                        placeholder="Nom"
-                        value={lastName}
-                        onChange={e => setLastName(e.target.value)}
-                      />
-                    </div>
-                    {regErrors.lastName && (
-                      <span style={{ fontSize: 11, color: "#e24b4a", paddingBottom: 4 }}>{regErrors.lastName}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="input-wrap" style={{
-                flexDirection: "column", alignItems: "flex-start",
-                borderBottom: regErrors.email ? "1.5px solid #e24b4a" : undefined
-              }}>
-                <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-                  <Mail size={18} className="input-icon" />
+                <div className="input-wrap" style={{ flex: 1 }}>
+                  <User size={18} className="input-icon" />
                   <input
-                    type="email"
-                    placeholder="Email"
-                    value={regEmail}
-                    onChange={e => setRegEmail(e.target.value)}
+                    type="text"
+                    placeholder="Prénom"
+                    onChange={(e) => setPrenom(e.target.value)}
                   />
                 </div>
-                {regErrors.email && (
-                  <span style={{ fontSize: 11, color: "#e24b4a", paddingBottom: 4 }}>{regErrors.email}</span>
-                )}
-              </div>
-
-              <div className="input-wrap" style={{
-                flexDirection: "column", alignItems: "flex-start",
-                borderBottom: regErrors.password ? "1.5px solid #e24b4a" : undefined
-              }}>
-                <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-                  <Lock size={18} className="input-icon" />
+                <div className="input-wrap" style={{ flex: 1 }}>
+                  <User size={18} className="input-icon" />
                   <input
-                    type="password"
-                    placeholder="Mot de passe (min. 6 caractères)"
-                    value={regPassword}
-                    onChange={e => setRegPassword(e.target.value)}
+                    type="text"
+                    placeholder="Nom"
+                    onChange={(e) => setNom(e.target.value)}
                   />
                 </div>
-                {regErrors.password && (
-                  <span style={{ fontSize: 11, color: "#e24b4a", paddingBottom: 4 }}>{regErrors.password}</span>
-                )}
               </div>
-
+              <div className="input-wrap">
+                <Mail size={18} className="input-icon" />
+                <input
+                  type="email"
+                  placeholder="Email"
+                  onChange={(e) => setEmailReg(e.target.value)}
+                />
+              </div>
+              <div className="input-wrap">
+                <Lock size={18} className="input-icon" />
+                <input
+                  type="password"
+                  placeholder="Mot de passe"
+                  onChange={(e) => setPassReg(e.target.value)}
+                />
+              </div>
               <div className="login-row">
                 <span></span>
                 <button type="submit" className="btn-login">CRÉER</button>
               </div>
-
-              <div className="or-row">Ou s'inscrire avec</div>
-
-              <div className="socials">
-                <button type="button" className="soc-btn">
-                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" width="18" height="18" />
-                  Google
-                </button>
-                <button type="button" className="soc-btn">
-                  <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" width="18" height="18" />
-                  Facebook
-                </button>
-              </div>
-
-              <p className="signup-text">
-                Déjà membre ?{" "}
-                <span
-                  style={{ color: "#cf478b", fontWeight: 600, cursor: "pointer" }}
-                  onClick={() => { setMode("login"); setLoginErrors({}); }}
-                >
-                  Se connecter
-                </span>
-              </p>
-
             </form>
           )}
 
