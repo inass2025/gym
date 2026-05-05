@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Adherent;
 use App\Models\Coach;
 
 class AuthController extends Controller
 {
-    // POST /api/register - Adhérent
+    // ================= REGISTER =================
     public function registerAdherent(Request $request)
     {
         $request->validate([
@@ -25,9 +24,8 @@ class AuthController extends Controller
             'prenom'           => $request->prenom,
             'email'            => $request->email,
             'password'         => Hash::make($request->password),
-            'telephone'        => $request->telephone,
             'date_inscription' => now(),
-            'objectif'         => $request->objectif,
+            'role'             => 'adherent',
         ]);
 
         $token = $adherent->createToken('adherent-token')->plainTextToken;
@@ -35,38 +33,11 @@ class AuthController extends Controller
         return response()->json([
             'user'  => $adherent,
             'token' => $token,
+            'role'  => $adherent->role,
         ], 201);
     }
 
-    // POST /api/register-coach - Coach
-    public function registerCoach(Request $request)
-    {
-        $request->validate([
-            'nom'        => 'required|string',
-            'prenom'     => 'required|string',
-            'email'      => 'required|email|unique:coachs',
-            'password'   => 'required|min:6',
-            'specialite' => 'required|string',
-        ]);
-
-        $coach = Coach::create([
-            'nom'        => $request->nom,
-            'prenom'     => $request->prenom,
-            'email'      => $request->email,
-            'password'   => Hash::make($request->password),
-            'specialite' => $request->specialite,
-            'telephone'  => $request->telephone,
-        ]);
-
-        $token = $coach->createToken('coach-token')->plainTextToken;
-
-        return response()->json([
-            'user'  => $coach,
-            'token' => $token,
-        ], 201);
-    }
-
-    // POST /api/login
+    // ================= LOGIN =================
     public function login(Request $request)
     {
         $request->validate([
@@ -74,14 +45,14 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Check Adhérent d'abord
+        // Check Adherent
         $adherent = Adherent::where('email', $request->email)->first();
         if ($adherent && Hash::check($request->password, $adherent->password)) {
             $token = $adherent->createToken('adherent-token')->plainTextToken;
             return response()->json([
                 'user'  => $adherent,
                 'token' => $token,
-                'role'  => 'adherent',
+                'role'  => $adherent->role,
             ]);
         }
 
@@ -96,10 +67,12 @@ class AuthController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Email ou mot de passe incorrect'], 401);
+        return response()->json([
+            'message' => 'Email ou mot de passe incorrect'
+        ], 401);
     }
 
-    // POST /api/logout
+    // ================= LOGOUT =================
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
