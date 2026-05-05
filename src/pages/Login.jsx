@@ -1,49 +1,74 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { User, Lock, Mail } from "lucide-react";
 import "./LoginPage.css";
+import api from "../Api/Axios.js";
 
 export default function Login() {
-  const [mode, setMode] = useState("login"); // "login" | "register"
+  const [mode, setMode] = useState("login"); 
 
-  // Login fields
-  const [loginEmail, setLoginEmail]       = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginErrors, setLoginErrors]     = useState({});
+  // Login 
+  const [email, setEmail]       = useState("");
+  const [password, setPassword] = useState("");
 
-  // Register fields
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName]   = useState("");
-  const [regEmail, setRegEmail]   = useState("");
-  const [regPassword, setRegPassword] = useState("");
-  const [regErrors, setRegErrors] = useState({});
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const errors = {};
-    if (!loginEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginEmail))
-      errors.email = "Email invalide";
-    if (!loginPassword)
-      errors.password = "Mot de passe requis";
-    setLoginErrors(errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("Login →", { loginEmail, loginPassword });
+  // Register 
+  const [prenom, setPrenom] = useState("");
+  const [nom, setNom]   = useState("");
+  const [emailReg, setEmailReg]   = useState("");
+  const [passReg, setPassReg] = useState("");
+
+
+  const handleLogin = async (e) => {
+  e.preventDefault();
+  const errors = {};
+  if (email === "" || password === "")
+    errors.email = "Email invalide";
+  if (!loginPassword)
+    errors.password = "Mot de passe requis";
+  setLoginErrors(errors);
+  if (Object.keys(errors).length === 0) {
+    try {
+      const res = await api.post("/api/login", {
+        email: loginEmail,
+        password: loginPassword,
+      });
+      localStorage.setItem("token", res.data.token);
+      alert("Connecté avec succès!");
+    } catch (err) {
+      setLoginErrors({ email: "Email ou mot de passe incorrect" });
     }
-  };
+  }
+};
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    const errors = {};
-    if (!firstName.trim()) errors.firstName = "Prénom requis";
-    if (!lastName.trim())  errors.lastName  = "Nom requis";
-    if (!regEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regEmail))
-      errors.email = "Email invalide";
-    if (!regPassword || regPassword.length < 6)
-      errors.password = "Minimum 6 caractères";
-    setRegErrors(errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("Register →", { firstName, lastName, regEmail, regPassword });
+
+
+const handleRegister = async (e) => {
+  e.preventDefault();
+  const errors = {};
+  if (!firstName.trim()) errors.firstName = "Prénom requis";
+  if (!lastName.trim())  errors.lastName  = "Nom requis";
+  if (!regEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(regEmail))
+    errors.email = "Email invalide";
+  if (!regPassword || regPassword.length < 6)
+    errors.password = "Minimum 6 caractères";
+  setRegErrors(errors);
+  if (Object.keys(errors).length === 0) {
+    try {
+      const res = await api.post("/api/register", {
+        nom: lastName,
+        prenom: firstName,
+        email: regEmail,
+        password: regPassword,
+      });
+      localStorage.setItem("token", res.data.token);
+      alert("Compte créé avec succès!");
+    } catch (err) {
+      setRegErrors({ email: "Cet email existe déjà" });
     }
-  };
+  }
+};
 
   return (
     <div className="login-page">
