@@ -1,0 +1,383 @@
+/* ============================================================
+   AdherentPage.css – Dark luxury profile design
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
+/* ---------- Wrapper ---------- */
+.ap-wrapper {
+  min-height: 100vh;
+  background: rgb(41, 39, 39);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 24px 64px;
+  font-family: 'Jost', sans-serif;
+  color: #e8e2d9;
+}
+
+/* ---------- Card ---------- */
+.ap-card {
+  width: 100%;
+  max-width: 1080px;
+}
+
+/* ---------- Header ---------- */
+.ap-header {
+  margin-bottom: 40px;
+}
+
+.ap-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 400;
+  color: #e8e2d9;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.ap-title em,
+.ap-title span {
+  font-style: italic;
+  color: #c9a84c;
+}
+
+.ap-subtitle {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #7a7570;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Two-column layout ---------- */
+.ap-body {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .ap-body { grid-template-columns: 1fr; }
+}
+
+/* ---------- Shared panel ---------- */
+.ap-panel {
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 32px 24px;
+}
+
+/* ---------- Left panel ---------- */
+.ap-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.ap-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a78bfa 0%, #c9a84c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.ap-nom {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #e8e2d9;
+}
+
+.ap-badge {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7c6ef5;
+}
+
+.ap-member-tag {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid #2e2a20;
+  background: transparent;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #c9a84c;
+  letter-spacing: 0.04em;
+}
+
+.ap-member-tag::before {
+  content: '✦';
+  font-size: 0.6rem;
+  color: #c9a84c;
+}
+
+.ap-change-photo {
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px 0;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  color: #7a7570;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.ap-change-photo:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+}
+
+/* ---------- Right panel ---------- */
+.ap-info-panel {
+  padding: 32px 36px;
+}
+
+/* ---------- Section header ---------- */
+.ap-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.ap-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #e8e2d9;
+  margin: 0;
+}
+
+/* ── Bouton Modifier / Annuler ── */
+.ap-edit-btn {
+  background: transparent;
+  border: 1px solid #3a3530;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #7a7570;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: border-color 0.25s, color 0.25s, background 0.25s, box-shadow 0.25s;
+}
+
+.ap-edit-btn:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+/* État actif = mode édition en cours → bouton devient "Annuler" en rouge discret */
+.ap-edit-btn--active {
+  border-color: rgba(200, 80, 80, 0.4);
+  color: #d47070;
+}
+
+.ap-edit-btn--active:hover {
+  border-color: #d47070;
+  color: #d47070;
+  box-shadow: 0 0 0 3px rgba(200, 80, 80, 0.08);
+}
+
+/* ---------- Alerts ---------- */
+.ap-alert {
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: 0.01em;
+}
+
+.ap-alert--success {
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  color: #c9a84c;
+}
+
+.ap-alert--error {
+  background: rgba(200, 80, 80, 0.08);
+  border: 1px solid rgba(200, 80, 80, 0.25);
+  color: #d47070;
+}
+
+/* ---------- Fields grid ---------- */
+.ap-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .ap-fields { grid-template-columns: 1fr; }
+}
+
+.ap-field--full {
+  grid-column: 1 / -1;
+}
+
+.ap-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ap-field__label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #5a5550;
+}
+
+/* Valeur en lecture seule */
+.ap-field__value {
+  display: block;
+  padding: 11px 16px;
+  background: #111111;
+  border: 1px solid #232323;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: #ccc8c0;
+  letter-spacing: 0.01em;
+  transition: border-color 0.2s;
+  min-height: 44px;
+}
+
+.ap-field__value:hover {
+  border-color: #3a3530;
+}
+
+/* Input en mode édition */
+.ap-input {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  background: #111111;
+  border: 1px solid #c9a84c;
+  border-radius: 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: #e8e2d9;
+  letter-spacing: 0.01em;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  animation: inputAppear 0.2s ease;
+}
+
+@keyframes inputAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ap-input::placeholder {
+  color: #3a3530;
+}
+
+.ap-input:focus {
+  border-color: #d4a843;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.12);
+}
+
+.ap-textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+/* ---------- Actions ---------- */
+.ap-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 24px;
+  border-top: 1px solid #2a2a2a;
+  margin-top: 24px;
+  animation: inputAppear 0.2s ease;
+}
+
+.ap-save-btn {
+  padding: 11px 36px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #b8922a 0%, #d4a843 50%, #b8922a 100%);
+  background-size: 200% 100%;
+  border: none;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #0f0f0f;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-position 0.4s ease, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.2);
+}
+
+.ap-save-btn:hover:not(:disabled) {
+  background-position: 100% 0;
+  box-shadow: 0 4px 28px rgba(201, 168, 76, 0.35);
+}
+
+.ap-save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Loading ---------- */
+.ap-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 60px 0;
+  color: #5a5550;
+  font-size: 0.9rem;
+}
+
+.ap-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #2a2a2a;
+  border-top-color: #c9a84c;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

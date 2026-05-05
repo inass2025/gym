@@ -1,0 +1,69 @@
+.cours-card {
+  background: #fafaf8;
+  border-radius: 10px;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  padding: 14px;
+}
+
+.cours-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cours-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #EF9F27;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.cours-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.cours-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+
+.cours-meta span {
+  font-size: 12px;
+  color: #666;
+}
+
+.btn-reserver {
+  width: 100%;
+  background: #EF9F27;
+  color: #412402;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.btn-reserver:hover:not(:disabled) {
+  background: #BA7517;
+  color: #FAEEDA;
+}
+
+.btn-reserver.reserved {
+  background: #EAF3DE;
+  color: #3B6D11;
+  cursor: default;
+}
+
+.btn-reserver:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

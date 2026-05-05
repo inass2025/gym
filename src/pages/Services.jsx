@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import './Services.css';
 import React, { useEffect } from "react";
 const classes = [
