@@ -11,15 +11,16 @@ class Adherent extends Model
 
     protected $table = 'adherents';
 
-    protected $fillable = [
-        'nom',
-        'prenom',
-        'email',
-        'password',
-        'telephone',
-        'date_inscription',
-        'objectif',
-    ];
+   protected $fillable = [
+    'nom',
+    'prenom', 
+    'email',
+    'password',
+    'telephone',
+    'date_inscription',
+    'objectif',
+    'role',  
+];
 
     public function reservation()
     {

@@ -13,27 +13,42 @@ class ReservationController extends Controller
         return response()->json($reservations, 200);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'date'        => 'required|date',
-            'statut'      => 'required|string',
-            'adherent_id' => 'required|exists:adherents,id',
-            'cours_id'    => 'required|exists:cours,id',
-        ]);
+   public function store(Request $request)
+{
+    $user = $request->user();
 
-        $reservation = Reservation::create($request->all());
-        return response()->json($reservation, 201);
+    Reservation::create([
+        'cours_id' => $request->cours_id,
+        'adherent_id' => $user->id,
+        'date_reservation' => now(),
+        'status' => 'confirmé',
+    ]);
+
+    return response()->json(['message' => 'OK']);
+}
+   public function show(Request $request, $id)
+{
+    $user = $request->user();
+
+    $reservation = Reservation::where('id', $id)
+        ->where('adherent_id', $user->id)
+        ->first();
+
+    if (!$reservation) {
+        return response()->json(['message' => 'Réservation introuvable'], 404);
     }
 
-    public function show($id)
-    {
-        $reservation = Reservation::find($id);
-        if (!$reservation) {
-            return response()->json(['message' => 'Réservation introuvable'], 404);
-        }
-        return response()->json($reservation, 200);
-    }
+    return response()->json($reservation, 200);
+}
+public function myReservations(Request $request)
+{
+    $reservations = Reservation::with('cours')          // ← جيب بيانات الكورس
+        ->where('adherent_id', $request->user()->id)    // ← ديال المستخدم فقط
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return response()->json($reservations, 200);
+}
 
     public function update(Request $request, $id)
     {
@@ -45,13 +60,17 @@ class ReservationController extends Controller
         return response()->json($reservation, 200);
     }
 
-    public function destroy($id)
-    {
-        $reservation = Reservation::find($id);
-        if (!$reservation) {
-            return response()->json(['message' => 'Réservation introuvable'], 404);
-        }
-        $reservation->delete();
-        return response()->json(['message' => 'Réservation supprimée'], 200);
+   public function destroy( Request $request ,$id)
+{
+    $reservation = Reservation::where('id', $id)
+        ->where('adherent_id', $request->user()->id) 
+        ->first();
+
+    if (!$reservation) {
+        return response()->json(['message' => 'Réservation introuvable'], 404);
     }
+
+    $reservation->delete();
+    return response()->json(['message' => 'Réservation supprimée'], 200);
+}
 }

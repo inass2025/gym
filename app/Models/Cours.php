@@ -19,10 +19,10 @@ protected $fillable = [
 
 public function coach(){
     return $this->belongsTo(Coach::class);
-};
+}
 
 
 public function reservation(){
     return $this->hasMany(Reservation::class);
-};
+}
 }

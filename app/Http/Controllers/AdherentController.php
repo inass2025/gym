@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
+use App\Models\Adherent;
+use Illuminate\Support\Facades\Auth;
 class AdherentController extends Controller
 {
 
@@ -52,20 +52,27 @@ class AdherentController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
-        $adherent = Adherent::find($id);
+    public function update(Request $request)
+{
+    $user = $request->user();
 
-        if (!$adherent) {
-            return response()->json([
-                'message' => 'Introuvable'
-            ], 404);
-        }
+    $validated = $request->validate([
+        'nom'       => 'sometimes|string|max:255',
+        'email'     => 'sometimes|email|unique:users,email,' . $user->id,
+        'telephone' => 'sometimes|nullable|string|max:20',
+        'adresse'   => 'sometimes|nullable|string|max:500',
+    ]);
 
-        $adherent->update($request->all());
-        return response()->json($adherent, 200);
-    }
+    $user->update($validated);
 
+    return response()->json($user);
+}
+     
+   public function profile()
+{
+    $user = Auth::user();
+    return response()->json($user);
+}
 
     public function destroy($id)
     {
