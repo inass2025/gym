@@ -18,6 +18,10 @@ return new class extends Migration
             $table->string('prenom');
             $table->string('email')->unique();
             $table->string('password');
+
+            $table->enum('role', ['admin', 'coach', 'adherent'])
+            ->default('adherent');
+
             $table->string('telephone')->nullable();
             $table->date('date_inscription')->nullable();
             $table->string('objectif')->nullable();
