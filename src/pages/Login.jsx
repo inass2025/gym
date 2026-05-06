@@ -33,6 +33,11 @@ export default function Login() {
       const role = res.data.role;
       localStorage.setItem("token", res.data.token);
       
+localStorage.setItem("token", res.data.token);
+localStorage.setItem("user", JSON.stringify(res.data.user));
+localStorage.setItem("role", res.data.role);
+
+
       localStorage.setItem("role", role);
       if (role === "admin") {
         navigate("/admin");

@@ -1,0 +1,161 @@
+.coach-profil { color: #fff; }
+
+.coach-profil__header {
+  margin-bottom: 40px;
+}
+
+.coach-profil__header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.coach-profil__header h1 span {
+  color: #e83e8c;
+  font-style: italic;
+}
+
+.coach-profil__header p {
+  color: rgba(255,255,255,0.5);
+  font-size: 15px;
+}
+
+.coach-profil__content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.coach-profil__left {
+  background: #111318;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.coach-profil__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e83e8c, #0891b2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.coach-profil__left h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.coach-profil__badge {
+  color: #e83e8c;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+
+.coach-profil__specialite {
+  color: rgba(255,255,255,0.5);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.coach-profil__right {
+  background: #111318;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.coach-profil__right-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.coach-profil__right-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.coach-profil__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.coach-profil__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.coach-profil__field label {
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.coach-profil__field input {
+  background: #1a1d27;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.coach-profil__field input:not(:disabled) {
+  border-color: #e83e8c;
+}
+
+.btn-edit {
+  background: rgba(232,62,140,0.15);
+  color: #e83e8c;
+  border: 1px solid rgba(232,62,140,0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover { background: rgba(232,62,140,0.25); }
+
+.btn-save {
+  background: #e83e8c;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-cancel {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.6);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}

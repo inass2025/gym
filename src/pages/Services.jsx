@@ -1,6 +1,6 @@
+import React from 'react';
 import {useEffect} from 'react'
 import './Services.css';
-import React, { useEffect } from "react";
 const classes = [
   {
     id: 1,
