@@ -21,11 +21,11 @@ protected $fillable = [
 
 public function cours(){
     return $this->hasMany(Cours::class);
-};
+}
 
 public function message(){
-    return hasMany->(Message::class);
-};
+    return$this->hasMany(Message::class);
+}
 
 
 

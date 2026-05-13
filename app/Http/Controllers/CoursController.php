@@ -21,7 +21,7 @@ class CoursController extends Controller
             'capacite'   => 'required|integer',
             'salle'      => 'required|string',
             'date'       => 'required|date',
-            'coach_id'   => 'required|exists:coachs,id',
+           'coach_id'    => 'required|exists:adherents,id'
         ]);
 
         $cours = Cours::create($request->all());

@@ -5,11 +5,34 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Adherent;
-use App\Models\Coach;
+// ❌ supprime : use App\Models\Coach;
 
 class AuthController extends Controller
 {
-    // ================= REGISTER =================
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required',
+        ]);
+
+        // On cherche dans UNE seule table : adherents
+        // Le role (admin / coach / adherent) est une colonne dans cette table
+        $adherent = Adherent::where('email', $request->email)->first();
+
+        if (!$adherent || !Hash::check($request->password, $adherent->password)) {
+            return response()->json(['message' => 'Email ou mot de passe incorrect'], 401);
+        }
+
+        $token = $adherent->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'user'  => $adherent,
+            'token' => $token,
+            'role'  => $adherent->role, // "admin", "coach", ou "adherent"
+        ]);
+    }
+
     public function registerAdherent(Request $request)
     {
         $request->validate([
@@ -28,7 +51,7 @@ class AuthController extends Controller
             'role'             => 'adherent',
         ]);
 
-        $token = $adherent->createToken('adherent-token')->plainTextToken;
+        $token = $adherent->createToken('auth-token')->plainTextToken;
 
         return response()->json([
             'user'  => $adherent,
@@ -37,42 +60,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // ================= LOGIN =================
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
-
-        // Check Adherent
-        $adherent = Adherent::where('email', $request->email)->first();
-        if ($adherent && Hash::check($request->password, $adherent->password)) {
-            $token = $adherent->createToken('adherent-token')->plainTextToken;
-            return response()->json([
-                'user'  => $adherent,
-                'token' => $token,
-                'role'  => $adherent->role,
-            ]);
-        }
-
-        // Check Coach
-        $coach = Coach::where('email', $request->email)->first();
-        if ($coach && Hash::check($request->password, $coach->password)) {
-            $token = $coach->createToken('coach-token')->plainTextToken;
-            return response()->json([
-                'user'  => $coach,
-                'token' => $token,
-                'role'  => 'coach',
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Email ou mot de passe incorrect'
-        ], 401);
-    }
-
-    // ================= LOGOUT =================
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

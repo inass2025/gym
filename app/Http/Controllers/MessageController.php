@@ -4,53 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 class MessageController extends Controller
 {
-    public function index()
-    {
-        $messages = Message::all();
-        return response()->json($messages, 200);
+   public function index($adherent_id, $coach_id) {
+        $messages = Message::where('adherent_id', $adherent_id)
+                           ->where('coach_id', $coach_id)
+                           ->orderBy('date_envoie')
+                           ->get();
+        return response()->json($messages);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'contenu'     => 'required|string',
-            'adherent_id' => 'required|exists:adherents,id',
-            'coach_id'    => 'required|exists:coachs,id',
-        ]);
+    
+    public function store(Request $request) {
+    
+    Log::info('Request data:', $request->all());
 
-        $message = Message::create($request->all());
-        return response()->json($message, 201);
-    }
+    $message = Message::create([
+        'content'     => $request->input('content'),  // ← bdel $request->content
+        'date_envoie' => now(),
+        'adherent_id' => $request->input('adherent_id'),
+        'coach_id'    => $request->input('coach_id'),
+    ]);
 
-    public function show($id)
-    {
-        $message = Message::find($id);
-        if (!$message) {
-            return response()->json(['message' => 'Message introuvable'], 404);
-        }
-        return response()->json($message, 200);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $message = Message::find($id);
-        if (!$message) {
-            return response()->json(['message' => 'Message introuvable'], 404);
-        }
-        $message->update($request->all());
-        return response()->json($message, 200);
-    }
-
-    public function destroy($id)
-    {
-        $message = Message::find($id);
-        if (!$message) {
-            return response()->json(['message' => 'Message introuvable'], 404);
-        }
-        $message->delete();
-        return response()->json(['message' => 'Message supprimé'], 200);
-    }
+    return response()->json($message, 201);
+}
+  
 }

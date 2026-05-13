@@ -2,25 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Adherent extends Model
+class Adherent extends Authenticatable
 {
     use HasApiTokens;
 
     protected $table = 'adherents';
 
-   protected $fillable = [
-    'nom',
-    'prenom', 
-    'email',
-    'password',
-    'telephone',
-    'date_inscription',
-    'objectif',
-    'role',  
-];
+    protected $fillable = [
+        'nom',
+        'prenom',
+        'email',
+        'password',
+        'telephone',
+        'adresse',
+        'date_naissance',
+        'sexe',
+        'poids',
+        'taille',
+        'date_inscription',
+        'objectif',
+        'niveau',
+        'role',
+        'photo'
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
 
     public function reservation()
     {

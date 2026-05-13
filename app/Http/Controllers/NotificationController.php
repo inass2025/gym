@@ -3,54 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class NotificationController extends Controller
 {
-    public function index()
+    // GET /api/notifications/{adherentId}
+    public function index(int $adherentId): JsonResponse
     {
-        $notifications = Notification::all();
-        return response()->json($notifications, 200);
+        $notifications = Notification::where('adherent_id', $adherentId)
+            ->orderBy('date_envoie', 'desc')
+            ->get();
+
+        return response()->json($notifications);
     }
 
-    public function store(Request $request)
+    // PATCH /api/notifications/{id}/lu
+    public function markAsRead(int $id): JsonResponse
     {
-        $request->validate([
-            'message'     => 'required|string',
-            'type'        => 'required|string',
-            'adherent_id' => 'required|exists:adherents,id',
-        ]);
+        $notification = Notification::findOrFail($id);
+        $notification->update(['lu' => true]);
 
-        $notification = Notification::create($request->all());
-        return response()->json($notification, 201);
+        return response()->json(['success' => true]);
     }
 
-    public function show($id)
+    // PATCH /api/notifications/adherent/{adherentId}/lu-tout
+    public function markAllAsRead(int $adherentId): JsonResponse
     {
-        $notification = Notification::find($id);
-        if (!$notification) {
-            return response()->json(['message' => 'Notification introuvable'], 404);
-        }
-        return response()->json($notification, 200);
-    }
+        Notification::where('adherent_id', $adherentId)
+            ->where('lu', false)
+            ->update(['lu' => true]);
 
-    public function update(Request $request, $id)
-    {
-        $notification = Notification::find($id);
-        if (!$notification) {
-            return response()->json(['message' => 'Notification introuvable'], 404);
-        }
-        $notification->update($request->all());
-        return response()->json($notification, 200);
-    }
-
-    public function destroy($id)
-    {
-        $notification = Notification::find($id);
-        if (!$notification) {
-            return response()->json(['message' => 'Notification introuvable'], 404);
-        }
-        $notification->delete();
-        return response()->json(['message' => 'Notification supprimée'], 200);
+        return response()->json(['success' => true]);
     }
 }

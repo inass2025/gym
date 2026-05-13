@@ -9,7 +9,7 @@ class Abonnement extends Model
 protected $table = 'abonnement';
 protected $fillable = [
     'type',
-    'date_dèbut',
+    'date_debut',
     'date_fin',
     'prix',
     'statut',
@@ -20,10 +20,11 @@ protected $fillable = [
 
 public function adherent(){
     return $this->belongsTo(Adherent::class);
-};
+}
 
 
-public function paiement(){
-    return $this->hasMany(Paiment::class);
-};
+public function paiement()
+{
+    return $this->hasMany(Paiment::class); // ← Paiment مش Paiement
+}
 }

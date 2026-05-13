@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    protected $table = 'messages';
+    protected $table = 'message';
 
-    protected $fillable = [
-        'contenu',
-        'date_envoi',
+     protected $fillable = [
+        'content',      // ← sah (machi contenu)
+        'date_envoie',  // ← sah (machi date_envoi)
         'adherent_id',
         'coach_id',
     ];

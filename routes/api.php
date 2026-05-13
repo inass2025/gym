@@ -14,6 +14,16 @@ use App\Http\Controllers\PerformanceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\MessageController;
 
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ProgrammeController;
+
+
+Route::middleware('auth:sanctum')->get('/mon-programme', [ProgrammeController::class, 'monProgramme']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // ... routes dyalek li kaynin
+    Route::post('/change-password', [PasswordController::class, 'update']);
+});
 /*
 |--------------------------------------------------------------------------
 | 🔓 PUBLIC ROUTES (بدون auth)
@@ -40,18 +50,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile', [AdherentController::class, 'update']);
 
     // 🔹 Dashboard
-    Route::get('/dashboard', function (Request $request) {
-        $user = $request->user();
+ Route::get('/dashboard', function (Request $request) {
 
-        return [
-            'name' => $user->name,
-            'status' => 'Active',
-            'sessions' => 5,
-            'next_class' => 'Yoga 18:00',
-            'expire' => '2026-05-25'
-        ];
-    });
+    $user = $request->user();
 
+    $abo = $user->abonnement()->first();
+
+    return response()->json([
+        'name'   => $user->name,
+        'status' => $abo?->type ?? 'Active',
+        'sessions' => $user->reservation()->count(),
+    ]);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/performance',       [PerformanceController::class, 'index']);
+    Route::post('/performance',      [PerformanceController::class, 'store']);
+    Route::delete('/performance/{id}', [PerformanceController::class, 'destroy']);
+});
+Route::middleware('auth:sanctum')->get('/abonnements', [AbonnementController::class, 'index']);
     /*
     |--------------------------------------------------------------------------
     | 🎯 RESERVATION API (مهم)
@@ -71,7 +87,11 @@ Route::middleware('auth:sanctum')->group(function () {
     | 📦 باقي الموارد
     |--------------------------------------------------------------------------
     */
-        
+        Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/abonnement',          [AbonnementController::class, 'show']);
+    Route::get('/check-abonnement', [AbonnementController::class, 'check']);
+    Route::post('/abonnement/souscrire', [AbonnementController::class, 'souscrire']); // ← جديد
+});
     Route::apiResource('adherent', AdherentController::class);
     Route::apiResource('coach', CoachController::class);
     Route::apiResource('cours', CoursController::class);
@@ -81,3 +101,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('notification', NotificationController::class);
     Route::apiResource('message', MessageController::class);
 });
+
+// routes/api.php
+Route::get('/messages/{adherent_id}/{coach_id}', [MessageController::class, 'index']);
+Route::post('/messages', [MessageController::class, 'store']);
+Route::get('/coaches', function () {
+    return \App\Models\Adherent::where('role', 'coach')->get();
+});
+Route::get('notifications/{adherentId}', [NotificationController::class, 'index']);
+Route::patch('notifications/{id}/lu', [NotificationController::class, 'markAsRead']);
+Route::patch('notifications/adherent/{adherentId}/lu-tout', [NotificationController::class, 'markAllAsRead']);

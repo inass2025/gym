@@ -6,25 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('notification', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('message');
-            $table->date('date_envoie');
-            $table->string('type');
+            $table->text('message');
+            $table->timestamp('date_envoie')->useCurrent();
+            $table->enum('type', [
+                'abonnement_expire',
+                'reservation_confirmee',
+                'paiement_confirme',
+                'reservation_annulee',
+                'rappel_seance',
+            ]);
+            $table->boolean('lu')->default(false);
             $table->timestamps();
+
+            $table->foreignId('adherent_id')
+                  ->constrained('adherents')
+                  ->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('notification');
+        Schema::dropIfExists('notifications');
     }
 };

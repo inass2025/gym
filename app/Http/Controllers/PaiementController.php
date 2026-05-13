@@ -2,35 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Paiement;
+use App\Models\Paiment;
 use Illuminate\Http\Request;
 
 class PaiementController extends Controller
 {
     public function index()
     {
-        $paiements = Paiement::all();
+        $paiements = Paiment::all();
         return response()->json($paiements, 200);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'montant'        => 'required|numeric',
-            'date'           => 'required|date',
-            'methode'        => 'required|string',
-            'statut'         => 'required|string',
-            'adherent_id'    => 'required|exists:adherents,id',
-            'abonnement_id'  => 'required|exists:abonnements,id',
-        ]);
+ 
 
-        $paiement = Paiement::create($request->all());
-        return response()->json($paiement, 201);
-    }
-
+public function store(Request $request)
+{
+    $paiment = Paiment::create($request->all());
+    return response()->json($paiment, 201);
+}
     public function show($id)
     {
-        $paiement = Paiement::find($id);
+        $paiement = Paiment::find($id);
         if (!$paiement) {
             return response()->json(['message' => 'Paiement introuvable'], 404);
         }
@@ -39,7 +31,7 @@ class PaiementController extends Controller
 
     public function update(Request $request, $id)
     {
-        $paiement = Paiement::find($id);
+        $paiement = Paiment::find($id);
         if (!$paiement) {
             return response()->json(['message' => 'Paiement introuvable'], 404);
         }
@@ -49,7 +41,7 @@ class PaiementController extends Controller
 
     public function destroy($id)
     {
-        $paiement = Paiement::find($id);
+        $paiement = Paiment::find($id);
         if (!$paiement) {
             return response()->json(['message' => 'Paiement introuvable'], 404);
         }

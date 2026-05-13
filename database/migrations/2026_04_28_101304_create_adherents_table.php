@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('telephone')->nullable();
             $table->date('date_inscription')->nullable();
             $table->string('objectif')->nullable();
-
+            
             $table->timestamps();
         });
     }
