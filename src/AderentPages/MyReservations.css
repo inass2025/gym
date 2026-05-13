@@ -9,7 +9,8 @@
 .page-title {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #1a1a2e;
+  color: #c1c1ff;
+  
   margin: 0 0 0.25rem;
 }
 
@@ -24,7 +25,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: #ffffff;
+  background: #f0c4ce
+  ;
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   padding: 1rem 1.25rem;
@@ -41,7 +43,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #e0f2fe;
+  background: #f1fbff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,23 +101,23 @@
 }
 
 .badge-ok {
-  background: #dcfce7;
-  color: #15803d;
+  background: #d6ffe5;
+  color: #004b66;
 }
 
 .badge-cancel {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: #ffb5b5;
+  color: #7ec8e3;
 }
 
 /* ===== Button Annuler ===== */
 .btn-cancel {
   flex-shrink: 0;
   padding: 8px 16px;
-  border: 1px solid #fca5a5;
+  border: 1px solid #ff7092;
   border-radius: 8px;
   background: transparent;
-  color: #b91c1c;
+  color: #f4a7b9;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -123,13 +125,13 @@
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: #fee2e2;
+  background: #ffbbbb;
 }
 
 .btn-cancel:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  border-color: #d1d5db;
+  border-color: #ddebff;
   color: #9ca3af;
 }
 

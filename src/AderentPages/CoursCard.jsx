@@ -1,50 +1,95 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "./api";
+import { useNavigate } from "react-router-dom";
 import "./CoursCard.css";
 
 function CoursCard({ cours, onReserved }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]   = useState(false);
   const [reserved, setReserved] = useState(false);
-  const [ Error,  setError] = useState("");
+  const [error, setError]       = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // check من API — هاد الحل أصح من localStorage
+    api.get("/my-reservations")
+      .then((res) => {
+        const dejaReserve = res.data.some(
+          (r) =>
+            (r.cours_id === cours.id || r.cours?.id === cours.id) &&
+            r.statut === "confirmé"
+        );
+        setReserved(dejaReserve);
+      })
+      .catch(() => {});
+  }, [cours.id]);
 
   const reserve = () => {
     setLoading(true);
-    api.post("/reserve", { cours_id: cours.id })
-      .then(() => {
-        setReserved(true);
-        if (onReserved) onReserved(cours);
+    setError("");
+
+    api.get("/check-abonnement")
+      .then((res) => {
+        if (!res.data.hasAbonnement) {
+          alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
+          navigate("/adherent/Abonnement");
+          return;
+        }
+        return api.post("/reserve", { cours_id: cours.id });
+      })
+      .then((res) => {
+        if (res) {
+          setReserved(true);
+          if (onReserved) onReserved(cours);
+        }
       })
       .catch((err) => {
-        console.error("Détail erreur:", err.response?.data); // ← هادا المهم
-  console.error("Status:", err.response?.status);
-  console.error("Message:", err.response?.data?.message);
-  setError(err.response?.data?.message || "Erreur serveur 500");
+        setError(err.response?.data?.message || "Erreur");
       })
       .finally(() => setLoading(false));
   };
 
   return (
-    <div className="cours-card">
-      <div className="cours-card-top">
-        <span className="cours-dot" />
-        <span className="cours-name">{cours.nom}</span>
-      </div>
+    <div className={`special-card ${reserved ? "is-reserved" : ""}`}>
+      <div className="card-glow"></div>
+      
+      <div className="card-content">
+        <div className="card-top">
+          <div className="category-tag">{cours.coach || "Fitness"}</div>
+          <h2 className="title">{cours.nom}</h2>
+        </div>
 
-      <div className="cours-meta">
-        {cours.description && <span>📝 {cours.description}</span>}
-        {cours.jours      && <span>📅 {cours.jours}</span>}
-        {cours.horaire    && <span>🕐 {cours.horaire}</span>}
-        {cours.salle      && <span>📍 {cours.salle}</span>}
-        {cours.coach      && <span>🏋️ {cours.coach}</span>}
-      </div>
+        <div className="stats-row">
+          <div className="stat">
+            <span className="stat-label">📅 Jour</span>
+            <span className="stat-value">{cours.jours}</span>
+          </div>
+          <div className="stat">
+            <span className="stat-label">🕐 Heure</span>
+            <span className="stat-value">{cours.horaire}</span>
+          </div>
+        </div>
 
-      <button
-        className={`btn-reserver ${reserved ? "reserved" : ""}`}
-        onClick={reserve}
-        disabled={loading || reserved}
-      >
-        {loading ? "..." : reserved ? "✓ Réservé" : "Réserver"}
-      </button>
+        <div className="footer-section">
+          <div className="location">
+            <span className="pin">📍</span> {cours.salle}
+          </div>
+          
+          <button 
+            className={`action-fab ${reserved ? "done" : ""}`}
+            onClick={reserve}
+            disabled={loading || reserved}
+          >
+            {loading ? (
+              <div className="spinner"></div>
+            ) : reserved ? (
+              "✓ Déjà réservé"
+            ) : (
+              "Réserver"
+            )}
+          </button>
+        </div>
+        {error && <small className="err-msg">{error}</small>}
+      </div>
     </div>
   );
 }

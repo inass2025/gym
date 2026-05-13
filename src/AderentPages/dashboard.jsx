@@ -1,231 +1,167 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import CoursList from "./CoursList";
+import api from "./api";
 import "./Dashboard.css";
 
-function SidePanel({ open, onClose, onReserved }) {
-  return (
-    <>
-      <div className={`overlay ${open ? "show" : ""}`} onClick={onClose} />
-      <div className={`side-panel ${open ? "open" : ""}`}>
-        <div className="panel-header">
-          <div>
-            <h2 className="panel-title">Cours disponibles</h2>
-            <p className="panel-sub">Sélectionnez un cours à réserver</p>
-          </div>
-          <button className="close-btn" onClick={onClose}>✕</button>
-        </div>
-        <div className="panel-body">
-          <CoursList onReserved={onReserved} />
-        </div>
-      </div>
-    </>
-  );
-}
+const MONTHS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+const DAYS_SHORT = ["Lu","Ma","Me","Je","Ve","Sa","Di"];
 
-function Dashboard() {
-  const [data, setData]             = useState(null);
-  const [reservations, setReservations] = useState([]); // ← جديد
-  const [panelOpen, setPanelOpen]   = useState(false);
+export default function AdherentDashboard() {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const [abonnements, setAbonnements] = useState([]);
+  const [reservations, setReservations] = useState([]);
+  const [calMonth, setCalMonth] = useState(new Date().getMonth());
+  const [calYear, setCalYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const headers = { Authorization: `Bearer ${token}` };
-
-    // جيب بيانات الداشبورد
-    axios.get("http://127.0.0.1:8000/api/dashboard", { headers })
-      .then(res => setData(res.data))
-      .catch(err => console.log(err));
-
-    // جيب reservations ديال المستخدم ← جديد
-    axios.get("http://127.0.0.1:8000/api/my-reservations", { headers })
-      .then(res => setReservations(res.data))
-      .catch(err => console.log(err));
+    api.get("/abonnements").then(r => setAbonnements(r.data)).catch(() => {});
+    api.get("/my-reservations").then(r => setReservations(r.data)).catch(() => {});
   }, []);
 
-  const handleReserved = (cours) => {
-    // زيد الـ reservation الجديدة للقائمة مباشرة
-    setReservations(prev => [{
-      id: Date.now(),
-      cours: cours,
-      date_reservation: new Date().toISOString(),
-      statut: "confirmé"
-    }, ...prev]);
-    setPanelOpen(false);
-  };
+  const aboActif = abonnements.find(a => a.statut === "actif");
+  const daysLeft = aboActif
+    ? Math.round((new Date(aboActif.date_fin) - new Date()) / (1000*60*60*24))
+    : 0;
+  const pct = aboActif
+    ? Math.round(((new Date() - new Date(aboActif.date_debut)) /
+        (new Date(aboActif.date_fin) - new Date(aboActif.date_debut))) * 100)
+    : 0;
 
-  const annuler = (id) => {
-    if (!window.confirm("Annuler cette réservation ?")) return;
-    axios.delete(`http://127.0.0.1:8000/api/reservations/${id}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    }).then(() =>
-      setReservations(prev =>
-        prev.map(r => r.id === id ? { ...r, statut: "annulé" } : r)
-      )
-    ).catch(() => alert("Erreur lors de l'annulation."));
-  };
+  const eventDates = reservations.map(r => r.date_reservation);
 
-  if (!data) return <p className="loading">Chargement...</p>;
+  function buildCalendar() {
+    const first = new Date(calYear, calMonth, 1);
+    const lastDay = new Date(calYear, calMonth + 1, 0).getDate();
+    const startDow = (first.getDay() + 6) % 7;
+    const prevLast = new Date(calYear, calMonth, 0).getDate();
+    const today = new Date();
+    const cells = [];
 
-  const joursRestants = Math.ceil(
-    (new Date(data.expire) - new Date()) / (1000 * 60 * 60 * 24)
-  );
+    for (let i = startDow - 1; i >= 0; i--)
+      cells.push({ day: prevLast - i, current: false });
+    for (let d = 1; d <= lastDay; d++) {
+      const iso = `${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+      cells.push({
+        day: d, current: true,
+        isToday: today.getDate()===d && today.getMonth()===calMonth && today.getFullYear()===calYear,
+        hasEvent: eventDates.includes(iso),
+      });
+    }
+    const rem = (startDow + lastDay) % 7;
+    if (rem > 0) for (let i = 1; i <= 7-rem; i++) cells.push({ day: i, current: false });
+    return cells;
+  }
 
-  // آخر reservation confirmée
-  const derniereReservation = reservations.find(r => r.statut === "confirmé");
+  const fmtDate = d => { if(!d) return "—"; const [y,m,j]=d.split("-"); return `${j}/${m}/${y}`; };
+  const initials = `${user.prenom?.[0]||""}${user.nom?.[0]||""}`.toUpperCase();
 
   return (
-    <div className="dashboard">
-
+    <div className="adh-dash">
       {/* Topbar */}
-      <div className="topbar">
-        <div>
-          <h1 className="topbar-title">Dashboard</h1>
-          <p className="topbar-sub">Bienvenue, {data.nom} 💪</p>
+      <div className="adh-topbar">
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div className="adh-avatar">{initials}</div>
+          <div>
+            <h1 className="adh-greeting">Bonjour, {user.prenom} {user.nom} 👋</h1>
+            <p className="adh-date">{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</p>
+          </div>
         </div>
-        <button className="btn-primary" onClick={() => setPanelOpen(true)}>
-          + Réserver un cours
-        </button>
+        <button className="adh-notif-btn" aria-label="Notifications">🔔</button>
       </div>
 
-      {/* Stat Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <p className="stat-label">Séances ce mois</p>
-          <h2 className="stat-value yellow">{data.sessions}</h2>
-          <p className="stat-sub">Séances effectuées</p>
+      {/* Stats */}
+      <div className="adh-stats">
+        <div className="adh-stat">
+          <div className="adh-stat-label">Abonnement</div>
+          <div className="adh-stat-val pink">{aboActif ? aboActif.type : "—"}</div>
+          <div className="adh-stat-sub">{aboActif ? "actif" : "aucun"}</div>
         </div>
-        <div className="stat-card">
-          <p className="stat-label">Statut</p>
-          <h2 className="stat-value green">{data.status}</h2>
-          <p className="stat-sub">Abonnement en cours</p>
+        <div className="adh-stat">
+          <div className="adh-stat-label">Réservations</div>
+          <div className="adh-stat-val blue">{reservations.length}</div>
+          <div className="adh-stat-sub">cette période</div>
         </div>
-        <div className="stat-card">
-          <p className="stat-label">Expire dans</p>
-          <h2 className="stat-value red">{joursRestants} j</h2>
-          <p className="stat-sub">Le {data.expire}</p>
+        <div className="adh-stat">
+          <div className="adh-stat-label">Jours restants</div>
+          <div className="adh-stat-val green">{daysLeft > 0 ? daysLeft : "—"}</div>
+          <div className="adh-stat-sub">fin d'abonnement</div>
         </div>
-
-        {/* ← ديناميك: عدد reservations */}
-        <div className="stat-card">
-          <p className="stat-label">Réservations</p>
-          <h2 className="stat-value blue">
-            {reservations.filter(r => r.statut === "confirmé").length}
-          </h2>
-          <p className="stat-sub">Cours réservés</p>
+        <div className="adh-stat">
+          <div className="adh-stat-label">Cours réservés</div>
+          <div className="adh-stat-val">{reservations.length}</div>
+          <div className="adh-stat-sub">total</div>
         </div>
       </div>
 
-      {/* Abonnement + Prochain cours */}
-      <div className="row-2">
-        <div className="card abo-card">
-          <div className="card-header">
-            <span className="card-title">Mon Abonnement</span>
-            <span className="card-action">Gérer →</span>
-          </div>
-          <h3 className="abo-plan">{data.status}</h3>
-          <p className="abo-dates">Expire le : {data.expire}</p>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${Math.max(0, 100 - (joursRestants / 365) * 100)}%` }}
-            />
-          </div>
-          <div className="abo-footer">
-            <span>{joursRestants} jours restants</span>
-            <span className="yellow">{data.sessions} séances effectuées</span>
-          </div>
-        </div>
-
-        {/* ← ديناميك: prochain cours */}
-        <div className="card">
-          <div className="card-header">
-            <span className="card-title">Prochain Cours</span>
-            <span className="card-action" onClick={() => setPanelOpen(true)} style={{ cursor: "pointer" }}>
-              Voir planning →
-            </span>
-          </div>
-
-          {derniereReservation ? (
-            <div className="next-class-box">
-              <span className="next-class-icon">🏋️</span>
-              <div style={{ flex: 1 }}>
-                <p className="next-class-name">{derniereReservation.cours?.nom}</p>
-                <p className="next-class-sub">
-                  {derniereReservation.cours?.horaire} · {derniereReservation.cours?.jours}
-                </p>
-              </div>
-              {/* زر annuler مباشرة من الداشبورد */}
-              <button
-                onClick={() => annuler(derniereReservation.id)}
-                style={{
-                  border: "1px solid #fca5a5",
-                  background: "transparent",
-                  color: "#b91c1c",
-                  borderRadius: 8,
-                  padding: "4px 12px",
-                  fontSize: 13,
-                  cursor: "pointer"
-                }}
-              >
-                Annuler
-              </button>
+      {/* Row 2 */}
+      <div className="adh-row2">
+        {/* Calendrier */}
+        <div className="adh-card">
+          <div className="adh-card-title">📅 Calendrier</div>
+          <div className="adh-cal-header">
+            <span className="adh-cal-month">{MONTHS[calMonth]} {calYear}</span>
+            <div className="adh-cal-nav">
+              <button onClick={() => { let m=calMonth-1,y=calYear; if(m<0){m=11;y--;} setCalMonth(m);setCalYear(y); }}>‹</button>
+              <button onClick={() => { let m=calMonth+1,y=calYear; if(m>11){m=0;y++;} setCalMonth(m);setCalYear(y); }}>›</button>
             </div>
-          ) : (
-            <div className="next-class-box">
-              <span className="next-class-icon">📭</span>
-              <div>
-                <p className="next-class-name">Aucune réservation</p>
-                <p className="next-class-sub">Réservez un cours maintenant</p>
+          </div>
+          <div className="adh-cal-grid">
+            {DAYS_SHORT.map(d => <div key={d} className="adh-cal-day-name">{d}</div>)}
+            {buildCalendar().map((c,i) => (
+              <div key={i} className={`adh-cal-day ${!c.current?"other":""} ${c.isToday?"today":""} ${c.hasEvent?"has-event":""}`}>
+                {c.day}
               </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:12}}>
+          {/* Abonnement */}
+          <div className="adh-card">
+            <div className="adh-card-title">🎫 Mon abonnement</div>
+            {aboActif ? (
+              <div className="adh-abo">
+                <div style={{display:"flex",alignItems:"center",gap:8}}>
+                  <span className="adh-abo-type">{aboActif.type}</span>
+                  <span className={`adh-badge ${aboActif.statut}`}>{aboActif.statut}</span>
+                </div>
+                <div className="adh-abo-detail">📆 {fmtDate(aboActif.date_debut)} → {fmtDate(aboActif.date_fin)}</div>
+                <div className="adh-abo-detail">💰 {aboActif.prix} MAD</div>
+                <div className="adh-progress-bar">
+                  <div className="adh-progress-fill" style={{width:`${Math.min(pct,100)}%`}}></div>
+                </div>
+                <div className="adh-progress-label">{pct}% écoulé</div>
+              </div>
+            ) : <p className="adh-empty">Aucun abonnement actif</p>}
+          </div>
+
+          {/* Profil rapide */}
+          <div className="adh-card">
+            <div className="adh-card-title">👤 Profil rapide</div>
+            <div className="adh-profile">
+              <div className="adh-profile-row"><span>⚖️ Poids</span><span>{user.poids ? `${user.poids} kg` : "—"}</span></div>
+              <div className="adh-profile-row"><span>📏 Taille</span><span>{user.taille ? `${user.taille} cm` : "—"}</span></div>
+              <div className="adh-profile-row"><span>📅 Inscription</span><span>{fmtDate(user.date_inscription)}</span></div>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
-      {/* ← قائمة reservations ديناميك */}
-      {reservations.length > 0 && (
-        <div className="card" style={{ marginTop: 24 }}>
-          <div className="card-header">
-            <span className="card-title">Mes réservations</span>
-            <span>{reservations.filter(r => r.statut === "confirmé").length} actives</span>
-          </div>
-          {reservations.map(r => (
-            <div key={r.id} style={{
-              display: "flex", alignItems: "center", gap: 12,
-              padding: "10px 0", borderBottom: "1px solid #f3f4f6"
-            }}>
-              <span style={{ fontSize: 20 }}>🏋️</span>
-              <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>{r.cours?.nom}</p>
-                <p style={{ margin: 0, fontSize: 12, color: "#6b7280" }}>
-                  {r.cours?.jours} · {r.cours?.horaire} · Coach {r.cours?.coach}
-                </p>
+      {/* Réservations */}
+      <div className="adh-card" style={{marginTop:12}}>
+        <div className="adh-card-title">✅ Mes réservations</div>
+        {reservations.length === 0
+          ? <p className="adh-empty">Aucune réservation</p>
+          : reservations.map(r => (
+            <div key={r.id} className="adh-reserv-item">
+              <div className={`adh-dot ${r.status}`}></div>
+              <div className="adh-reserv-info">
+                <div className="adh-reserv-name">Cours #{r.cours_id}</div>
+                <div className="adh-reserv-date">{fmtDate(r.date_reservation)}</div>
               </div>
-              <span style={{
-                padding: "3px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600,
-                background: r.statut === "confirmé" ? "#dcfce7" : "#fee2e2",
-                color: r.statut === "confirmé" ? "#15803d" : "#b91c1c"
-              }}>
-                {r.statut}
-              </span>
-              {r.statut === "confirmé" && (
-                <button onClick={() => annuler(r.id)} style={{
-                  border: "1px solid #fca5a5", background: "transparent",
-                  color: "#b91c1c", borderRadius: 8, padding: "4px 10px",
-                  fontSize: 12, cursor: "pointer"
-                }}>
-                  Annuler
-                </button>
-              )}
+              <span className={`adh-badge ${r.status}`}>{r.status}</span>
             </div>
           ))}
-        </div>
-      )}
-
-      <SidePanel open={panelOpen} onClose={() => setPanelOpen(false)} onReserved={handleReserved} />
+      </div>
     </div>
   );
 }
-
-export default Dashboard;

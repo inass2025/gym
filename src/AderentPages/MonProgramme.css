@@ -1,0 +1,179 @@
+/* ── Variables couleurs gym ── */
+:root {
+  --orange: #f4a7b9;
+  --dark: #0d0d0d;
+  --card: #1a1a1a;
+  --border: #2a2a2a;
+  --text: #ffffff;
+  --text-muted: #888888;
+}
+
+/* ── Page entière ── */
+.programme-page {
+  background: var(--dark);
+  min-height: 100vh;
+  padding: 32px;
+  color: var(--text);
+  font-family: sans-serif;
+}
+
+/* ── Header (bonjour + objectif) ── */
+.programme-header {
+  margin-bottom: 32px;
+}
+
+.programme-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.programme-header p {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin: 0;
+}
+
+.objectif-badge {
+  display: inline-block;
+  background: #1f1208;
+  color: var(--orange);
+  border: 1px solid #3a2010;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+/* ── Titre section ── */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: var(--orange);
+  border-radius: 2px;
+}
+
+/* ── Grille des programmes ── */
+.programmes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ── Carte programme ── */
+.programme-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+
+.programme-card:hover {
+  border-color: var(--orange);
+}
+
+/* ── En-tête carte ── */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.card-jour {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.card-titre {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 16px 0;
+}
+
+/* ── Exercices ── */
+.card-exercices {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.7;
+  background: #241420;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+/* ── Conseil orange ── */
+.card-conseil {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #100018;
+  border: 1px solid #100011;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #4d2d46;
+  margin-bottom: 12px;
+}
+
+/* ── Coach ── */
+.card-coach {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.coach-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+}
+
+/* ── Message vide ── */
+.empty-message {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+/* ── Chargement ── */
+.loading {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-muted);
+}
+
+/* ── Erreur ── */
+.erreur {
+  background: #5e194c;
+  border: 1px solid #290823;
+  color: #6e313f;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+}

@@ -13,7 +13,7 @@ function CoursList({ onReserved }) {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p style={{ padding: "1rem", color: "#888", fontSize: "13px" }}>Chargement...</p>;
+  if (loading) return <p style={{ padding: "1rem", color: "#888", fontSize: "13px" }}> Chargement...</p>;
 
   if (cours.length === 0) return <p style={{ padding: "1rem", color: "#888", fontSize: "13px" }}>Aucun cours disponible.</p>;
 

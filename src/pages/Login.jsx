@@ -11,6 +11,7 @@ export default function Login() {
   // login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [err, setError] = useState("");
 
   // register
   const [prenom, setPrenom] = useState("");
@@ -47,9 +48,14 @@ localStorage.setItem("role", res.data.role);
         navigate("/adherent");
       }
     })
-    .catch(() => {
-      alert("Email ou mot de passe incorrect");
-    });
+    .catch((err) => {
+  console.log("STATUS:", err.response?.status);
+  console.log("DATA:", err.response?.data);
+  console.log("ERRORS:", err.response?.data?.errors);
+
+  setError(err.response?.data?.message || "Erreur");
+  alert("Erreur lors de l'inscription");
+});
   };
 
   // ================= REGISTER =================
@@ -70,9 +76,14 @@ localStorage.setItem("role", res.data.role);
       alert("Compte créé !");
       setMode("login");
     })
-    .catch(() => {
-      alert("Erreur lors de l'inscription");
-    });
+   .catch((err) => {
+  console.log("STATUS:", err.response?.status);
+  console.log("DATA:", err.response?.data);
+  console.log("ERRORS:", err.response?.data?.errors);
+
+  setError(err.response?.data?.message || "Erreur");
+  alert("Erreur lors de l'inscription");
+});
   };
 
   return (

@@ -1,106 +1,135 @@
-import { useState ,  } from "react";
-import { useNavigate } from 'react-router-dom';
-import "./Layout.css";
-import Dashboard from "../AderentPages/dashboard";
-import AdherentPage from "../AderentPages/AdherentPage";
-import CoursList from "../AderentPages/CoursList";
-import MyReservations from "../AderentPages/MyReservations";
-import Abonnement from "../AderentPages/Abonnement";
+import { useState } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import AdherentSidebar from './AdherentSidebar';
+import CoursList from '../AderentPages/CoursList';
+import './Layout.css';
 
-
-const NAV_ITEMS = [
-  { key: "Dashboard", label: "Dashboard", icon: "⚡" },
-  { key: "profile",   label: "Profil",    icon: "◈" },
-  { key: "MyReservations",   label: "MyReservations",    icon: "~~" },
-  { key: "Abonnement",   label: "MyReservations",    icon: "$$" },
- 
-];
-
-const PAGES = {
-  profile:     <AdherentPage />,
-  Dashboard:     <Dashboard />,
-  MyReservations:     <MyReservations />,
-  Abonnement:     <Abonnement />,
- 
-
+const PAGE_TITLES = {
+  '/adherent': 'DASHBOARD',
+  '/adherent/coach': 'MON COACH',
+  '/adherent/MyReservations': 'MES RÉSERVATIONS',
+  '/adherent/Abonnement': 'ABONNEMENT',
 };
 
+function SidePanel({ open, onClose, onReserved }) {
+  return (
+    <>
+      {/* Overlay */}
+      <div
+        onClick={onClose}
+        style={{
+          display: open ? 'block' : 'none',
+          position: 'fixed', inset: 0,
+          background: 'rgba(0,0,0,0.3)',
+          zIndex: 998,
+        }}
+      />
+
+      {/* Panel */}
+      <div style={{
+        position: 'fixed', top: 0, right: 0,
+        width: 420, height: '100vh',
+        background: '#fff',
+        boxShadow: '-4px 0 24px rgba(0,0,0,0.12)',
+        zIndex: 999,
+        transform: open ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 0.3s ease',
+        display: 'flex', flexDirection: 'column',
+      }}>
+
+        {/* Header */}
+        <div style={{
+          padding: '24px 20px 16px',
+          borderBottom: '1px solid #f3f4f6',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+        }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700 }}>Cours disponibles</h2>
+            <p style={{ margin: '4px 0 0', fontSize: 13, color: '#6b7280' }}>
+              Sélectionnez un cours à réserver
+            </p>
+          </div>
+          <button onClick={onClose} style={{
+            border: 'none', background: 'none',
+            fontSize: 20, cursor: 'pointer', color: '#6b7280',
+          }}>✕</button>
+        </div>
+
+        {/* Body — CoursList + CoursCard */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
+          <CoursList onReserved={onReserved} />
+        </div>
+
+      </div>
+    </>
+  );
+}
+
 export default function LayoutAd() {
-  const [active, setActive] = useState("profile");
-   const navigate = useNavigate()
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const [panelOpen, setPanelOpen] = useState(false);
 
-  const handleLogout = () => {
-    
-    localStorage.removeItem("token")
+  const user   = JSON.parse(localStorage.getItem('user') || '{}');
+  const prenom = user.prenom || 'Adhérent';
 
-   
-    navigate("/login")
-  }
+  const today = new Date().toLocaleDateString('fr-FR', {
+    weekday: 'long', day: '2-digit',
+    month: 'long',   year: 'numeric',
+  });
+
+  const pageTitle = PAGE_TITLES[location.pathname] || 'DASHBOARD';
+
+  const handleReserved = () => {
+    setPanelOpen(false);
+  };
 
   return (
-    <div className="layout">
-      {/* ── decorative blobs ── */}
-      <div className="blob blob--purple" />
-      <div className="blob blob--gold" />
+    <div className="ad-layout">
 
-      {/* ══ NAVBAR ══ */}
-      <nav className="navbar">
-        <a className="navbar__logo" href="#">
-          <span className="navbar__logo-dot" />
-          GEM
-        </a>
+      <AdherentSidebar />
 
-        <ul className="navbar__links">
-          {NAV_ITEMS.map(({ key, label }) => (
-            <li key={key}>
-              <button
-                className={`navbar__link${active === key ? " navbar__link--active" : ""}`}
-                onClick={() => setActive(key)}
-              >
-                {label}
-              </button>
-            </li>
-          ))}
-        </ul>
+      <div className="ad-layout__right">
 
-        <button className="navbar__profile" onClick={() => setActive("profile")}>
-          <span className="navbar__avatar">SC</span>
-          <span className="navbar__profile-name">Sophie C.</span>
-        </button>
-      </nav>
-
-      {/* ══ BODY ══ */}
-      <div className="layout__body">
-
-        {/* ── SIDEBAR ── */}
-        <aside className="sidebar">
-          <div className="sidebar__section">
-            <p className="sidebar__label">Navigation</p>
-            {NAV_ITEMS.map(({ key, label, icon }) => (
-              <button
-                key={key}
-                className={`sidebar__link${active === key ? " sidebar__link--active" : ""}`}
-                onClick={() => setActive(key)}
-              >
-                <span className="sidebar__icon">{icon}</span>
-                {label}
-              </button>
-            ))}
+        <header className="ad-navbar">
+          <div className="ad-navbar__left">
+            <h1 className="ad-navbar__title">{pageTitle}</h1>
+            <p className="ad-navbar__date">
+              {today.charAt(0).toUpperCase() + today.slice(1)}&nbsp;—&nbsp;Bienvenue, {prenom} 👋
+            </p>
           </div>
 
-          <div className="sidebar__footer">
-            <button className="sidebar__link sidebar__link--danger" onClick={handleLogout}>
-              <span className="sidebar__icon">↩</span>
-              Déconnexion
+          <div className="ad-navbar__right">
+            <button
+              className="ad-navbar__notif"
+              onClick={() => navigate('/adherent/notifications')}
+              title="Notifications"
+            >
+              🔔
+              <span className="notif-badge">5</span>
+            </button>
+
+            <button
+              className="ad-navbar__reserve"
+              onClick={() => setPanelOpen(true)}
+            >
+              + Réserver un cours
             </button>
           </div>
-        </aside>
+        </header>
 
-        {/* ── MAIN ── */}
-        <main className="main" key={active}>
-          {PAGES[active]}
+        <main className="ad-main">
+          <Outlet />
         </main>
+
       </div>
+
+      <SidePanel
+        open={panelOpen}
+        onClose={() => setPanelOpen(false)}
+        onReserved={handleReserved}
+      />
+
     </div>
   );
 }

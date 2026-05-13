@@ -11,7 +11,11 @@ import LayoutAd from './AdherentComponents/layout';
 import Dashboard from './AderentPages/dashboard';
 import MyReservations from './AderentPages/MyReservations';
 import Abonnement from './AderentPages/Abonnement';
-
+import Chat from './AderentPages/message';
+import Performances from './AderentPages/Performances';
+import MesAbonnements from './AderentPages/MesAbonnements';
+import MonProgramme from './AderentPages/MonProgramme';
+import NotificationBell from './AderentPages/NotificationBell';
 // Coach imports
 import CoachLayout from './components/CoachComponents/CoachLayout';
 import CoachDashboard from './pages/CoachPages/CoachDashboard';
@@ -45,6 +49,12 @@ function App() {
           <Route path="coach" element={<AdherentPage />} />
           <Route path="MyReservations" element={<MyReservations />} />
           <Route path="Abonnement" element={<Abonnement />} />
+          <Route path="MesAbonnements" element={<MesAbonnements />} />
+          <Route path="MonProgramme" element={< MonProgramme />} />
+          <Route path="Notification" element={<NotificationBell />} />
+          
+<Route path="/adherent/performances" element={<Performances />} />
+          <Route path="chat" element={<Chat />} />
         </Route>
 
         {/* 🟢 Coach Layout */}
