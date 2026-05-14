@@ -64,8 +64,8 @@ export default function About() {
         <div className="about__title-row reveal" data-delay="2">
           <div className="about__accent-bar"></div>
           <h1 className="about__title">
-            Committed to Your<br />
-            Transformation<br />
+           Transform Your Fitness<br/>
+Journey With Usn<br />
             Journey
           </h1>
         </div>

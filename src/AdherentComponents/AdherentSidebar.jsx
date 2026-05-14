@@ -70,7 +70,7 @@ export default function AdherentSidebar() {
             <span className="ad-userplan">Adhérent Annuel</span>
           </div>
           <button className="ad-dots" onClick={handleLogout} title="Déconnexion">
-            ···
+             ↩ 
           </button>
         </div>
       </div>
