@@ -56,11 +56,7 @@ export default function AdherentSidebar() {
 
 🏋️‍♀️</span> Mon Programme
         </NavLink>
-          <NavLink to="/adherent/Notification" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">
-
-</span> Notification
-        </NavLink>
+          
         
        
       </nav>

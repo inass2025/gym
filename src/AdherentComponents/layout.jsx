@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import AdherentSidebar from './AdherentSidebar';
 import CoursList from '../AderentPages/CoursList';
+import NotificationBell from '../AderentPages/NotificationBell';
 import './Layout.css';
 
 const PAGE_TITLES = {
@@ -14,7 +15,6 @@ const PAGE_TITLES = {
 function SidePanel({ open, onClose, onReserved }) {
   return (
     <>
-      {/* Overlay */}
       <div
         onClick={onClose}
         style={{
@@ -25,7 +25,6 @@ function SidePanel({ open, onClose, onReserved }) {
         }}
       />
 
-      {/* Panel */}
       <div style={{
         position: 'fixed', top: 0, right: 0,
         width: 420, height: '100vh',
@@ -37,7 +36,6 @@ function SidePanel({ open, onClose, onReserved }) {
         display: 'flex', flexDirection: 'column',
       }}>
 
-        {/* Header */}
         <div style={{
           padding: '24px 20px 16px',
           borderBottom: '1px solid #f3f4f6',
@@ -55,7 +53,6 @@ function SidePanel({ open, onClose, onReserved }) {
           }}>✕</button>
         </div>
 
-        {/* Body — CoursList + CoursCard */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
           <CoursList onReserved={onReserved} />
         </div>
@@ -80,10 +77,6 @@ export default function LayoutAd() {
 
   const pageTitle = PAGE_TITLES[location.pathname] || 'DASHBOARD';
 
-  const handleReserved = () => {
-    setPanelOpen(false);
-  };
-
   return (
     <div className="ad-layout">
 
@@ -100,14 +93,7 @@ export default function LayoutAd() {
           </div>
 
           <div className="ad-navbar__right">
-            <button
-              className="ad-navbar__notif"
-              onClick={() => navigate('/adherent/notifications')}
-              title="Notifications"
-            >
-              🔔
-              <span className="notif-badge">5</span>
-            </button>
+            <NotificationBell />
 
             <button
               className="ad-navbar__reserve"
@@ -127,7 +113,7 @@ export default function LayoutAd() {
       <SidePanel
         open={panelOpen}
         onClose={() => setPanelOpen(false)}
-        onReserved={handleReserved}
+        onReserved={() => setPanelOpen(false)}
       />
 
     </div>

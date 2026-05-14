@@ -65,7 +65,7 @@ export default function AdherentDashboard() {
             <p className="adh-date">{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</p>
           </div>
         </div>
-        <button className="adh-notif-btn" aria-label="Notifications">🔔</button>
+        
       </div>
 
       {/* Stats */}
