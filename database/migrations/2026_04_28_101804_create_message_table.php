@@ -11,14 +11,15 @@ return new class extends Migration
      */
   public function up(): void
 {
-    Schema::create('message', function (Blueprint $table) {
-        $table->id();
-        $table->text('content');
-        $table->timestamp('date_envoie')->useCurrent();
-        $table->unsignedBigInteger('adherent_id');
-        $table->unsignedBigInteger('coach_id');
-        $table->timestamps();
-    });
+    // database/migrations/xxxx_create_messages_table.php
+Schema::create('message', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('adherent_id')->constrained('adherents')->onDelete('cascade');
+    $table->foreignId('receiver_id')->constrained('adherents')->onDelete('cascade'); // ← بدل coach_id
+    $table->text('content');
+    $table->datetime('date_envoie');
+    $table->timestamps();
+});
 }
 
     /**
