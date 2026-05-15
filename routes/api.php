@@ -18,6 +18,7 @@ use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProgrammeController;
 
 
+
 Route::middleware('auth:sanctum')->get('/mon-programme', [ProgrammeController::class, 'monProgramme']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -77,9 +78,14 @@ Route::middleware('auth:sanctum')->get('/abonnements', [AbonnementController::cl
     // reserve cours
     Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my-reservations',        [ReservationController::class, 'myReservations']); // ← جديد
+    Route::get('/reservation', [ReservationController::class, 'index']);
     Route::get('/reservations/{id}',      [ReservationController::class, 'show']);
     Route::delete('/reservations/{id}',   [ReservationController::class, 'destroy']);
     Route::post('/reserve',               [ReservationController::class, 'store']);
+    
+    Route::get('/programmes', [ProgrammeController::class, 'index']);
+    Route::post('/programmes', [ProgrammeController::class, 'store']);
+    Route::delete('/programmes/{id}', [ProgrammeController::class, 'destroy']);
 });
 
     /*

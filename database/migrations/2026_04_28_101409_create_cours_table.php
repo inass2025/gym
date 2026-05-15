@@ -12,15 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cours', function (Blueprint $table) {
-            $table->id();
-            $table->string('nom');
-            $table->string('description');
-            $table->time('heur')->nullable();
-            $table->date('date');
-            $table->string('capacite');
-            $table->string('salle');
-            $table->timestamps();
-        });
+    $table->id();
+    $table->string('nom');
+    $table->text('description')->nullable();  // ← bdlha
+    $table->time('heur')->nullable();
+    $table->date('date');
+    $table->string('capacite');
+    $table->string('salle');
+    $table->string('niveau')->default('Débutant');  // ← zidha
+    $table->string('horaire')->nullable();           // ← zidha
+    $table->foreignId('coach_id')->constrained('adherents'); // ← zidha
+    $table->timestamps();
+});
     }
 
     /**

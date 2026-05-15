@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Adherent;
 use App\Models\Coach;
 use Illuminate\Http\Request;
 
@@ -50,17 +50,20 @@ class CoachController extends Controller
     }
 
     // PUT /api/coach/{id}
-    public function update(Request $request, $id)
-    {
-        $coach = Coach::find($id);
-
-        if (!$coach) {
-            return response()->json(['message' => 'Coach introuvable'], 404);
-        }
-
-        $coach->update($request->all());
-        return response()->json($coach, 200);
+public function update(Request $request, $id)
+{
+    $coach = Adherent::findOrFail($id);
+    
+    $data = $request->only(['nom', 'prenom', 'email', 'telephone', 'specialite']);
+    
+    if ($request->hasFile('photo')) {
+        $path = $request->file('photo')->store('photos', 'public');
+        $data['photo'] = $path;
     }
+    
+    $coach->update($data);
+    return response()->json($coach->fresh()); // ← bdl $coach b $coach->fresh()
+}
 
     // DELETE /api/coach/{id}
     public function destroy($id)
