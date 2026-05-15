@@ -7,8 +7,12 @@ export default function CoachProgrammes() {
   const [cours, setCours] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
-    nom: '', description: '', duree: '', niveau: 'Débutant', horaire: ''
-  });
+  nom: '', description: '', duree: '', niveau: 'Débutant',
+  horaire: '', capacite: '', salle: '', date: ''
+});
+
+const [editingCours, setEditingCours] = useState(null);
+const [editForm, setEditForm] = useState({});
 
   useEffect(() => {
     api.get('/api/cours').then(res => {
@@ -27,8 +31,13 @@ export default function CoachProgrammes() {
       setCours([...cours, res.data]);
       setForm({ nom: '', description: '', duree: '', niveau: 'Débutant', horaire: '' });
       setShowForm(false);
+      setForm({ 
+        nom: '', description: '', duree: '', niveau: 'Débutant', 
+        horaire: '', capacite: '', salle: '', date: '' 
+      });
     } catch (err) {
-      alert('Erreur lors de l\'ajout');
+        console.log('Erreur détails:', err.response?.data);
+      alert(JSON.stringify(err.response?.data));
     }
   };
 
@@ -40,6 +49,33 @@ export default function CoachProgrammes() {
       alert('Erreur lors de la suppression');
     }
   };
+
+
+  
+//CHNO ZADT TANI
+
+  const handleEditClick = (c) => {
+  setEditingCours(c.id);
+  setEditForm({
+    nom: c.nom, description: c.description, duree: c.duree,
+    niveau: c.niveau, horaire: c.horaire, capacite: c.capacite,
+    salle: c.salle, date: c.date
+  });
+};
+
+const handleEditSave = async (id) => {
+  try {
+    const res = await api.put(`/api/cours/${id}`, editForm);
+    setCours(cours.map(c => c.id === id ? res.data : c));
+    setEditingCours(null);
+  } catch (err) {
+    console.log(err.response?.data);
+    alert(JSON.stringify(err.response?.data));
+  }
+};
+
+//7AD HNA
+
 
   return (
     <div className="coach-programmes">
@@ -78,7 +114,25 @@ export default function CoachProgrammes() {
                 <option>Avancé</option>
               </select>
             </div>
+
+
+
+            {/* dk chi li zdt */}
+            <label>SALLE</label>
+  <input name="salle" placeholder="Ex: Salle A" value={form.salle} onChange={handleChange} />
+</div>
+<div className="form-field">
+  <label>CAPACITÉ (personnes)</label>
+  <input name="capacite" type="number" placeholder="20" value={form.capacite} onChange={handleChange} />
+</div>
+<div className="form-field">
+  <label>DATE</label>
+  <input name="date" type="date" value={form.date} onChange={handleChange} />
             <div className="form-field" style={{gridColumn: '1 / -1'}}>
+
+{/* had hna */}
+
+
               <label>DESCRIPTION</label>
               <textarea name="description" placeholder="Description du cours..." value={form.description} onChange={handleChange} />
             </div>

@@ -12,21 +12,48 @@ export default function CoachProfil() {
     telephone: user.telephone || '',
     specialite: user.specialite || '',
   });
+const [photo, setPhoto] = useState(user.photo || null);
+const [photoFile, setPhotoFile] = useState(null);
+
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSave = async () => {
-    try {
-      const res = await api.put(`/api/coach/${user.id}`, form);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      setUser(res.data);
-      setEditing(false);
-    } catch (err) {
-      alert('Erreur lors de la mise à jour');
-    }
-  };
+const handleSave = async () => {
+  try {
+    const formData = new FormData();
+    Object.keys(form).forEach(key => formData.append(key, form[key]));
+    if (photoFile) formData.append('photo', photoFile);
+    formData.append('_method', 'PUT'); // ← zid had chi
+
+    const res = await api.post(`/api/coach/${user.id}`, formData, { // ← bdl put b post
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    
+    localStorage.setItem('user', JSON.stringify(res.data));
+    setUser(res.data);
+    setForm({
+      nom: res.data.nom || '',
+      prenom: res.data.prenom || '',
+      email: res.data.email || '',
+      telephone: res.data.telephone || '',
+      specialite: res.data.specialite || '',
+    });
+    setPhoto(res.data.photo ? `http://localhost:8000/storage/${res.data.photo}` : null);
+    setEditing(false);
+  } catch (err) {
+    console.log('STATUS:', err.response?.status);
+    console.log('DATA:', err.response?.data);
+    alert(JSON.stringify(err.response?.data));
+  }
+};
+  const handlePhotoChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  setPhotoFile(file);
+  setPhoto(URL.createObjectURL(file));
+};
 
   return (
     <div className="coach-profil">
@@ -38,9 +65,18 @@ export default function CoachProfil() {
       <div className="coach-profil__content">
         {/* Carte gauche */}
         <div className="coach-profil__left">
-          <div className="coach-profil__avatar">
-            {user.prenom ? user.prenom[0].toUpperCase() : 'C'}
-          </div>
+
+
+        <div className="coach-profil__avatar" onClick={() => editing && document.getElementById('photo-input').click()}
+  style={{cursor: editing ? 'pointer' : 'default'}}>
+  {photo ? (
+    <img src={photo} alt="profil" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
+  ) : (
+    user.prenom ? user.prenom[0].toUpperCase() : 'C'
+  )}
+  {editing && <div style={{position:'absolute', bottom:0, right:0, background:'#f97316', borderRadius:'50%', padding:'4px', fontSize:'12px'}}>📷</div>}
+</div>
+<input id="photo-input" type="file" accept="image/*" style={{display:'none'}} onChange={handlePhotoChange} />
           <h3>{user.prenom} {user.nom}</h3>
           <span className="coach-profil__badge">COACH</span>
           <p className="coach-profil__specialite">🏋️ {user.specialite || 'Spécialité non définie'}</p>

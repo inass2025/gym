@@ -13,11 +13,23 @@ export default function CoachDashboard() {
   useEffect(() => {
     api.get('/api/cours').then(res => {
       const mesCours = res.data.filter(c => c.coach_id === user.id);
+      const mesCoursIds = mesCours.map(c => c.id);
       setStats(s => ({ ...s, cours: mesCours.length }));
-    }).catch(() => {});
 
-    api.get('/api/reservation').then(res => {
-      setStats(s => ({ ...s, reservations: res.data.length }));
+      // Fetch reservations o filter seulement ceux dyal mes cours
+      api.get('/api/reservation').then(res2 => {
+        const mesReservations = res2.data.filter(r => mesCoursIds.includes(r.cours_id));
+        
+        // Participants uniques (par adherent_id)
+        const participantsUniques = new Set(mesReservations.map(r => r.adherent_id)).size;
+
+        setStats(s => ({
+          ...s,
+          reservations: mesReservations.length,
+          participants: participantsUniques,
+        }));
+      }).catch(() => {});
+
     }).catch(() => {});
   }, []);
 

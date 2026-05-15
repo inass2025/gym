@@ -4,6 +4,7 @@ import './CoachSidebar.css';
 export default function CoachSidebar() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+const photo = user.photo ? `http://localhost:8000/storage/${user.photo}` : null;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -20,8 +21,12 @@ export default function CoachSidebar() {
 
       <div className="coach-sidebar__profile">
         <div className="coach-sidebar__avatar">
-          {user.prenom ? user.prenom[0].toUpperCase() : 'C'}
-        </div>
+  {photo ? (
+    <img src={photo} alt="profil" style={{width:'100%', height:'100%', borderRadius:'50%', objectFit:'cover'}} />
+  ) : (
+    user.prenom ? user.prenom[0].toUpperCase() : 'C'
+  )}
+</div>
         <p className="coach-sidebar__name">{user.prenom} {user.nom}</p>
         <span className="coach-sidebar__badge">Coach</span>
       </div>
