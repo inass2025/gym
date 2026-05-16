@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Adherent;
 use App\Models\Coach;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 class CoachController extends Controller
 {
     // GET /api/coach
@@ -53,16 +53,56 @@ class CoachController extends Controller
 public function update(Request $request, $id)
 {
     $coach = Adherent::findOrFail($id);
-    
-    $data = $request->only(['nom', 'prenom', 'email', 'telephone', 'specialite']);
-    
+
+    $data = $request->only([
+        'nom', 'prenom', 'email', 
+        'telephone', 'specialite', 'bio'
+    ]);
+
     if ($request->hasFile('photo')) {
+        if ($coach->photo) {
+            \Storage::disk('public')->delete($coach->photo);
+        }
         $path = $request->file('photo')->store('photos', 'public');
         $data['photo'] = $path;
     }
-    
-    $coach->update($data);
-    return response()->json($coach->fresh()); // ← bdl $coach b $coach->fresh()
+
+    // ← zid hado hnaya
+    if ($request->has('certifs')) {
+        $data['certifs'] = $request->certifs;
+    }
+    if ($request->has('experiences')) {
+        $data['experiences'] = $request->experiences;
+    }
+
+    $coach->update($data); // ← w hna sala
+    return response()->json($coach->fresh(), 200);
+}
+
+
+public function changePassword(Request $request, $id)
+{
+    $request->validate([
+        'current_password'      => 'required',
+        'new_password'          => 'required|min:6',
+        'new_password_confirmation' => 'required|same:new_password',
+    ]);
+
+    $coach = Adherent::where('role', 'coach')->findOrFail($id);
+
+    if (!Hash::check($request->current_password, $coach->password)) {
+        return response()->json([
+            'message' => 'Mot de passe actuel incorrect'
+        ], 400);
+    }
+// changer password
+    $coach->update([
+        'password' => Hash::make($request->new_password)
+    ]);
+
+    return response()->json([
+        'message' => 'Mot de passe modifié avec succès'
+    ], 200);
 }
 
     // DELETE /api/coach/{id}

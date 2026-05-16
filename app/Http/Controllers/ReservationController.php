@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    public function index()
-    {
-        $reservations = Reservation::all();
-        return response()->json($reservations, 200);
-    }
+   public function index()
+{
+    $reservations = Reservation::with('adherent', 'cours')->get();
+    return response()->json($reservations, 200);
+}
 
    public function store(Request $request)
 {
@@ -60,7 +60,22 @@ public function myReservations(Request $request)
         return response()->json($reservation, 200);
     }
 
-   public function destroy( Request $request ,$id)
+
+public function accepter($id)
+{
+    $reservation = Reservation::findOrFail($id);
+    $reservation->update(['status' => 'accepté']);
+    return response()->json($reservation, 200);
+}
+
+public function refuser($id)
+{
+    $reservation = Reservation::findOrFail($id);
+    $reservation->update(['status' => 'refusé']);
+    return response()->json($reservation, 200);
+}
+
+public function destroy( Request $request ,$id)
 {
     $reservation = Reservation::where('id', $id)
         ->where('adherent_id', $request->user()->id) 

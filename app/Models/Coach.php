@@ -17,6 +17,8 @@ protected $fillable = [
     'password',
     'specialite',
     'telephone',
+    'photo', 
+    'bio',
 ];
 
 public function cours(){
