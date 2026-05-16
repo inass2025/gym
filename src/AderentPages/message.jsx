@@ -81,6 +81,7 @@ export default function Chat() {
         content,
         adherent_id: adherentId,
         coach_id:    activeCoach.id,
+        sender: 'adherent'
       });
       setContent("");
       fetchMessages();

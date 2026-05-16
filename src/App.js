@@ -1,4 +1,5 @@
 import './App.css';
+import './context/theme.css';
 import Layout from './components/layout';
 import Home from './components/interface';
 import Login from './pages/Login';
@@ -21,11 +22,11 @@ import CoachLayout from './components/CoachComponents/CoachLayout';
 import CoachDashboard from './pages/CoachPages/CoachDashboard';
 import CoachProfil from './pages/CoachPages/CoachProfil';
 import CoachProgrammes from './pages/CoachPages/CoachProgrammes';
-import CoachParticipants from './pages/CoachPages/CoachParticipants';
-
-
-
-
+// import CoachParticipants from './pages/CoachPages/CoachParticipants';
+import CoachClients from './pages/CoachPages/CoachClients';
+import CoachPlanning from './pages/CoachPages/CoachPlanning';
+import CoachChat from './pages/CoachPages/CoachChat';
+import PrivateRoute from './components/PrivateRoute';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -58,11 +59,18 @@ function App() {
         </Route>
 
         {/* 🟢 Coach Layout */}
-        <Route path="/coach" element={<CoachLayout />}>
+        <Route path="/coach" element={
+  <PrivateRoute allowedRoles={['coach', 'admin']}>
+    <CoachLayout />
+  </PrivateRoute>
+}>
           <Route index element={<CoachDashboard />} />
           <Route path="profil" element={<CoachProfil />} />
           <Route path="programmes" element={<CoachProgrammes />} />
-          <Route path="participants" element={<CoachParticipants />} />
+          {/* <Route path="participants" element={<CoachParticipants />} /> */}
+          <Route path="clients" element={<CoachClients />} />
+          <Route path="planning" element={<CoachPlanning />} />
+          <Route path="chat" element={<CoachChat />} />
         </Route>
 
       </Routes>
