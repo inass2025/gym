@@ -17,8 +17,22 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ProgrammeController;
 
+// ─── dakhel Route::middleware('auth:sanctum')->group(function () { ───
 
-
+// 🔹 Gestion Adhérents CRUD
+Route::get('/adherent',          [AdherentController::class, 'index']);
+Route::post('/adherent',         [AdherentController::class, 'store']);
+Route::get('/adherent/{adherent}',    [AdherentController::class, 'show']);
+Route::put('/adherent/{adherent}',    [AdherentController::class, 'update']);
+Route::delete('/adherent/{adherent}', [AdherentController::class, 'destroy']);
+// gestion adherent crud 
+Route::get('/adherents',                [AdherentController::class, 'index']);
+Route::post('/adherents',               [AdherentController::class, 'store']);
+Route::get('/adherents/{adherent}',     [AdherentController::class, 'show']);
+Route::put('/adherents/{adherent}',     [AdherentController::class, 'update']);
+Route::delete('/adherents/{adherent}',  [AdherentController::class, 'destroy']);
+Route::patch('/adherents/{adherent}/bloquer', [AdherentController::class, 'bloquer']);
+//
 Route::middleware('auth:sanctum')->get('/mon-programme', [ProgrammeController::class, 'monProgramme']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -117,3 +131,23 @@ Route::get('/coaches', function () {
 Route::get('notifications/{adherentId}', [NotificationController::class, 'index']);
 Route::patch('notifications/{id}/lu', [NotificationController::class, 'markAsRead']);
 Route::patch('notifications/adherent/{adherentId}/lu-tout', [NotificationController::class, 'markAllAsRead']);
+
+
+/*
+|--------------------------------------------------------------------------
+| Routes API — Gestion des Coachs
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('coachs')->group(function () {
+
+    Route::get('/',                    [CoachController::class, 'index']);        // Liste coachs
+    Route::post('/',                   [CoachController::class, 'store']);        // Ajouter
+    Route::get('/{id}',                [CoachController::class, 'show']);         // Profil
+    Route::put('/{id}',                [CoachController::class, 'update']);       // Modifier
+    Route::delete('/{id}',             [CoachController::class, 'destroy']);      // Supprimer
+    Route::patch('/{id}/bloquer',      [CoachController::class, 'toggleBloque']); // Bloquer/Débloquer
+    Route::get('/{id}/clients',        [CoachController::class, 'clients']);      // Voir clients
+    Route::get('/{id}/planning',       [CoachController::class, 'planning']);     // Voir planning
+
+});

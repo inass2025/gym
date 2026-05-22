@@ -26,7 +26,8 @@ class Adherent extends Authenticatable
         'objectif',
         'niveau',
         'role',
-        'photo'
+        'photo',
+        'bloque'
     ];
 
     protected $hidden = [
