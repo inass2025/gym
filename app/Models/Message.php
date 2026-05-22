@@ -9,10 +9,11 @@ class Message extends Model
     protected $table = 'message';
 
      protected $fillable = [
-        'content',      // ← sah (machi contenu)
-        'date_envoie',  // ← sah (machi date_envoi)
+        'content',      
+        'date_envoie',  
         'adherent_id',
         'coach_id',
+        'sender', 
     ];
 
 

@@ -44,7 +44,15 @@ Route::middleware('auth:sanctum')->group(function () {
 | 🔓 PUBLIC ROUTES (بدون auth)
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\RegimeController;
 
+
+
+Route::put('/coach/{id}/password', [CoachController::class, 'changePassword']);
+Route::post('/coach/{id}', [CoachController::class, 'update']);
+Route::get('/regimes', [RegimeController::class, 'index']);
+Route::post('/regimes', [RegimeController::class, 'store']);
+Route::delete('/regimes/{id}', [RegimeController::class, 'destroy']);
 Route::post('/register', [AuthController::class, 'registerAdherent']);
 Route::post('/register-coach', [AuthController::class, 'registerCoach']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -55,17 +63,27 @@ Route::post('/login', [AuthController::class, 'login']);
 |--------------------------------------------------------------------------
 */
 
+
+Route::patch('/reservations/{id}/accepter', [ReservationController::class, 'accepter']);
+Route::patch('/reservations/{id}/refuser', [ReservationController::class, 'refuser']);
+Route::put('/programmes/{id}', [ProgrammeController::class, 'update']);
+Route::put('/programmes/{id}', [ProgrammeController::class, 'update']);
+
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // 🔹 Auth
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // 🔹 ChangePassword
+    Route::put('/coach/{id}/password', [CoachController::class, 'changePassword']);
 
     // 🔹 Profile
     Route::get('/profile', [AdherentController::class, 'profile']);
     Route::put('/profile', [AdherentController::class, 'update']);
 
     // 🔹 Dashboard
- Route::get('/dashboard', function (Request $request) {
+    Route::get('/dashboard', function (Request $request) {
 
     $user = $request->user();
 
@@ -122,7 +140,7 @@ Route::middleware('auth:sanctum')->get('/abonnements', [AbonnementController::cl
     Route::apiResource('message', MessageController::class);
 });
 
-// routes/api.php
+// Messages
 Route::get('/messages/{adherent_id}/{coach_id}', [MessageController::class, 'index']);
 Route::post('/messages', [MessageController::class, 'store']);
 Route::get('/coaches', function () {

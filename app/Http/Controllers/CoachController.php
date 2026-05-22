@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Adherent;
 use Illuminate\Http\Request;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Schema;
 
+=======
+use Illuminate\Support\Facades\Hash;
+>>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
 class CoachController extends Controller
 {
     // ✅ 1. LISTE tous les coachs
@@ -54,6 +58,7 @@ class CoachController extends Controller
         }
     }
 
+<<<<<<< HEAD
     // ✅ 3. CRÉER un coach
     public function store(Request $request)
     {
@@ -67,6 +72,63 @@ class CoachController extends Controller
                 'date_inscription' => 'nullable|date',
                 'objectif'         => 'nullable|string|max:255',
             ]);
+=======
+    // PUT /api/coach/{id}
+public function update(Request $request, $id)
+{
+    $coach = Adherent::findOrFail($id);
+
+    $data = $request->only([
+        'nom', 'prenom', 'email', 
+        'telephone', 'specialite', 'bio'
+    ]);
+
+    if ($request->hasFile('photo')) {
+        if ($coach->photo) {
+            \Storage::disk('public')->delete($coach->photo);
+        }
+        $path = $request->file('photo')->store('photos', 'public');
+        $data['photo'] = $path;
+    }
+
+    // ← zid hado hnaya
+    if ($request->has('certifs')) {
+        $data['certifs'] = $request->certifs;
+    }
+    if ($request->has('experiences')) {
+        $data['experiences'] = $request->experiences;
+    }
+
+    $coach->update($data); // ← w hna sala
+    return response()->json($coach->fresh(), 200);
+}
+
+
+public function changePassword(Request $request, $id)
+{
+    $request->validate([
+        'current_password'      => 'required',
+        'new_password'          => 'required|min:6',
+        'new_password_confirmation' => 'required|same:new_password',
+    ]);
+
+    $coach = Adherent::where('role', 'coach')->findOrFail($id);
+
+    if (!Hash::check($request->current_password, $coach->password)) {
+        return response()->json([
+            'message' => 'Mot de passe actuel incorrect'
+        ], 400);
+    }
+// changer password
+    $coach->update([
+        'password' => Hash::make($request->new_password)
+    ]);
+
+    return response()->json([
+        'message' => 'Mot de passe modifié avec succès'
+    ], 200);
+}
+>>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
 
             $coach = Adherent::create([
                 'nom'              => $request->nom,

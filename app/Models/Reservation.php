@@ -17,16 +17,15 @@ class Reservation extends Model
     ];
 
 
-    public function adherent()
-    {
-        return $this->belongsTo(Adherent::class);
-    }
+public function adherent()
+{
+    return $this->belongsTo(Adherent::class);
+}
 
-
-    public function cours()
-    {
-        return $this->belongsTo(Cours::class);
-    }
+public function cours()
+{
+    return $this->belongsTo(Cours::class);
+}
 }
 
 

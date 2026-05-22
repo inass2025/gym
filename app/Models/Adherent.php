@@ -10,8 +10,12 @@ class Adherent extends Authenticatable
     use HasApiTokens;
 
     protected $table = 'adherents';
-
+protected $casts = [
+    'certifs'     => 'array',
+    'experiences' => 'array',
+];
     protected $fillable = [
+<<<<<<< HEAD
         'nom',
         'prenom',
         'email',
@@ -29,6 +33,28 @@ class Adherent extends Authenticatable
         'photo',
         'bloque'
     ];
+=======
+    'nom',
+    'prenom',
+    'email',
+    'password',
+    'telephone',
+    'adresse',
+    'date_naissance',
+    'sexe',
+    'poids',
+    'taille',
+    'date_inscription',
+    'objectif',
+    'niveau',
+    'role',
+    'photo',
+    'specialite',   // ← zdt
+    'bio',          // ← zdt
+    'certifs',      // ← zdt
+    'experiences',  // ← zdt
+];
+>>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
 
     protected $hidden = [
         'password',
