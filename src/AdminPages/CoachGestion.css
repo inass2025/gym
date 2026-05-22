@@ -13,7 +13,7 @@
 /* ── Variables ── */
 :root {
   --bg:           #272624;
-  --bg-card:      #35332C;
+  --bg-card:      #272624;
   --bg-input:     #2A2822;
   --bg-hover:     #3B3930;
   --sage:         #73795D;
@@ -156,7 +156,7 @@
 ══════════════════ */
 
 .cg-carte {
-  background: var(--bg-card);
+  background: #272624;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 32px;
@@ -202,7 +202,7 @@
 }
 
 .cg-input {
-  background: var(--bg-input);
+  background: #272624;
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 11px 15px;
@@ -309,7 +309,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 ══════════════════ */
 
 .cg-table-wrapper {
-  background: var(--bg-card);
+  background: #272624;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -470,7 +470,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 }
 
 .cg-modal-boite {
-  background: var(--bg-card);
+  background: #272624;
   border: 1px solid var(--border-hov);
   border-radius: var(--radius-xl);
   padding: 36px;
