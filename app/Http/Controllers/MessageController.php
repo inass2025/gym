@@ -22,7 +22,7 @@ public function index($adherent_id, $coach_id) {
     'date_envoie' => now(),
     'adherent_id' => $request->input('adherent_id'),
     'coach_id'    => $request->input('coach_id'),
-    'sender'      => $request->input('sender', 'adherent'),
+    //'sender'      => $request->input('sender', 'adherent'),
 ]);
     return response()->json($message, 201);
 }

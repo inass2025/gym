@@ -100,40 +100,14 @@ class ReservationController extends Controller
         return response()->json($reservation, 200);
     }
 
-<<<<<<< HEAD
+
     public function destroy(Request $request, $id)
     {
         $reservation = Reservation::where('id', $id)
             ->where('adherent_id', $request->user()->id)
             ->first();
-=======
 
-public function accepter($id)
-{
-    $reservation = Reservation::findOrFail($id);
-    $reservation->update(['status' => 'accepté']);
-    return response()->json($reservation, 200);
-}
 
-public function refuser($id)
-{
-    $reservation = Reservation::findOrFail($id);
-    $reservation->update(['status' => 'refusé']);
-    return response()->json($reservation, 200);
-}
-
-public function destroy( Request $request ,$id)
-{
-    $reservation = Reservation::where('id', $id)
-        ->where('adherent_id', $request->user()->id) 
-        ->first();
->>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
-
-        if (!$reservation) {
-            return response()->json(['message' => 'Réservation introuvable'], 404);
-        }
-
-        $reservation->delete();
-        return response()->json(['message' => 'Réservation supprimée'], 200);
     }
+    
 }

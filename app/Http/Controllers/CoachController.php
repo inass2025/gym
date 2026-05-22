@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Adherent;
 use Illuminate\Http\Request;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Schema;
-
-=======
 use Illuminate\Support\Facades\Hash;
->>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
+
 class CoachController extends Controller
 {
     // ✅ 1. LISTE tous les coachs
@@ -18,7 +15,6 @@ class CoachController extends Controller
         try {
             $coachs = Adherent::where('role', 'coach')->get();
 
-            // Ajouter nombre_clients seulement si la colonne coach_id existe
             $coachs = $coachs->map(function ($coach) {
                 if (Schema::hasColumn('adherents', 'coach_id')) {
                     $coach->nombre_clients = Adherent::where('coach_id', $coach->id)
@@ -58,7 +54,6 @@ class CoachController extends Controller
         }
     }
 
-<<<<<<< HEAD
     // ✅ 3. CRÉER un coach
     public function store(Request $request)
     {
@@ -72,63 +67,6 @@ class CoachController extends Controller
                 'date_inscription' => 'nullable|date',
                 'objectif'         => 'nullable|string|max:255',
             ]);
-=======
-    // PUT /api/coach/{id}
-public function update(Request $request, $id)
-{
-    $coach = Adherent::findOrFail($id);
-
-    $data = $request->only([
-        'nom', 'prenom', 'email', 
-        'telephone', 'specialite', 'bio'
-    ]);
-
-    if ($request->hasFile('photo')) {
-        if ($coach->photo) {
-            \Storage::disk('public')->delete($coach->photo);
-        }
-        $path = $request->file('photo')->store('photos', 'public');
-        $data['photo'] = $path;
-    }
-
-    // ← zid hado hnaya
-    if ($request->has('certifs')) {
-        $data['certifs'] = $request->certifs;
-    }
-    if ($request->has('experiences')) {
-        $data['experiences'] = $request->experiences;
-    }
-
-    $coach->update($data); // ← w hna sala
-    return response()->json($coach->fresh(), 200);
-}
-
-
-public function changePassword(Request $request, $id)
-{
-    $request->validate([
-        'current_password'      => 'required',
-        'new_password'          => 'required|min:6',
-        'new_password_confirmation' => 'required|same:new_password',
-    ]);
-
-    $coach = Adherent::where('role', 'coach')->findOrFail($id);
-
-    if (!Hash::check($request->current_password, $coach->password)) {
-        return response()->json([
-            'message' => 'Mot de passe actuel incorrect'
-        ], 400);
-    }
-// changer password
-    $coach->update([
-        'password' => Hash::make($request->new_password)
-    ]);
-
-    return response()->json([
-        'message' => 'Mot de passe modifié avec succès'
-    ], 200);
-}
->>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
 
             $coach = Adherent::create([
                 'nom'              => $request->nom,
@@ -150,7 +88,7 @@ public function changePassword(Request $request, $id)
         }
     }
 
-    // ✅ 4. MODIFIER un coach
+    // ✅ 4. MODIFIER un coach (avec photo, certifs, experiences)
     public function update(Request $request, $id)
     {
         try {
@@ -160,18 +98,38 @@ public function changePassword(Request $request, $id)
                 'nom'              => 'sometimes|string|max:100',
                 'prenom'           => 'sometimes|string|max:100',
                 'email'            => 'sometimes|email|unique:adherents,email,' . $id,
-                'password'         => 'sometimes|string|min:6',
                 'telephone'        => 'nullable|string|max:20',
+                'specialite'       => 'nullable|string|max:255',
+                'bio'              => 'nullable|string',
                 'date_inscription' => 'nullable|date',
                 'objectif'         => 'nullable|string|max:255',
             ]);
 
-            $coach->update($request->only([
-                'nom', 'prenom', 'email', 'password',
-                'telephone', 'date_inscription', 'objectif',
-            ]));
+            $data = $request->only([
+                'nom', 'prenom', 'email',
+                'telephone', 'specialite', 'bio',
+                'date_inscription', 'objectif',
+            ]);
 
-            return response()->json(['message' => 'Coach modifié', 'coach' => $coach]);
+            if ($request->hasFile('photo')) {
+                if ($coach->photo) {
+                    \Storage::disk('public')->delete($coach->photo);
+                }
+                $path = $request->file('photo')->store('photos', 'public');
+                $data['photo'] = $path;
+            }
+
+            if ($request->has('certifs')) {
+                $data['certifs'] = $request->certifs;
+            }
+
+            if ($request->has('experiences')) {
+                $data['experiences'] = $request->experiences;
+            }
+
+            $coach->update($data);
+
+            return response()->json(['message' => 'Coach modifié', 'coach' => $coach->fresh()]);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
@@ -180,7 +138,33 @@ public function changePassword(Request $request, $id)
         }
     }
 
-    // ✅ 5. SUPPRIMER un coach
+    // ✅ 5. CHANGER MOT DE PASSE
+    public function changePassword(Request $request, $id)
+    {
+        $request->validate([
+            'current_password'          => 'required',
+            'new_password'              => 'required|min:6',
+            'new_password_confirmation' => 'required|same:new_password',
+        ]);
+
+        $coach = Adherent::where('role', 'coach')->findOrFail($id);
+
+        if (!Hash::check($request->current_password, $coach->password)) {
+            return response()->json([
+                'message' => 'Mot de passe actuel incorrect'
+            ], 400);
+        }
+
+        $coach->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return response()->json([
+            'message' => 'Mot de passe modifié avec succès'
+        ], 200);
+    }
+
+    // ✅ 6. SUPPRIMER un coach
     public function destroy($id)
     {
         try {
@@ -193,7 +177,7 @@ public function changePassword(Request $request, $id)
         }
     }
 
-    // ✅ 6. BLOQUER / DÉBLOQUER (toggle)
+    // ✅ 7. BLOQUER / DÉBLOQUER (toggle)
     public function toggleBloque($id)
     {
         try {
@@ -209,7 +193,7 @@ public function changePassword(Request $request, $id)
         }
     }
 
-    // ✅ 7. CLIENTS d'un coach
+    // ✅ 8. CLIENTS d'un coach
     public function clients($id)
     {
         try {
@@ -232,7 +216,7 @@ public function changePassword(Request $request, $id)
         }
     }
 
-    // ✅ 8. PLANNING d'un coach (ses cours)
+    // ✅ 9. PLANNING d'un coach (ses cours)
     public function planning($id)
     {
         try {

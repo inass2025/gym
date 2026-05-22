@@ -15,7 +15,7 @@ protected $casts = [
     'experiences' => 'array',
 ];
     protected $fillable = [
-<<<<<<< HEAD
+
         'nom',
         'prenom',
         'email',
@@ -31,30 +31,14 @@ protected $casts = [
         'niveau',
         'role',
         'photo',
-        'bloque'
-    ];
-=======
-    'nom',
-    'prenom',
-    'email',
-    'password',
-    'telephone',
-    'adresse',
-    'date_naissance',
-    'sexe',
-    'poids',
-    'taille',
-    'date_inscription',
-    'objectif',
-    'niveau',
-    'role',
-    'photo',
-    'specialite',   // ← zdt
+        'bloque', 'specialite',   // ← zdt
     'bio',          // ← zdt
     'certifs',      // ← zdt
-    'experiences',  // ← zdt
-];
->>>>>>> bffb81253f4b6bd6f948eb6a5838a73deefb6835
+    'experiences',
+    ];
+
+
+
 
     protected $hidden = [
         'password',

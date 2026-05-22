@@ -13,7 +13,7 @@ class Message extends Model
         'date_envoie',  
         'adherent_id',
         'coach_id',
-        'sender', 
+        //'sender', 
     ];
 
 
