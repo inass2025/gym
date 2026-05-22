@@ -1,7 +1,6 @@
 .coach-profil {
   min-height: 100vh;
-
-  color: #ffffff;
+  color: #F0EDE8;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -14,21 +13,21 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 12px;
-  background: linear-gradient(135deg, #fff 0%, #f4a7b9 100%);
+  background: linear-gradient(135deg, #F0EDE8 0%, #E2D2CE 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .coach-profil__header h1 span {
-  background: linear-gradient(135deg, #f4a7b9 0%, #f893ab 100%);
+  background: linear-gradient(135deg, #E2D2CE 0%, #C9B8B3 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .coach-profil__header p {
-  color: rgba(255, 255, 255, 0.6);
+  color: #73795D;
   font-size: 1rem;
 }
 
@@ -40,13 +39,14 @@
   gap: 32px;
 }
 
+/* ── Colonne gauche ── */
 .coach-profil__left {
-  background: rgba(26, 29, 39, 0.8);
+  background: rgba(56, 54, 47, 0.85);
   backdrop-filter: blur(10px);
   border-radius: 24px;
   padding: 32px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255,255,255,0.07);
   height: fit-content;
   position: sticky;
   top: 20px;
@@ -55,7 +55,7 @@
 .coach-profil__avatar {
   width: 140px;
   height: 140px;
-  background: linear-gradient(135deg, rgb(243, 139, 188), #f4a7b9);
+  background: linear-gradient(135deg, #3D4F5A, #73795D);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -63,9 +63,9 @@
   margin: 0 auto 20px;
   font-size: 56px;
   font-weight: 600;
-  color: white;
+  color: #E2D2CE;
   position: relative;
-  box-shadow: 0 8px 24px rgba(240, 175, 205, 0.3);
+  box-shadow: 0 8px 24px rgba(61,79,90,0.35);
   overflow: hidden;
 }
 
@@ -73,36 +73,38 @@
   font-size: 1.25rem;
   margin-bottom: 8px;
   font-weight: 600;
+  color: #F0EDE8;
 }
 
 .coach-profil__badge {
   display: inline-block;
-  background: #f4a7b9;
-  border: 1px solid rgba(232, 62, 140, 0.3);
+  background: rgba(61,79,90,0.3);
+  border: 1px solid rgba(61,79,90,0.5);
   border-radius: 20px;
   padding: 4px 12px;
   font-size: 0.75rem;
-  color: #f1a1b4;
+  color: #E2D2CE;
   margin-bottom: 12px;
 }
 
 .coach-profil__specialite {
-  color: rgba(255, 255, 255, 0.5);
+  color: #73795D;
   font-size: 0.8rem;
   margin-bottom: 8px;
 }
 
+/* ── Colonne droite ── */
 .coach-profil__right {
-  background: rgba(26, 29, 39, 0.6);
+  background: rgba(56, 54, 47, 0.6);
   backdrop-filter: blur(10px);
   border-radius: 24px;
   padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255,255,255,0.07);
   transition: all 0.3s;
 }
 
 .coach-profil__right:hover {
-  border-color: rgba(232, 62, 140, 0.3);
+  border-color: rgba(226,210,206,0.2);
 }
 
 .coach-profil__right-header {
@@ -117,7 +119,7 @@
 .coach-profil__right-header h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #bd7586;
+  color: #E2D2CE;
 }
 
 .coach-profil__grid {
@@ -136,17 +138,17 @@
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.4);
+  color: #73795D;
   text-transform: uppercase;
 }
 
 .coach-profil__field input,
 .coach-profil__field select {
-  background: #1a1d27;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #2E2C26;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
   padding: 12px 16px;
-  color: #fff;
+  color: #F0EDE8;
   font-size: 0.9rem;
   transition: all 0.3s;
   outline: none;
@@ -154,17 +156,18 @@
 
 .coach-profil__field input:focus,
 .coach-profil__field select:focus {
-  border-color: #f4a7b9;
-  box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.1);
+  border-color: #E2D2CE;
+  box-shadow: 0 0 0 3px rgba(226,210,206,0.1);
 }
 
 .coach-profil__field input:disabled,
 .coach-profil__field select:disabled {
-  background: rgba(26, 29, 39, 0.5);
-  color: rgba(255, 255, 255, 0.5);
+  background: rgba(46,44,38,0.5);
+  color: #73795D;
   cursor: not-allowed;
 }
 
+/* ── Boutons ── */
 .btn-edit,
 .btn-save,
 .btn-cancel {
@@ -178,24 +181,24 @@
 }
 
 .btn-edit {
-  background: rgba(232, 62, 140, 0.1);
-  color: #f4a7b9;
-  border: 1px solid rgba(232, 62, 140, 0.3);
+  background: rgba(61,79,90,0.2);
+  color: #E2D2CE;
+  border: 1px solid rgba(61,79,90,0.4);
 }
 
 .btn-edit:hover {
-  background: rgba(232, 62, 140, 0.2);
+  background: rgba(61,79,90,0.35);
   transform: translateY(-2px);
 }
 
 .btn-save {
-  background: linear-gradient(135deg, #f4a7b9, #f06595);
-  color: white;
+  background: linear-gradient(135deg, #E2D2CE, #C9B8B3);
+  color: #2E2C26;
 }
 
 .btn-save:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(232, 62, 140, 0.3);
+  box-shadow: 0 4px 12px rgba(226,210,206,0.25);
 }
 
 .btn-save:disabled {
@@ -204,13 +207,13 @@
 }
 
 .btn-cancel {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.04);
+  color: #73795D;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.08);
   transform: translateY(-2px);
 }
 
@@ -218,16 +221,17 @@
   padding: 6px 12px;
 }
 
+/* ── IMC ── */
 .coach-profil__imc {
   margin-top: 24px;
-  background: rgba(232, 62, 140, 0.06);
-  border: 1px solid rgba(232, 62, 140, 0.2);
+  background: rgba(61,79,90,0.1);
+  border: 1px solid rgba(61,79,90,0.25);
   border-radius: 12px;
   padding: 16px 20px;
 }
 
 .coach-profil__imc-label {
-  color: rgba(255, 255, 255, 0.4);
+  color: #73795D;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -237,12 +241,12 @@
 .coach-profil__imc-value {
   font-size: 32px;
   font-weight: 700;
-  color: #f4a7b9;
+  color: #E2D2CE;
   line-height: 1;
 }
 
 .coach-profil__imc-category {
-  color: rgba(255, 255, 255, 0.5);
+  color: #73795D;
   font-size: 13px;
   margin-top: 4px;
 }
@@ -251,19 +255,20 @@
   margin-top: 12px;
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.07);
   overflow: hidden;
 }
 
 .coach-profil__imc-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #7ec8e3, #f4a7b9);
+  background: linear-gradient(90deg, #3D4F5A, #E2D2CE);
   border-radius: 3px;
   transition: width 0.6s ease;
 }
 
+/* ── Documents ── */
 .coach-profil__empty-docs {
-  color: rgba(255, 255, 255, 0.3);
+  color: #73795D;
   font-size: 14px;
   margin-bottom: 16px;
 }
@@ -272,8 +277,8 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #1a1d27;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #2E2C26;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 10px;
   padding: 12px 16px;
   margin-bottom: 10px;
@@ -288,13 +293,13 @@
 }
 
 .coach-profil__document-name {
-  color: #fff;
+  color: #F0EDE8;
   font-size: 14px;
   font-weight: 600;
 }
 
 .coach-profil__document-date {
-  color: rgba(255, 255, 255, 0.4);
+  color: #73795D;
   font-size: 12px;
 }
 
@@ -308,9 +313,9 @@
   gap: 8px;
   margin-top: 8px;
   cursor: pointer;
-  background: rgba(232, 62, 140, 0.1);
-  border: 1px dashed rgba(232, 62, 140, 0.4);
-  color: #f4a7b9;
+  background: rgba(226,210,206,0.06);
+  border: 1px dashed rgba(226,210,206,0.3);
+  color: #E2D2CE;
   font-size: 13px;
   font-weight: 600;
   border-radius: 10px;
@@ -319,7 +324,7 @@
 }
 
 .coach-profil__upload-label:hover {
-  background: rgba(232, 62, 140, 0.2);
+  background: rgba(226,210,206,0.12);
 }
 
 .coach-profil__upload-input {
@@ -327,11 +332,12 @@
 }
 
 .coach-profil__upload-info {
-  color: rgba(255, 255, 255, 0.3);
+  color: #73795D;
   font-size: 12px;
   margin-top: 8px;
 }
 
+/* ── Mot de passe ── */
 .coach-profil__pass-form {
   display: flex;
   flex-direction: column;
@@ -339,8 +345,8 @@
 }
 
 .coach-profil__success-message {
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
   color: #10b981;
   border-radius: 8px;
   padding: 10px 14px;
@@ -348,9 +354,9 @@
 }
 
 .coach-profil__error-message {
-  background: rgba(232, 62, 140, 0.1);
-  border: 1px solid rgba(232, 62, 140, 0.3);
-  color: #f4a7b9;
+  background: rgba(226,210,206,0.08);
+  border: 1px solid rgba(226,210,206,0.2);
+  color: #E2D2CE;
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 13px;
@@ -362,11 +368,12 @@
   margin-top: 4px;
 }
 
+/* ── Responsive ── */
 @media (max-width: 1024px) {
   .coach-profil__content {
     grid-template-columns: 1fr;
   }
-  
+
   .coach-profil__left {
     position: static;
     max-width: 400px;
@@ -378,20 +385,20 @@
   .coach-profil {
     padding: 20px;
   }
-  
+
   .coach-profil__header h1 {
     font-size: 1.75rem;
   }
-  
+
   .coach-profil__right-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .coach-profil__grid {
     grid-template-columns: 1fr;
   }
-  
+
   .coach-profil__right {
     padding: 20px;
   }

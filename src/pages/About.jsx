@@ -31,10 +31,10 @@ export default function About() {
   useScrollReveal();
 
   const stats = [
-    { icon: "📅", label: "15 Years of Excellence" },
-    { icon: "👥", label: "1000+ Users Joined" },
-    { icon: "⚙️", label: "5000+ Success Stories" },
-    { icon: "🤝", label: "Community-Driven" },
+    { label: "15 Years of Excellence" },
+    {  label: "1000+ Active Members " },
+    {  label: "5000+  Fitness Goals Achieved " },
+    {  label: "Strong Fitness Community" },
   ];
 
   return (
@@ -72,10 +72,12 @@ Journey With Usn<br />
 
         {/* Corps de texte */}
         <p className="about__body reveal" data-delay="3">
-          We are dedicated to helping you become the best version of yourself.
-          With expert coaching, personalized training plans, and constant motivation,
-          we guide you every step of the way. Whether your goal is to build strength,
-          lose weight, or improve your lifestyle, we are here to support your transformation.
+         We are passionate about helping
+          you achieve your fitness goals through 
+          professional coaching, personalized 
+          workout plans, and continuous support.
+           Whether you want to gain strength, improve endurance, lose weight, or maintain a healthy lifestyle, our team is here to guide and motivate you every step of the way.
+
         </p>
 
         {/* Stats — chacune glisse avec un délai croissant */}

@@ -9,14 +9,15 @@ function CoursCard({ cours, onReserved }) {
   const [error, setError]       = useState("");
   const navigate = useNavigate();
 
+  const isFull = cours.capacite <= 0;
+
   useEffect(() => {
-    // check من API — هاد الحل أصح من localStorage
     api.get("/my-reservations")
       .then((res) => {
         const dejaReserve = res.data.some(
           (r) =>
             (r.cours_id === cours.id || r.cours?.id === cours.id) &&
-            r.statut === "confirmé"
+            r.status === "confirmé"
         );
         setReserved(dejaReserve);
       })
@@ -32,7 +33,7 @@ function CoursCard({ cours, onReserved }) {
         if (!res.data.hasAbonnement) {
           alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
           navigate("/adherent/Abonnement");
-          return;
+          return Promise.reject("no-abonnement"); // ← stop la chaîne
         }
         return api.post("/reserve", { cours_id: cours.id });
       })
@@ -43,15 +44,16 @@ function CoursCard({ cours, onReserved }) {
         }
       })
       .catch((err) => {
-        setError(err.response?.data?.message || "Erreur");
+        if (err === "no-abonnement") return; // déjà géré
+        setError(err.response?.data?.message || "Erreur lors de la réservation.");
       })
       .finally(() => setLoading(false));
   };
 
   return (
-    <div className={`special-card ${reserved ? "is-reserved" : ""}`}>
+    <div className={`special-card ${reserved ? "is-reserved" : ""} ${isFull ? "is-full" : ""}`}>
       <div className="card-glow"></div>
-      
+
       <div className="card-content">
         <div className="card-top">
           <div className="category-tag">{cours.coach || "Fitness"}</div>
@@ -61,11 +63,18 @@ function CoursCard({ cours, onReserved }) {
         <div className="stats-row">
           <div className="stat">
             <span className="stat-label">📅 Jour</span>
-            <span className="stat-value">{cours.jours}</span>
+            <span className="stat-value">{cours.jours ?? cours.date}</span>
           </div>
           <div className="stat">
             <span className="stat-label">🕐 Heure</span>
-            <span className="stat-value">{cours.horaire}</span>
+            <span className="stat-value">{cours.horaire ?? cours.heur}</span>
+          </div>
+          {/* ✅ Capacité */}
+          <div className="stat">
+            <span className="stat-label">👥 Places</span>
+            <span className={`stat-value ${isFull ? "capacity-full" : "capacity-ok"}`}>
+              {isFull ? "Complet" : `${cours.capacite} place${cours.capacite > 1 ? "s" : ""}`}
+            </span>
           </div>
         </div>
 
@@ -73,21 +82,24 @@ function CoursCard({ cours, onReserved }) {
           <div className="location">
             <span className="pin">📍</span> {cours.salle}
           </div>
-          
-          <button 
-            className={`action-fab ${reserved ? "done" : ""}`}
+
+          <button
+            className={`action-fab ${reserved ? "done" : ""} ${isFull ? "full" : ""}`}
             onClick={reserve}
-            disabled={loading || reserved}
+            disabled={loading || reserved || isFull}
           >
             {loading ? (
               <div className="spinner"></div>
             ) : reserved ? (
               "✓ Déjà réservé"
+            ) : isFull ? (
+              " Complet"
             ) : (
               "Réserver"
             )}
           </button>
         </div>
+
         {error && <small className="err-msg">{error}</small>}
       </div>
     </div>

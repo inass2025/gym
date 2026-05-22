@@ -61,7 +61,7 @@ export default function AdherentDashboard() {
         <div style={{display:"flex",alignItems:"center",gap:10}}>
           <div className="adh-avatar">{initials}</div>
           <div>
-            <h1 className="adh-greeting">Bonjour, {user.prenom} {user.nom} 👋</h1>
+            <h1 className="adh-greeting">Bonjour, {user.prenom} {user.nom} </h1>
             <p className="adh-date">{new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</p>
           </div>
         </div>

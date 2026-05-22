@@ -1,20 +1,20 @@
 /* ── Variables ── */
 :root {
-  --bg-main:    #1a1a2e;
-  --bg-sidebar: #16213e;
-  --bg-panel:   #1a1a2e;
-  --bg-card:    #1e2a3a;
-  --bg-active:  #243447;
-  --bg-input:   #1e2a3a;
-  --accent:     #f4a7b9;        /* vert-jaune fluo = bouton Envoyer */
-  --accent2:    #5ab0d0;
-  --bubble-me:  #f4a7b9;
-  --bubble-other: #1a1a2e;
-  --text:       #f0f0f0;
-  --text-dim:   #8a9bb0;
-  --dot:        #5ab0d0;
+  --bg-main:       #2E2C26;
+  --bg-sidebar:    #262420;
+  --bg-panel:      #2E2C26;
+  --bg-card:       #38362F;
+  --bg-active:     #3D3B33;
+  --bg-input:      #38362F;
+  --accent:        #E2D2CE;
+  --accent2:       #3D4F5A;
+  --bubble-me:     #E2D2CE;
+  --bubble-other:  #3D4F5A;
+  --text:          #F0EDE8;
+  --text-dim:      #73795D;
+  --dot:           #73795D;
   --radius-bubble: 18px;
-  --font:       'DM Sans', sans-serif;
+  --font:          'DM Sans', sans-serif;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
@@ -58,7 +58,7 @@
 
 .ch-new-btn {
   background: var(--accent);
-  color: #0a0a0f;
+  color: #2E2C26;
   border: none;
   border-radius: 20px;
   padding: 5px 12px;
@@ -86,7 +86,7 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.ch-conv-item:hover  { background: rgba(255,255,255,0.05); }
+.ch-conv-item:hover  { background: rgba(255,255,255,0.04); }
 .ch-conv-item.active { background: var(--bg-active); }
 
 .ch-conv-info {
@@ -138,7 +138,7 @@
   justify-content: center;
   font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  color: #2E2C26;
   flex-shrink: 0;
   letter-spacing: 0.5px;
 }
@@ -171,7 +171,7 @@
   flex-direction: column;
   gap: 4px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
 }
 
 .ch-empty {
@@ -205,7 +205,7 @@
 
 .ch-bubble-mine {
   background: var(--bubble-me);
-  color: #0a0a0f;
+  color: #2E2C26;
   border-bottom-right-radius: 4px;
   font-weight: 500;
 }
@@ -239,11 +239,11 @@
   transition: border 0.2s;
 }
 .ch-input::placeholder { color: var(--text-dim); }
-.ch-input:focus        { border-color: rgba(200,241,53,0.4); }
+.ch-input:focus        { border-color: rgba(226,210,206,0.35); }
 
 .ch-send-btn {
   background: var(--accent);
-  color: #0a0a0f;
+  color: #2E2C26;
   border: none;
   border-radius: 24px;
   padding: 10px 20px;
@@ -257,6 +257,6 @@
 .ch-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── Scrollbar ── */
-.ch-messages::-webkit-scrollbar { width: 4px; }
+.ch-messages::-webkit-scrollbar       { width: 4px; }
 .ch-messages::-webkit-scrollbar-track { background: transparent; }
-.ch-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+.ch-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }

@@ -7,7 +7,7 @@
   --bg-base:       #0e0e0e;
   --bg-sidebar:    #111111;
   --bg-navbar:     #0e0e0e;
-  --accent:        #f4a7b9;
+  --accent:        #3D4F5A ;
   --accent-dim:    #1c2600;
   --red:           #dfc7ff;
   --blue:          #7ec8e3;
@@ -110,7 +110,7 @@
 .ad-navbar__left {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  
 }
 
 .ad-navbar__title {
@@ -165,7 +165,7 @@
 
 /* Reserve button */
 .ad-navbar__reserve {
-  background: var(--accent);
+  background: #3D4F5A  ;
   color: #000;
   border: none;
   padding: 0.45rem 1.1rem;

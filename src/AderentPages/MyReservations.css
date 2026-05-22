@@ -9,14 +9,13 @@
 .page-title {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #c1c1ff;
-  
+  color: #E2D2CE;
   margin: 0 0 0.25rem;
 }
 
 .page-sub {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: #73795D;
   margin: 0 0 1.5rem;
 }
 
@@ -25,9 +24,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background: #f0c4ce
-  ;
-  border: 1px solid #e5e7eb;
+  background: #38362F;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 14px;
   padding: 1rem 1.25rem;
   margin-bottom: 12px;
@@ -35,7 +33,7 @@
 }
 
 .res-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
 }
 
 /* ===== Avatar ===== */
@@ -43,7 +41,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #f1fbff;
+  background: #3D4F5A;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,7 +58,7 @@
 .res-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #111827;
+  color: #F0EDE8;
   margin: 0 0 6px;
 }
 
@@ -69,7 +67,7 @@
   flex-wrap: wrap;
   gap: 8px 16px;
   font-size: 0.82rem;
-  color: #6b7280;
+  color: #73795D;
   margin-bottom: 8px;
 }
 
@@ -87,7 +85,7 @@
 
 .res-date {
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: #73795D;
 }
 
 /* ===== Badges ===== */
@@ -101,23 +99,23 @@
 }
 
 .badge-ok {
-  background: #d6ffe5;
-  color: #004b66;
+  background: rgba(115,121,93,0.25);
+  color: #E2D2CE;
 }
 
 .badge-cancel {
-  background: #ffb5b5;
-  color: #7ec8e3;
+  background: rgba(61,79,90,0.4);
+  color: #E2D2CE;
 }
 
 /* ===== Button Annuler ===== */
 .btn-cancel {
   flex-shrink: 0;
   padding: 8px 16px;
-  border: 1px solid #ff7092;
+  border: 1px solid #E2D2CE;
   border-radius: 8px;
   background: transparent;
-  color: #f4a7b9;
+  color: #E2D2CE;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
@@ -125,14 +123,14 @@
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: #ffbbbb;
+  background: rgba(226,210,206,0.12);
 }
 
 .btn-cancel:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  border-color: #ddebff;
-  color: #9ca3af;
+  border-color: #73795D;
+  color: #73795D;
 }
 
 /* ===== States ===== */
@@ -140,7 +138,7 @@
 .empty {
   text-align: center;
   padding: 3rem 1rem;
-  color: #9ca3af;
+  color: #73795D;
   font-size: 0.95rem;
 }
 

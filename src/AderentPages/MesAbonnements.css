@@ -128,8 +128,8 @@
 
 input:focus {
   outline: none;
-  border-color: #e83e8c;
-  box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.1);
+  border-color: #73795D ;
+  box-shadow: 0 0 0 3px rgba(37, 32, 7, 0.1);
 }
 
 /* Filtres */
@@ -348,7 +348,7 @@ p:contains("Chargement...") {
 h1.text-2xl {
   position: relative;
   display: inline-block;
-  background: linear-gradient(135deg, #1a1d27, #e83e8c);
+  background: linear-gradient(135deg, #1a1d27, #73795D );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -391,12 +391,12 @@ h1.text-2xl {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #e83e8c, #f06595);
+  background: linear-gradient(135deg, #73795D , #849158 );
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c72a6e;
+  background: #73795D ;
 }
 
 /* Responsive Design */
@@ -485,8 +485,8 @@ input[type="text"] {
 }
 
 input[type="text"]:focus {
-  border-color: #e83e8c;
-  box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.1);
+  border-color: #73795D ;
+  box-shadow: 0 0 0 3px rgba(53, 52, 2, 0.1);
 }
 
 /* Style pour le conteneur principal */

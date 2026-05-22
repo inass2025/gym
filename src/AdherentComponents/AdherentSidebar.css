@@ -5,23 +5,21 @@
    =========================== */
 
 .ad-sidebar {
-  width: 200px;
-  background: #111111;
-  border-right: 1px solid #222222;
-  display: flex;
-  flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
+  width: var(--sidebar-w);
   height: 100vh;
+  background: #1a1a1a;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  z-index: 100;
 }
 
 /* LOGO */
 .ad-sidebar__logo {
   padding: 1.4rem 1.2rem 1.1rem;
-  border-bottom: 1px solid #222222;
+  border-bottom: 1px solid #2a2a2a;
   margin-bottom: 0.6rem;
 }
 
@@ -30,7 +28,7 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.3rem;
   letter-spacing: 0.08em;
-  color: #f4a7b9;
+  color: #E2D2CE;
   line-height: 1;
 }
 
@@ -38,7 +36,7 @@
   display: block;
   font-size: 0.52rem;
   letter-spacing: 0.18em;
-  color: #4a4a4a;
+  color: #73795D;
   margin-top: 3px;
   text-transform: uppercase;
 }
@@ -55,7 +53,7 @@
 .ad-sidebar__label {
   font-size: 0.58rem;
   letter-spacing: 0.14em;
-  color: #363636;
+  color: #444444;
   text-transform: uppercase;
   padding: 0.8rem 1.2rem 0.3rem;
   font-family: 'Barlow', sans-serif;
@@ -78,14 +76,14 @@
 }
 
 .ad-link:hover {
-  background: #1a1a1a;
+  background: #242424;
   color: #cccccc;
 }
 
 .ad-link.active {
-  background: #1c2600;
-  color: #0891b2;
-  border-left-color: #f4a7b9;
+  background: rgba(61,79,90,0.3);
+  color: #E2D2CE;
+  border-left-color: #3D4F5A;
 }
 
 .ad-link__icon {
@@ -97,8 +95,8 @@
 /* BADGES */
 .ad-badge {
   margin-left: auto;
-  background: #f4a7b9;
-  color: #fff;
+  background: #3D4F5A;
+  color: #E2D2CE;
   font-size: 0.58rem;
   font-weight: 700;
   border-radius: 999px;
@@ -108,8 +106,9 @@
 
 /* FOOTER (user block) */
 .ad-sidebar__footer {
-  border-top: 1px solid #1e1e1e;
+  border-top: 1px solid #2a2a2a;
   padding: 0.85rem 1rem;
+  margin-top: auto;
 }
 
 .ad-sidebar__user {
@@ -122,8 +121,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #f4a7b9;
-  color: #000;
+  background: #3D4F5A;
+  color: #E2D2CE;
   font-weight: 700;
   font-size: 0.68rem;
   display: flex;
@@ -144,7 +143,7 @@
 .ad-username {
   font-size: 0.74rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #F0EDE8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -152,7 +151,7 @@
 
 .ad-userplan {
   font-size: 0.58rem;
-  color: #555555;
+  color: #73795D;
 }
 
 .ad-dots {
@@ -167,7 +166,42 @@
 }
 
 .ad-dots:hover {
-  color: #ffffff;
+  color: #F0EDE8;
+}
+
+/* DÉCONNEXION */
+.ad-sidebar__logout {
+  border-top: 1px solid #2a2a2a;
+  padding: 0.6rem 0.8rem;
+}
+
+.ad-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.48rem 0.6rem;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #555555;
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ad-logout-btn:hover {
+  background: rgba(226,210,206,0.06);
+  color: #E2D2CE;
+}
+
+.ad-logout-btn__icon {
+  font-size: 0.85rem;
+  opacity: 0.65;
+  flex-shrink: 0;
 }
 
 /* SCROLLBAR */

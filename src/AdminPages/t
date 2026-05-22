@@ -1,0 +1,198 @@
+import { useState, useEffect } from "react";
+
+const API = "http://localhost:8000/api/coachs";
+
+export default function CoachGestion() {
+
+  // State des coachs
+  const [coachs, setCoachs] = useState([]);
+
+  // formulaire
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
+
+  // id coach à modifier
+  const [editId, setEditId] = useState(null);
+
+  // charger coachs au démarrage
+  useEffect(() => {
+    getCoachs();
+  }, []);
+
+  // récupérer les coachs
+  async function getCoachs() {
+    const response = await fetch(API);
+    const data = await response.json();
+    setCoachs(data);
+  }
+
+  // ajouter ou modifier
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const coach = {
+      nom,
+      prenom,
+      email,
+      telephone,
+    };
+
+    // Modifier
+    if (editId) {
+      await fetch(`${API}/${editId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(coach),
+      });
+
+      alert("Coach modifié");
+    }
+
+    // Ajouter
+    else {
+      await fetch(API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(coach),
+      });
+
+      alert("Coach ajouté");
+    }
+
+    // vider formulaire
+    setNom("");
+    setPrenom("");
+    setEmail("");
+    setTelephone("");
+    setEditId(null);
+
+    // recharger liste
+    getCoachs();
+  }
+
+  // supprimer coach
+  async function supprimerCoach(id) {
+    const confirmation = window.confirm(
+      "Voulez-vous supprimer ce coach ?"
+    );
+
+    if (!confirmation) return;
+
+    await fetch(`${API}/${id}`, {
+      method: "DELETE",
+    });
+
+    alert("Coach supprimé");
+    getCoachs();
+  }
+
+  // remplir formulaire pour modifier
+  function modifierCoach(coach) {
+    setEditId(coach.id);
+
+    setNom(coach.nom);
+    setPrenom(coach.prenom);
+    setEmail(coach.email);
+    setTelephone(coach.telephone);
+  }
+
+  return (
+    <div style={{ padding: "30px" }}>
+
+      <h1>Gestion des Coachs</h1>
+
+      {/* Formulaire */}
+      <form onSubmit={handleSubmit}>
+
+        <input
+          type="text"
+          placeholder="Nom"
+          value={nom}
+          onChange={(e) => setNom(e.target.value)}
+        />
+
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="Prénom"
+          value={prenom}
+          onChange={(e) => setPrenom(e.target.value)}
+        />
+
+        <br /><br />
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="Téléphone"
+          value={telephone}
+          onChange={(e) => setTelephone(e.target.value)}
+        />
+
+        <br /><br />
+
+        <button type="submit">
+          {editId ? "Modifier" : "Ajouter"}
+        </button>
+      </form>
+
+      <hr />
+
+      {/* Liste coachs */}
+      <h2>Liste des coachs</h2>
+
+      <table border="1" cellPadding="10">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {coachs.map((coach) => (
+            <tr key={coach.id}>
+              <td>{coach.nom}</td>
+              <td>{coach.prenom}</td>
+              <td>{coach.email}</td>
+              <td>{coach.telephone}</td>
+
+              <td>
+                <button
+                  onClick={() => modifierCoach(coach)}
+                >
+                  Modifier
+                </button>
+
+                <button
+                  onClick={() => supprimerCoach(coach.id)}
+                >
+                  Supprimer
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+    </div>
+  );
+}

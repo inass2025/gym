@@ -22,8 +22,8 @@ export default function AdherentPage() {
   const [passError, setPassError]       = useState(null)
   const [passSuccess, setPassSuccess]   = useState(false)
 
-  const  [photoFile, setPhotoFile] = useState(null);
-const [photoPreview, setPhotoPreview] = useState(null)
+  const [photoFile, setPhotoFile]       = useState(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
 
   // ── Charger le profil ────────────────────────────────────────────────────
   useEffect(() => {
@@ -72,54 +72,53 @@ const [photoPreview, setPhotoPreview] = useState(null)
 
   // ── Sauvegarder ──────────────────────────────────────────────────────────
   const handleSave = () => {
-  setSaving(true)
+    setSaving(true)
+    const data = new FormData()
+    Object.keys(form).forEach(key => { data.append(key, form[key] ?? '') })
+    if (photoFile) data.append('photo', photoFile)
 
-  const data = new FormData()
-
-  Object.keys(form).forEach(key => {
-    data.append(key, form[key] ?? '')
-  })
-
-  if (photoFile) {
-    data.append('photo', photoFile)
+    axios.post(`${API}/profile?_method=PUT`, data, {
+      headers: { ...authHeaders(), 'Content-Type': 'multipart/form-data' },
+    })
+      .then(res => {
+        setUser(res.data)
+        fillForm(res.data)
+        setEditing(false)
+        setSuccess(true)
+        setPhotoFile(null)
+        setPhotoPreview(null)
+        const stored = JSON.parse(localStorage.getItem('user') || '{}')
+        localStorage.setItem('user', JSON.stringify({
+          ...stored,
+          nom:    res.data.nom,
+          prenom: res.data.prenom,
+          photo:  res.data.photo,
+        }))
+        window.dispatchEvent(new Event('user-updated'))
+      })
+      .catch(err => {
+        console.log(err.response?.data)
+        setError('Erreur mise à jour')
+      })
+      .finally(() => setSaving(false))
   }
-
-  axios.post(`${API}/profile?_method=PUT`, data, {
-    headers: {
-      ...authHeaders(),
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  .then(res => {
-    setUser(res.data)
-    fillForm(res.data)
-    setEditing(false)
-    setSuccess(true)
-  })
-  .catch(err => {
-    console.log(err.response?.data)
-    setError("Erreur mise à jour")
-  })
-  .finally(() => setSaving(false))
-}
 
   const handleCancel = () => {
     fillForm(user)
     setEditing(false)
     setError(null)
     setSuccess(false)
+    setPhotoFile(null)
+    setPhotoPreview(null)
   }
 
-  // ── Photo ────────────────────────────────────────────────────────────────
   const handlePhotoChange = (e) => {
-  const file = e.target.files[0]
-  if (!file) return
+    const file = e.target.files[0]
+    if (!file) return
+    setPhotoFile(file)
+    setPhotoPreview(URL.createObjectURL(file))
+  }
 
-  setPhotoFile(file)
-  setPhotoPreview(URL.createObjectURL(file))
-}
-
-  // ── Document médical ─────────────────────────────────────────────────────
   const handleDocUpload = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -127,7 +126,6 @@ const [photoPreview, setPhotoPreview] = useState(null)
     setUser(prev => ({ ...prev, documents: [...(prev.documents ?? []), newDoc] }))
   }
 
-  // ── Mot de passe ─────────────────────────────────────────────────────────
   const handlePassChange = () => {
     setPassError(null)
     if (passForm.nouveau !== passForm.confirmer) {
@@ -138,44 +136,48 @@ const [photoPreview, setPhotoPreview] = useState(null)
       setPassError('Minimum 6 caractères.')
       return
     }
-   const data = {
-  current_password: passForm.ancien,
-  password: passForm.nouveau,
-  password_confirmation: passForm.confirmer,
-}
-
-axios.post(`${API}/change-password`, data, {
-  headers: authHeaders()
-})
+    axios.post(`${API}/change-password`, {
+      current_password:      passForm.ancien,
+      password:              passForm.nouveau,
+      password_confirmation: passForm.confirmer,
+    }, { headers: authHeaders() })
       .then(() => {
         setPassSuccess(true)
         setPassForm({ ancien: '', nouveau: '', confirmer: '' })
         setTimeout(() => { setPassSuccess(false); setShowPassForm(false) }, 2000)
       })
       .catch(err => {
-  console.log(err.response?.data)
+        const errs = err.response?.data?.errors
+        setPassError(
+          errs?.current_password?.[0] ?? errs?.password?.[0] ?? err.response?.data?.message ?? 'Erreur.'
+        )
+      })
+  }
 
-  if (err.response?.data?.errors?.current_password) {
-    setPassError(err.response.data.errors.current_password[0])
-  } 
-  else if (err.response?.data?.errors?.password) {
-    setPassError(err.response.data.errors.password[0])
-  } 
-  else {
-    setPassError(err.response?.data?.message ?? 'Erreur.')
-  }
-})
-  }
+  const avatarSrc = photoPreview
+    || (user?.photo
+      ? (user.photo.startsWith('http') ? user.photo : `http://localhost:8000/storage/${user.photo}`)
+      : null)
 
   const abonnement = user?.abonnement ?? { formule: '—', dateExpiration: '—', actif: false }
 
+  const selectStyle = {
+    background: '#2E2C26',
+    border: '1px solid rgba(226,210,206,0.25)',
+    borderRadius: 10,
+    padding: '12px 16px',
+    color: '#F0EDE8',
+    fontSize: 15,
+    outline: 'none',
+  }
+
   if (loading) return (
-    <div className="coach-profil" style={{ padding: 40, textAlign: 'center' }}>
+    <div className="coach-profil" style={{ padding: 40, textAlign: 'center', color: '#73795D' }}>
       Chargement du profil…
     </div>
   )
   if (!user) return (
-    <div className="coach-profil" style={{ padding: 40, textAlign: 'center', color: '#e83e8c' }}>
+    <div className="coach-profil" style={{ padding: 40, textAlign: 'center', color: '#E2D2CE' }}>
       {error}
     </div>
   )
@@ -192,84 +194,57 @@ axios.post(`${API}/change-password`, data, {
       {/* ════ CONTENT ════ */}
       <div className="coach-profil__content">
 
-        {/* ── COLONNE GAUCHE : avatar + abonnement ── */}
+        {/* ── COLONNE GAUCHE ── */}
         <div className="coach-profil__left">
 
           {/* Avatar */}
           <div className="coach-profil__avatar" style={{ position: 'relative' }}>
-            {photoPreview || user.photo
-              ? <img
-                  src={photoPreview || user.photo}
-                  alt="avatar"
-                  style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
-                />
+            {avatarSrc
+              ? <img src={avatarSrc} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
               : initials
             }
-            <label
-              title="Changer la photo"
-              style={{
-                position: 'absolute', bottom: 0, right: 0,
-                background: '#e83e8c', borderRadius: '50%',
-                width: 26, height: 26, display: 'flex',
-                alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', fontSize: 13,
-              }}
-            >
+            <label title="Changer la photo" style={{
+              position: 'absolute', bottom: 0, right: 0,
+              background: '#3D4F5A', borderRadius: '50%',
+              width: 26, height: 26, display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', fontSize: 13,
+            }}>
               📷
               <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoChange} />
             </label>
           </div>
 
           <h3>{user.prenom} {user.nom}</h3>
-          <div className="coach-profil__badge">
-            🏅 {user.role ?? 'Adhérent'}
-          </div>
+          <div className="coach-profil__badge">🏅 {user.role ?? 'Adhérent'}</div>
           {user.date_inscription && (
-            <div className="coach-profil__specialite">
-              📅 Membre depuis {user.date_inscription}
-            </div>
+            <div className="coach-profil__specialite">📅 Membre depuis {user.date_inscription}</div>
           )}
 
           {/* Séparateur */}
-          <div style={{
-            width: '100%', height: 1,
-            background: 'rgba(255,255,255,0.07)',
-            margin: '24px 0',
-          }} />
+          <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.07)', margin: '24px 0' }} />
 
           {/* Abonnement */}
           <div style={{ width: '100%', textAlign: 'left' }}>
-            <div style={{
-              color: 'rgba(255,255,255,0.4)',
-              fontSize: 11, fontWeight: 600,
-              letterSpacing: '0.1em', marginBottom: 12,
-            }}>
+            <div style={{ color: '#73795D', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', marginBottom: 12 }}>
               👑 ABONNEMENT
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14 }}>
-                {abonnement.formule}
-              </span>
+              <span style={{ color: '#B0A89A', fontSize: 14 }}>{abonnement.formule}</span>
               {abonnement.actif
                 ? <span style={{
-                    background: 'rgba(16,185,129,0.15)',
-                    color: '#10b981',
+                    background: 'rgba(16,185,129,0.15)', color: '#10b981',
                     border: '1px solid rgba(16,185,129,0.3)',
-                    borderRadius: 6, padding: '2px 8px',
-                    fontSize: 11, fontWeight: 700,
+                    borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
                   }}>Actif</span>
                 : <span style={{
-                    background: 'rgba(232,62,140,0.15)',
-                    color: '#e83e8c',
-                    border: '1px solid rgba(232,62,140,0.3)',
-                    borderRadius: 6, padding: '2px 8px',
-                    fontSize: 11, fontWeight: 700,
+                    background: 'rgba(226,210,206,0.08)', color: '#E2D2CE',
+                    border: '1px solid rgba(226,210,206,0.2)',
+                    borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
                   }}>Expiré</span>
               }
             </div>
-            <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
-              Expire le {abonnement.dateExpiration}
-            </div>
+            <div style={{ color: '#73795D', fontSize: 13 }}>Expire le {abonnement.dateExpiration}</div>
           </div>
         </div>
 
@@ -289,51 +264,37 @@ axios.post(`${API}/change-password`, data, {
                     <button className="btn-cancel" onClick={handleCancel}>Annuler</button>
                   </>
                 ) : (
-                  <button className="btn-edit" onClick={() => setEditing(true)}>
-                    ✏️ Modifier
-                  </button>
+                  <button className="btn-edit" onClick={() => setEditing(true)}>✏️ Modifier</button>
                 )}
               </div>
             </div>
 
             {success && (
-              <div style={{
-                background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
-                color: '#10b981', borderRadius: 8, padding: '10px 14px',
-                fontSize: 13, marginBottom: 20,
-              }}>
+              <div className="coach-profil__success-message" style={{ marginBottom: 20 }}>
                 ✅ Profil mis à jour avec succès !
               </div>
             )}
             {error && (
-              <div style={{
-                background: 'rgba(232,62,140,0.1)', border: '1px solid rgba(232,62,140,0.3)',
-                color: '#e83e8c', borderRadius: 8, padding: '10px 14px',
-                fontSize: 13, marginBottom: 20,
-              }}>
+              <div className="coach-profil__error-message" style={{ marginBottom: 20 }}>
                 ⚠️ {error}
               </div>
             )}
 
             <div className="coach-profil__grid">
-
               {[
-                { label: 'Nom',              name: 'nom',            type: 'text' },
-                { label: 'Prénom',           name: 'prenom',         type: 'text' },
-                { label: 'Date de naissance',name: 'date_naissance', type: 'date' },
-                { label: 'Email',            name: 'email',          type: 'email' },
-                { label: 'Téléphone',        name: 'telephone',      type: 'text', placeholder: '+212 6XX XXX XXX' },
-                { label: 'Adresse',          name: 'adresse',        type: 'text', placeholder: 'Ville, Pays' },
+                { label: 'Nom',               name: 'nom',            type: 'text' },
+                { label: 'Prénom',            name: 'prenom',         type: 'text' },
+                { label: 'Date de naissance', name: 'date_naissance', type: 'date' },
+                { label: 'Email',             name: 'email',          type: 'email' },
+                { label: 'Téléphone',         name: 'telephone',      type: 'text', placeholder: '+212 6XX XXX XXX' },
+                { label: 'Adresse',           name: 'adresse',        type: 'text', placeholder: 'Ville, Pays' },
               ].map(({ label, name, type, placeholder }) => (
                 <div className="coach-profil__field" key={name}>
                   <label>{label.toUpperCase()}</label>
                   <input
-                    name={name}
-                    type={type}
-                    value={form[name]}
-                    onChange={handleChange}
-                    placeholder={placeholder}
-                    disabled={!editing}
+                    name={name} type={type}
+                    value={form[name]} onChange={handleChange}
+                    placeholder={placeholder} disabled={!editing}
                   />
                 </div>
               ))}
@@ -343,20 +304,7 @@ axios.post(`${API}/change-password`, data, {
                 <label>SEXE</label>
                 {editing
                   ? (
-                    <select
-                      name="sexe"
-                      value={form.sexe}
-                      onChange={handleChange}
-                      style={{
-                        background: '#1a1d27',
-                        border: '1px solid #e83e8c',
-                        borderRadius: 10,
-                        padding: '12px 16px',
-                        color: '#fff',
-                        fontSize: 15,
-                        outline: 'none',
-                      }}
-                    >
+                    <select name="sexe" value={form.sexe} onChange={handleChange} style={selectStyle}>
                       <option value="">—</option>
                       <option>Homme</option>
                       <option>Femme</option>
@@ -365,7 +313,6 @@ axios.post(`${API}/change-password`, data, {
                   : <input value={user.sexe || '—'} disabled />
                 }
               </div>
-
             </div>
           </div>
 
@@ -376,23 +323,14 @@ axios.post(`${API}/change-password`, data, {
             </div>
 
             <div className="coach-profil__grid">
-
               <div className="coach-profil__field">
                 <label>POIDS (KG)</label>
-                <input
-                  name="poids" type="number"
-                  value={form.poids} onChange={handleChange}
-                  disabled={!editing}
-                />
+                <input name="poids" type="number" value={form.poids} onChange={handleChange} disabled={!editing} />
               </div>
 
               <div className="coach-profil__field">
                 <label>TAILLE (CM)</label>
-                <input
-                  name="taille" type="number"
-                  value={form.taille} onChange={handleChange}
-                  disabled={!editing}
-                />
+                <input name="taille" type="number" value={form.taille} onChange={handleChange} disabled={!editing} />
               </div>
 
               {/* Objectif */}
@@ -400,20 +338,7 @@ axios.post(`${API}/change-password`, data, {
                 <label>OBJECTIF</label>
                 {editing
                   ? (
-                    <select
-                      name="objectif"
-                      value={form.objectif}
-                      onChange={handleChange}
-                      style={{
-                        background: '#1a1d27',
-                        border: '1px solid #e83e8c',
-                        borderRadius: 10,
-                        padding: '12px 16px',
-                        color: '#fff',
-                        fontSize: 15,
-                        outline: 'none',
-                      }}
-                    >
+                    <select name="objectif" value={form.objectif} onChange={handleChange} style={selectStyle}>
                       <option value="">—</option>
                       <option>Perte de poids</option>
                       <option>Prise de muscle</option>
@@ -430,20 +355,7 @@ axios.post(`${API}/change-password`, data, {
                 <label>NIVEAU</label>
                 {editing
                   ? (
-                    <select
-                      name="niveau"
-                      value={form.niveau}
-                      onChange={handleChange}
-                      style={{
-                        background: '#1a1d27',
-                        border: '1px solid #e83e8c',
-                        borderRadius: 10,
-                        padding: '12px 16px',
-                        color: '#fff',
-                        fontSize: 15,
-                        outline: 'none',
-                      }}
-                    >
+                    <select name="niveau" value={form.niveau} onChange={handleChange} style={selectStyle}>
                       <option value="">—</option>
                       <option>Débutant</option>
                       <option>Intermédiaire</option>
@@ -453,41 +365,30 @@ axios.post(`${API}/change-password`, data, {
                   : <input value={user.niveau || '—'} disabled />
                 }
               </div>
-
             </div>
 
             {/* IMC */}
             {imc && (
               <div style={{
                 marginTop: 24,
-                background: 'rgba(232,62,140,0.06)',
-                border: '1px solid rgba(232,62,140,0.2)',
+                background: 'rgba(61,79,90,0.1)',
+                border: '1px solid rgba(61,79,90,0.25)',
                 borderRadius: 12, padding: '16px 20px',
               }}>
-                <div style={{
-                  color: 'rgba(255,255,255,0.4)',
-                  fontSize: 11, fontWeight: 600,
-                  letterSpacing: '0.1em', marginBottom: 8,
-                }}>
+                <div style={{ color: '#73795D', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', marginBottom: 8 }}>
                   IMC — INDICE DE MASSE CORPORELLE
                 </div>
-                <div style={{ fontSize: 32, fontWeight: 700, color: '#e83e8c', lineHeight: 1 }}>
+                <div style={{ fontSize: 32, fontWeight: 700, color: '#E2D2CE', lineHeight: 1 }}>
                   {imc}
                 </div>
-                <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13, marginTop: 4 }}>
+                <div style={{ color: '#73795D', fontSize: 13, marginTop: 4 }}>
                   Catégorie : {imcCategorie}
                 </div>
-                {/* barre IMC */}
-                <div style={{
-                  marginTop: 12,
-                  height: 6, borderRadius: 3,
-                  background: 'rgba(255,255,255,0.08)',
-                  overflow: 'hidden',
-                }}>
+                <div style={{ marginTop: 12, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
                   <div style={{
                     height: '100%',
                     width: `${Math.min((imc / 40) * 100, 100)}%`,
-                    background: 'linear-gradient(90deg, #0891b2, #e83e8c)',
+                    background: 'linear-gradient(90deg, #3D4F5A, #E2D2CE)',
                     borderRadius: 3,
                     transition: 'width 0.6s ease',
                   }} />
@@ -503,7 +404,7 @@ axios.post(`${API}/change-password`, data, {
             </div>
 
             {(user.documents ?? []).length === 0 && (
-              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14, marginBottom: 16 }}>
+              <p style={{ color: '#73795D', fontSize: 14, marginBottom: 16 }}>
                 Aucun document téléchargé.
               </p>
             )}
@@ -511,17 +412,14 @@ axios.post(`${API}/change-password`, data, {
             {(user.documents ?? []).map((doc, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 14,
-                background: '#1a1d27',
+                background: '#2E2C26',
                 border: '1px solid rgba(255,255,255,0.07)',
-                borderRadius: 10, padding: '12px 16px',
-                marginBottom: 10,
+                borderRadius: 10, padding: '12px 16px', marginBottom: 10,
               }}>
                 <span style={{ fontSize: 22 }}>📑</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>{doc.nom}</div>
-                  <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 12 }}>
-                    Téléchargé le {doc.date}
-                  </div>
+                  <div style={{ color: '#F0EDE8', fontSize: 14, fontWeight: 600 }}>{doc.nom}</div>
+                  <div style={{ color: '#73795D', fontSize: 12 }}>Téléchargé le {doc.date}</div>
                 </div>
                 <a href={doc.url} download style={{ textDecoration: 'none' }}>
                   <button className="btn-edit" style={{ padding: '6px 12px' }}>⬇️</button>
@@ -532,60 +430,43 @@ axios.post(`${API}/change-password`, data, {
             <label style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               marginTop: 8, cursor: 'pointer',
-              background: 'rgba(232,62,140,0.1)',
-              border: '1px dashed rgba(232,62,140,0.4)',
-              color: '#e83e8c', fontSize: 13, fontWeight: 600,
+              background: 'rgba(226,210,206,0.06)',
+              border: '1px dashed rgba(226,210,206,0.3)',
+              color: '#E2D2CE', fontSize: 13, fontWeight: 600,
               borderRadius: 10, padding: '10px 20px',
               transition: 'background 0.2s',
             }}>
               ＋ Télécharger un document
               <input type="file" accept=".pdf,.jpg,.png" style={{ display: 'none' }} onChange={handleDocUpload} />
             </label>
-            <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12, marginTop: 8 }}>
-              PDF, JPG ou PNG. Max 2 Mo.
-            </p>
+            <p style={{ color: '#73795D', fontSize: 12, marginTop: 8 }}>PDF, JPG ou PNG. Max 2 Mo.</p>
           </div>
 
           {/* ── 4. Sécurité ── */}
           <div className="coach-profil__right">
             <div className="coach-profil__right-header">
               <h3>🔒 Sécurité</h3>
-              <button
-                className="btn-edit"
-                onClick={() => setShowPassForm(v => !v)}
-              >
+              <button className="btn-edit" onClick={() => setShowPassForm(v => !v)}>
                 {showPassForm ? '✕ Annuler' : '🔑 Changer le mot de passe'}
               </button>
             </div>
 
             {showPassForm && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
                 {passSuccess && (
-                  <div style={{
-                    background: 'rgba(16,185,129,0.1)',
-                    border: '1px solid rgba(16,185,129,0.3)',
-                    color: '#10b981', borderRadius: 8,
-                    padding: '10px 14px', fontSize: 13,
-                  }}>
+                  <div className="coach-profil__success-message">
                     ✅ Mot de passe changé avec succès !
                   </div>
                 )}
                 {passError && (
-                  <div style={{
-                    background: 'rgba(232,62,140,0.1)',
-                    border: '1px solid rgba(232,62,140,0.3)',
-                    color: '#e83e8c', borderRadius: 8,
-                    padding: '10px 14px', fontSize: 13,
-                  }}>
-                    ⚠️ {passError}
+                  <div className="coach-profil__error-message">
+                    {passError}
                   </div>
                 )}
-
                 {[
-                  { label: 'ANCIEN MOT DE PASSE', key: 'ancien' },
-                  { label: 'NOUVEAU MOT DE PASSE', key: 'nouveau' },
-                  { label: 'CONFIRMER LE NOUVEAU', key: 'confirmer' },
+                  { label: 'ANCIEN MOT DE PASSE',    key: 'ancien' },
+                  { label: 'NOUVEAU MOT DE PASSE',   key: 'nouveau' },
+                  { label: 'CONFIRMER LE NOUVEAU',   key: 'confirmer' },
                 ].map(({ label, key }) => (
                   <div className="coach-profil__field" key={key}>
                     <label>{label}</label>
@@ -596,14 +477,9 @@ axios.post(`${API}/change-password`, data, {
                     />
                   </div>
                 ))}
-
                 <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                  <button className="btn-save" onClick={handlePassChange}>
-                    Confirmer le changement
-                  </button>
-                  <button className="btn-cancel" onClick={() => setShowPassForm(false)}>
-                    Annuler
-                  </button>
+                  <button className="btn-save" onClick={handlePassChange}>Confirmer le changement</button>
+                  <button className="btn-cancel" onClick={() => setShowPassForm(false)}>Annuler</button>
                 </div>
               </div>
             )}

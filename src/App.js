@@ -22,11 +22,12 @@ import CoachDashboard from './pages/CoachPages/CoachDashboard';
 import CoachProfil from './pages/CoachPages/CoachProfil';
 import CoachProgrammes from './pages/CoachPages/CoachProgrammes';
 import CoachParticipants from './pages/CoachPages/CoachParticipants';
+//admin imports
+import LayoutAdmin from './AdminComponents/AdminLayout';
+import GestionAdherent from './AdminPages/GestionAdherent';
 
 
-
-
-
+import CoachGestion from './AdminPages/GoachGestion';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -63,6 +64,12 @@ function App() {
           <Route path="profil" element={<CoachProfil />} />
           <Route path="programmes" element={<CoachProgrammes />} />
           <Route path="participants" element={<CoachParticipants />} />
+        </Route>
+
+         <Route path="/Admin" element={<LayoutAdmin  />}>
+         <Route path="coaches" element={<CoachGestion />} />
+         <Route path="Adherent" element={<GestionAdherent />} />
+  
         </Route>
 
       </Routes>

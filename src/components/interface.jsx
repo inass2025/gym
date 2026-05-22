@@ -4,7 +4,9 @@ import Services from '../pages/Services';
 import Footer from '../pages/Footer';
 import CardContenu from '../pages/CardContenu';
 import Commentaire from '../pages/Commentaire';
-
+import FitnessSection from '../pages/WhyUs';
+import Trainers from '../pages/coach';
+import BlogSection from '../pages/akhbar';
 import './Interface.css';
 import {Link} from "react-router-dom"
 
@@ -61,6 +63,9 @@ export default function Home() {
                 <About/>
                 <Services/>
                 <CardContenu/>
+                <FitnessSection/>
+                <BlogSection/>
+                <Trainers/>
                
                 <Commentaire/>
                 

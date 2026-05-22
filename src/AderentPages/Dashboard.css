@@ -18,7 +18,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #f4a7b9;
+  background: #73795D;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,11 +42,11 @@
 
 .adh-notif-btn {
   background: rgb(24, 23, 23);
-  border: 1px solid #f4a7b9;
+  border: 1px solid #73795D;
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;
-  color: #f4a7b9;
+  color: #73795D;
 }
 
 .adh-notif-btn:hover {
@@ -64,7 +64,7 @@
   background: rgb(24, 23, 23);
   border-radius: 8px;
   padding: 14px 16px;
-  border: 1px solid #f4a7b9;
+  border: 1px solid #73795D;
 }
 
 .adh-stat-label {
@@ -82,11 +82,11 @@
 }
 
 .adh-stat-val.pink {
-  color: #f4a7b9;
+  color: #73795D;
 }
 
 .adh-stat-val.blue {
-  color: #6ba5d6;
+  color: #3D4F5A;
 }
 
 .adh-stat-val.green {
@@ -95,7 +95,7 @@
 
 .adh-stat-sub {
   font-size: 11px;
-  color: #888;
+  color: #E2D2CE ;
   margin-top: 3px;
 }
 
@@ -108,7 +108,7 @@
 
 .adh-card {
      background: rgb(24, 23, 23);;
-  border: 1px solid #f4a7b9;
+  border: 1px solid #73795D ;
   border-radius: 12px;
   padding: 1rem 1.25rem;
 }
@@ -117,7 +117,7 @@
   font-size: 13px;
   font-weight: 500;
   margin-bottom: 12px;
-  color: #f4a7b9;
+  color: #73795D ;
 }
 
 .adh-cal-header {
@@ -130,7 +130,7 @@
 .adh-cal-month {
   font-size: 13px;
   font-weight: 500;
-  color: #ffffff;
+  color: #E2D2CE ;
 }
 
 .adh-cal-nav {
@@ -141,11 +141,11 @@
 .adh-cal-nav button {
   width: 24px;
   height: 24px;
-  border: 1px solid #f4a7b9;
+  border: 1px solid #73795D ;
   border-radius: 6px;
     background: rgb(24, 23, 23);;
   cursor: pointer;
-  color: #f4a7b9;
+  color: #73795D ;
 }
 
 .adh-cal-nav button:hover {
@@ -179,13 +179,13 @@
 }
 
 .adh-cal-day.today {
-  background: #f4a7b9;
+  background: #73795D ;
   color: rgb(41, 39, 39);
   font-weight: 500;
 }
 
 .adh-cal-day.has-event {
-  background: #6ba5d6;
+  background: #3D4F5A ;
   color: rgb(41, 39, 39);
   font-weight: 500;
 }
@@ -204,12 +204,12 @@
   font-size: 14px;
   font-weight: 500;
   text-transform: capitalize;
-  color: #ffffff;
+  color: #E2D2CE ;
 }
 
 .adh-abo-detail {
   font-size: 12px;
-  color: #b0b0b0;
+  color: #E2D2CE ;
 }
 
 .adh-badge {
@@ -243,7 +243,7 @@
 
 .adh-progress-fill {
   height: 100%;
-  background: #f4a7b9;
+  background: #73795D ;
   border-radius: 99px;
 }
 
@@ -262,7 +262,7 @@
   justify-content: space-between;
   font-size: 13px;
   padding: 7px 0;
-  border-bottom: 1px solid #f4a7b9;
+  border-bottom: 1px solid #73795D ;
 }
 
 .adh-profile-row:last-child {

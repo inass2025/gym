@@ -61,19 +61,13 @@ export default function AdherentSidebar() {
        
       </nav>
 
-      {/* USER + LOGOUT */}
-      <div className="ad-sidebar__footer">
-        <div className="ad-sidebar__user">
-          <div className="ad-avatar">{initials.toUpperCase()}</div>
-          <div className="ad-userinfo">
-            <span className="ad-username">{user.prenom} {user.nom}</span>
-            <span className="ad-userplan">Adhérent Annuel</span>
-          </div>
-          <button className="ad-dots" onClick={handleLogout} title="Déconnexion">
-             ↩ 
-          </button>
-        </div>
-      </div>
+
+<div class="ad-sidebar__logout">
+  <button class="ad-logout-btn">
+    <span class="ad-logout-btn__icon">⎋</span>
+    Déconnexion
+  </button>
+</div>
 
     </aside>
   );

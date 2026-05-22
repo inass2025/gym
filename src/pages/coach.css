@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.page {
+  background: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.label {
+  color: #e85d04;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: line-through;
+  margin-bottom: 12px;
+}
+
+.title {
+  color: #fff;
+  font-size: 34px;
+  font-weight: 400;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.orange {
+  color: #e85d04;
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* Grille 4 cartes — une sous l'autre */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Cercle photo */
+.circle {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px dashed #555;
+  position: relative;
+}
+
+.circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cercle actif = bordure orange */
+.circle-active {
+  border-color: #e85d04;
+}
+
+/* Overlay orange + */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(232, 93, 4, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plus {
+  color: #fff;
+  font-size: 52px;
+  font-weight: 200;
+}
+
+/* Nom */
+.name {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Rôle */
+.role {
+  color: #aaa;
+  font-size: 12px;
+  text-align: center;
+}
