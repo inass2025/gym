@@ -1,4 +1,5 @@
 import './App.css';
+import './context/theme.css';
 import Layout from './components/layout';
 import Home from './components/interface';
 import Login from './pages/Login';
@@ -21,6 +22,7 @@ import CoachLayout from './components/CoachComponents/CoachLayout';
 import CoachDashboard from './pages/CoachPages/CoachDashboard';
 import CoachProfil from './pages/CoachPages/CoachProfil';
 import CoachProgrammes from './pages/CoachPages/CoachProgrammes';
+<<<<<<< HEAD
 import CoachParticipants from './pages/CoachPages/CoachParticipants';
 //admin imports
 import LayoutAdmin from './AdminComponents/AdminLayout';
@@ -28,6 +30,14 @@ import GestionAdherent from './AdminPages/GestionAdherent';
 
 
 import CoachGestion from './AdminPages/GoachGestion';
+=======
+// import CoachParticipants from './pages/CoachPages/CoachParticipants';
+import CoachClients from './pages/CoachPages/CoachClients';
+import CoachPlanning from './pages/CoachPages/CoachPlanning';
+import CoachChat from './pages/CoachPages/CoachChat';
+import PrivateRoute from './components/PrivateRoute';
+
+>>>>>>> 1b4c027b3f093123305973523e72a814bcdf62d2
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -59,11 +69,18 @@ function App() {
         </Route>
 
         {/* 🟢 Coach Layout */}
-        <Route path="/coach" element={<CoachLayout />}>
+        <Route path="/coach" element={
+  <PrivateRoute allowedRoles={['coach', 'admin']}>
+    <CoachLayout />
+  </PrivateRoute>
+}>
           <Route index element={<CoachDashboard />} />
           <Route path="profil" element={<CoachProfil />} />
           <Route path="programmes" element={<CoachProgrammes />} />
-          <Route path="participants" element={<CoachParticipants />} />
+          {/* <Route path="participants" element={<CoachParticipants />} /> */}
+          <Route path="clients" element={<CoachClients />} />
+          <Route path="planning" element={<CoachPlanning />} />
+          <Route path="chat" element={<CoachChat />} />
         </Route>
 
          <Route path="/Admin" element={<LayoutAdmin  />}>

@@ -1,0 +1,118 @@
+/* ===== DARK MODE (default) ===== */
+:root,
+[data-theme="dark"] {
+  --bg-main: #1c1b18;
+  --bg-card: #242320;
+  --bg-input: #2c2b27;
+  --border: rgba(255, 255, 255, 0.07);
+  --text-primary: #f0ede8;
+  --text-secondary: rgba(240, 237, 232, 0.55);
+  --text-muted: rgba(240, 237, 232, 0.32);
+  --accent: #3D4F5A;
+  --accent-bg: rgba(61, 79, 90, 0.18);
+  --accent-border: rgba(61, 79, 90, 0.35);
+  --accent2: #73795D;
+  --success: #73795D;
+  --warning: #8a9a7a;
+  --danger: #c0392b;
+  --sidebar-bg: #1e1d1a;
+  --hover-bg: rgba(255, 255, 255, 0.04);
+}
+
+/* ===== LIGHT MODE ===== */
+[data-theme="light"] {
+  --bg-main: #f5f2ec;
+  --bg-card: #ffffff;
+  --bg-input: #f0ede6;
+  --border: rgba(46, 44, 38, 0.1);
+  --text-primary: #2E2C26;
+  --text-secondary: rgba(46, 44, 38, 0.6);
+  --text-muted: rgba(46, 44, 38, 0.38);
+  --accent: #3D4F5A;
+  --accent-bg: rgba(61, 79, 90, 0.1);
+  --accent-border: rgba(61, 79, 90, 0.25);
+  --accent2: #73795D;
+  --success: #73795D;
+  --warning: #8a9a7a;
+  --danger: #c0392b;
+  --sidebar-bg: #ffffff;
+  --hover-bg: rgba(46, 44, 38, 0.04);
+}
+
+/* ===== APPLY THEME ===== */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.coach-layout  { background: var(--bg-main); }
+.coach-main    { background: var(--bg-main); }
+
+/* Sidebar */
+.coach-sidebar                { background: var(--sidebar-bg); border-right-color: var(--border); }
+.coach-sidebar__logo          { color: var(--text-primary); }
+.coach-sidebar__name          { color: var(--text-primary); }
+.coach-sidebar__section       { color: var(--text-muted); }
+.coach-sidebar__logout        { color: var(--text-secondary); }
+.coach-sidebar__nav a         { color: var(--text-secondary); }
+.coach-sidebar__nav a:hover   { background: var(--hover-bg); color: var(--text-primary); }
+.coach-sidebar__nav a.active  { background: var(--accent-bg); color: var(--accent); }
+
+/* Cards */
+.dash-card,
+.coach-profil__left,
+.coach-profil__right,
+.cc__card,
+.cp__seance-card,
+.cd-chart-card,
+.cch__wrap,
+.cch__annonce-card {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* Inputs */
+.coach-profil__field input,
+.coach-profil__field textarea,
+.cc__search,
+.cc__field input,
+.cc__field select,
+.cc__field textarea,
+.cp__modal,
+.cch__input,
+.cch__textarea {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* Drawer */
+.cc__drawer             { background: var(--bg-card); border-left-color: var(--border); }
+.cc__drawer-tabs,
+.cc__drawer-header      { border-color: var(--border); }
+
+/* Info items */
+.cc__info-item,
+.cp__cal-day,
+.cd-seance-item {
+  background: var(--bg-input);
+  border-color: var(--border);
+}
+
+/* Texts */
+.coach-dashboard__header p,
+.coach-profil__header p,
+.cc__header p,
+.cp__header p,
+.cch__page-header p { color: var(--text-secondary); }
+
+.dash-card__label,
+.coach-profil__field label,
+.cc__info-label,
+.cc__section-title,
+.cp__section-title { color: var(--text-muted); }
+
+/* Transition */
+* { transition: background-color 0.25s, border-color 0.25s, color 0.15s; }
