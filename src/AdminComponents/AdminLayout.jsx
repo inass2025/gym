@@ -5,7 +5,7 @@ const NAV_ITEMS = [
   
   { to: 'coaches',      label: 'Coachs'       },
   { to: 'Adherent',      label: 'Membres'      },
-  { to: 'planning',     label: 'Planning'     },
+  { to: 'cours',     label: 'cours'     },
   { to: 'programs',   label: 'Programmes'   },
   { to: 'reports',      label: 'Rapports'     },
 ];

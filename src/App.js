@@ -27,6 +27,7 @@ import CoachProgrammes from './pages/CoachPages/CoachProgrammes';
 //admin imports
 import LayoutAdmin from './AdminComponents/AdminLayout';
 import GestionAdherent from './AdminPages/GestionAdherent';
+ import GestionCours from './AdminPages/GestionCours';
 
 
 import CoachGestion from './AdminPages/GoachGestion';
@@ -55,40 +56,48 @@ function App() {
         </Route>
 
         {/* 🔴 Adherent Layout */}
-        <Route path="/adherent" element={<LayoutAd />}>
-          <Route index element={<Dashboard />} />
-          <Route path="coach" element={<AdherentPage />} />
-          <Route path="MyReservations" element={<MyReservations />} />
-          <Route path="Abonnement" element={<Abonnement />} />
-          <Route path="MesAbonnements" element={<MesAbonnements />} />
-          <Route path="MonProgramme" element={< MonProgramme />} />
-          <Route path="Notification" element={<NotificationBell />} />
-          
-<Route path="/adherent/performances" element={<Performances />} />
-          <Route path="chat" element={<Chat />} />
-        </Route>
+      {/* 🔴 Adherent Layout */}
+<Route path="/adherent" element={
+  <PrivateRoute allowedRoles={['adherent']}>
+    <LayoutAd />
+  </PrivateRoute>
+}>
+  <Route index element={<Dashboard />} />
+  <Route path="coach" element={<AdherentPage />} />
+  <Route path="MyReservations" element={<MyReservations />} />
+  <Route path="Abonnement" element={<Abonnement />} />
+  <Route path="MesAbonnements" element={<MesAbonnements />} />
+  <Route path="MonProgramme" element={<MonProgramme />} />
+  <Route path="Notification" element={<NotificationBell />} />
+  <Route path="/adherent/performances" element={<Performances />} />
+  <Route path="chat" element={<Chat />} />
+</Route>
 
-        {/* 🟢 Coach Layout */}
-        <Route path="/coach" element={
+{/* 🟢 Coach Layout */}
+<Route path="/coach" element={
   <PrivateRoute allowedRoles={['coach', 'admin']}>
     <CoachLayout />
   </PrivateRoute>
 }>
-          <Route index element={<CoachDashboard />} />
-          <Route path="profil" element={<CoachProfil />} />
-          <Route path="programmes" element={<CoachProgrammes />} />
-          {/* <Route path="participants" element={<CoachParticipants />} /> */}
-          <Route path="clients" element={<CoachClients />} />
-          <Route path="planning" element={<CoachPlanning />} />
-          <Route path="chat" element={<CoachChat />} />
-        </Route>
+  <Route index element={<CoachDashboard />} />
+  <Route path="profil" element={<CoachProfil />} />
+  <Route path="programmes" element={<CoachProgrammes />} />
+  <Route path="clients" element={<CoachClients />} />
+  <Route path="planning" element={<CoachPlanning />} />
+  <Route path="chat" element={<CoachChat />} />
+</Route>
 
-         <Route path="/Admin" element={<LayoutAdmin  />}>
-         <Route path="coaches" element={<CoachGestion />} />
-         <Route path="Adherent" element={<GestionAdherent />} />
-  
-        </Route>
+{/* 🔴 Admin Layout */}
+<Route path="/Admin" element={
+  <PrivateRoute allowedRoles={['admin']}>
+    <LayoutAdmin />
+  </PrivateRoute>
+}>
+  <Route path="coaches" element={<CoachGestion />} />
+  <Route path="Adherent" element={<GestionAdherent />} />
 
+<Route path="cours" element={<GestionCours />} />
+</Route>
       </Routes>
     </BrowserRouter>
   );

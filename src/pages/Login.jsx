@@ -31,23 +31,15 @@ export default function Login() {
       password: password,
     })
     .then((res) => {
-      const role = res.data.role;
-      localStorage.setItem("token", res.data.token);
-      
-localStorage.setItem("token", res.data.token);
-localStorage.setItem("user", JSON.stringify(res.data.user));
-localStorage.setItem("role", res.data.role);
+  const role = res.data.role;
+  localStorage.setItem("token", res.data.token);
+  localStorage.setItem("user", JSON.stringify(res.data.user));
+  localStorage.setItem("role", role);
 
-
-      localStorage.setItem("role", role);
-      if (role === "admin") {
-        navigate("/admin");
-      } else if (role === "coach") {
-        navigate("/coach");
-      } else {
-        navigate("/adherent");
-      }
-    })
+  if (role === "admin") navigate("/Admin");
+  else if (role === "coach") navigate("/coach");
+  else navigate("/adherent");
+})
     .catch((err) => {
   console.log("STATUS:", err.response?.status);
   console.log("DATA:", err.response?.data);
