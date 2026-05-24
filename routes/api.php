@@ -19,12 +19,7 @@ use App\Http\Controllers\ProgrammeController;
 
 // ─── dakhel Route::middleware('auth:sanctum')->group(function () { ───
 
-// 🔹 Gestion Adhérents CRUD
-Route::get('/adherent',          [AdherentController::class, 'index']);
-Route::post('/adherent',         [AdherentController::class, 'store']);
-Route::get('/adherent/{adherent}',    [AdherentController::class, 'show']);
-Route::put('/adherent/{adherent}',    [AdherentController::class, 'update']);
-Route::delete('/adherent/{adherent}', [AdherentController::class, 'destroy']);
+
 // gestion adherent crud 
 Route::get('/adherents',                [AdherentController::class, 'index']);
 Route::post('/adherents',               [AdherentController::class, 'store']);
@@ -62,8 +57,23 @@ Route::post('/login', [AuthController::class, 'login']);
 | 🔐 PROTECTED ROUTES (auth:sanctum)
 |--------------------------------------------------------------------------
 */
+// ✅ GET — public (بلا token)
+Route::get('/cours', [CoursController::class, 'index']);
+Route::get('/coaches-list', [CoursController::class, 'coachesList']);
 
-
+// 🔒 POST / PUT / DELETE — admin only
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/cours', [CoursController::class, 'store']);
+    Route::put('/cours/{id}', [CoursController::class, 'update']);
+    Route::delete('/cours/{id}', [CoursController::class, 'destroy']);
+});
+// Admin only
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/cours', [CoursController::class, 'store']);
+    Route::put('/cours/{id}', [CoursController::class, 'update']);
+    Route::delete('/cours/{id}', [CoursController::class, 'destroy']);
+});
+//
 Route::patch('/reservations/{id}/accepter', [ReservationController::class, 'accepter']);
 Route::patch('/reservations/{id}/refuser', [ReservationController::class, 'refuser']);
 Route::put('/programmes/{id}', [ProgrammeController::class, 'update']);
