@@ -50,10 +50,7 @@ export default function Home() {
             <span className="hero__icon hero__icon--dark">↗</span>
          </Link>
 
-          <a href="#offre" className="hero__cta-secondary">
-            See the offers
-            <span className="hero__icon hero__icon--blue">↓</span>
-          </a>
+          
 
         </div>
       </div>
