@@ -49,7 +49,7 @@ function App() {
         {/* 🔵 Public Layout */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="gallery" element={<Gallery />} />
+          <Route path="Gallery" element={<Gallery />} />
           <Route path="contact" element={<Contact />} />
           <Route path="login" element={<Login />} />
           <Route path="moreabout" element={<MoreAbout />} />

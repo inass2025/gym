@@ -11,12 +11,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 150px 100px;
   font-family: 'Segoe UI', sans-serif;
 }
 
 .label {
-  color: #e85d04;
+  color: #73795D;
   font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;

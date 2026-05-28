@@ -42,31 +42,34 @@ export default function Navbar() {
 
           <li className="navbar__dot"></li>
           <li>
-            <a href="#Coaches" className="navbar__link">
-              Coaches
+            <a href="#Sevices" className="navbar__link">
+              Programs
             </a>
           </li>
 
           <li className="navbar__dot"></li>
           <li>
-             <a href="#Facilities" className="navbar__link">
-              Facilities
+             <a href="#classes" className="navbar__link">
+              classes
+            </a>
+          </li>
+            <li className="navbar__dot"></li>
+          <li>
+             <a href="#whyUs" className="navbar__link">
+              whyUs
             </a>
           </li>
 
-          <li className="navbar__dot"></li>
+             <li className="navbar__dot"></li>
           <li>
-            <NavLink to="/gallery" className={navLink}>
-              Gallery
-            </NavLink>
+             <a href="#Blog" className="navbar__link">
+              Blog
+            </a>
           </li>
 
-          <li className="navbar__dot"></li>
-          <li>
-            <NavLink to="/contact" className={navLink}>
-              Contact
-            </NavLink>
-          </li>
+          
+
+          
         </ul>
 
         {/* Boutons droite (desktop) */}
@@ -74,8 +77,8 @@ export default function Navbar() {
           <NavLink to="/login" className="navbar__login">
             Log in
           </NavLink>
-          <NavLink to="/join" className="navbar__cta">
-            Join Now
+          <NavLink to="/Gallery" className="navbar__cta">
+             Gallery
             <span className="navbar__cta-icon">↗</span>
           </NavLink>
         </div>
