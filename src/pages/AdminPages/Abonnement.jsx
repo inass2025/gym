@@ -1,5 +1,3 @@
-// src/pages/AdminPages/Abonnements.jsx
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './DashboardAdmin.css';
@@ -8,11 +6,42 @@ const API   = 'http://localhost:8000/api';
 const token = () => localStorage.getItem('token');
 const auth  = () => ({ headers: { Authorization: `Bearer ${token()}` } });
 
+const inputStyle = {
+  width: '100%',
+  boxSizing: 'border-box',
+  background: '#2a2927',
+  border: '1.5px solid rgba(255,255,255,0.08)',
+  borderRadius: '12px',
+  padding: '14px 16px',
+  color: '#fff',
+  fontSize: '14px',
+  outline: 'none',
+  transition: 'border-color 0.2s',
+  appearance: 'none',
+  WebkitAppearance: 'none',
+};
+
+const labelStyle = {
+  display: 'block',
+  color: 'rgba(255,255,255,0.35)',
+  fontSize: '11px',
+  textTransform: 'uppercase',
+  letterSpacing: '1.2px',
+  marginBottom: '8px',
+  fontWeight: '600',
+};
+
+const fieldStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+};
+
 export default function Abonnements() {
   const [abonnements, setAbonnements] = useState([]);
   const [loading, setLoading]         = useState(true);
   const [showForm, setShowForm]       = useState(false);
   const [editId, setEditId]           = useState(null);
+  const [focusedField, setFocusedField] = useState(null);
   const [form, setForm]               = useState({
     adherent_id: '', type: 'mensuel',
     date_debut: '', date_fin: '',
@@ -74,19 +103,18 @@ export default function Abonnements() {
     fetchAbonnements();
   };
 
-  // Stats rapides calculées côté client
   const stats = {
-    total:    abonnements.length,
-    actifs:   abonnements.filter(a => a.statut === 'actif').length,
+    total:     abonnements.length,
+    actifs:    abonnements.filter(a => a.statut === 'actif').length,
     suspendus: abonnements.filter(a => a.statut === 'suspendu').length,
-    expires:  abonnements.filter(a => a.statut === 'expire').length,
+    expires:   abonnements.filter(a => a.statut === 'expire').length,
   };
 
   const STAT_CARDS = [
-    { icon: 'ti-ticket',          label: 'Total abonnements', value: stats.total,    cls: 'db-stat-sage'  },
-    { icon: 'ti-circle-check',    label: 'Actifs',            value: stats.actifs,   cls: 'db-stat-green' },
-    { icon: 'ti-player-pause',    label: 'Suspendus',         value: stats.suspendus,cls: 'db-stat-amber' },
-    { icon: 'ti-calendar-x',      label: 'Expirés',           value: stats.expires,  cls: 'db-stat-red'   },
+    { icon: 'ti-ticket',       label: 'Total abonnements', value: stats.total,     cls: 'db-stat-sage'  },
+    { icon: 'ti-circle-check', label: 'Actifs',            value: stats.actifs,    cls: 'db-stat-green' },
+    { icon: 'ti-player-pause', label: 'Suspendus',         value: stats.suspendus, cls: 'db-stat-amber' },
+    { icon: 'ti-calendar-x',   label: 'Expirés',           value: stats.expires,   cls: 'db-stat-red'   },
   ];
 
   const statutBadge = (s) => ({
@@ -95,6 +123,13 @@ export default function Abonnements() {
     expire:    'badge-bloque',
     renouvele: 'badge-info',
   }[s] || '');
+
+  const getInputStyle = (name) => ({
+    ...inputStyle,
+    borderColor: focusedField === name
+      ? 'rgba(115,121,93,0.7)'
+      : 'rgba(255,255,255,0.08)',
+  });
 
   if (loading) return (
     <div className="db-loading">
@@ -138,59 +173,132 @@ export default function Abonnements() {
 
       {/* ── FORMULAIRE ── */}
       {showForm && (
-        <div className="db-card" style={{ marginBottom: 24 }}>
-          <div className="db-card-header">
-            <h2 className="db-card-titre">
-              <i className={`ti ${editId ? 'ti-edit' : 'ti-plus'}`} />
+        <div style={{
+          background: '#1a1917',
+          borderRadius: '16px',
+          padding: '28px 32px',
+          marginBottom: '24px',
+          border: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          {/* Titre formulaire */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
+            <i className={`ti ${editId ? 'ti-edit' : 'ti-plus'}`}
+              style={{ color: '#8b7cf6', fontSize: 20 }} />
+            <h3 style={{ color: '#fff', fontFamily: 'Syne, sans-serif', fontSize: 18, fontWeight: 600, margin: 0 }}>
               {editId ? 'Modifier abonnement' : 'Nouvel abonnement'}
-            </h2>
+            </h3>
           </div>
-          <div className="db-form-grid">
-            <div className="db-form-field">
-              <label className="db-form-label">ID Adhérent</label>
-              <input className="db-form-input" type="number" value={form.adherent_id}
-                onChange={e => setForm({ ...form, adherent_id: e.target.value })} />
+
+          {/* Grid des champs */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 24px' }}>
+
+            <div style={fieldStyle}>
+              <label style={labelStyle}>ID Adhérent</label>
+              <input
+                style={getInputStyle('adherent_id')}
+                type="number"
+                placeholder="Ex: 12"
+                value={form.adherent_id}
+                onChange={e => setForm({ ...form, adherent_id: e.target.value })}
+                onFocus={() => setFocusedField('adherent_id')}
+                onBlur={() => setFocusedField(null)}
+              />
             </div>
-            <div className="db-form-field">
-              <label className="db-form-label">Type</label>
-              <select className="db-form-input" value={form.type}
-                onChange={e => setForm({ ...form, type: e.target.value })}>
+
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Type</label>
+              <select
+                style={getInputStyle('type')}
+                value={form.type}
+                onChange={e => setForm({ ...form, type: e.target.value })}
+                onFocus={() => setFocusedField('type')}
+                onBlur={() => setFocusedField(null)}
+              >
                 <option value="mensuel">Mensuel</option>
                 <option value="trimestriel">Trimestriel</option>
                 <option value="annuel">Annuel</option>
               </select>
             </div>
-            <div className="db-form-field">
-              <label className="db-form-label">Date début</label>
-              <input className="db-form-input" type="date" value={form.date_debut}
-                onChange={e => setForm({ ...form, date_debut: e.target.value })} />
+
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Date début</label>
+              <input
+                style={getInputStyle('date_debut')}
+                type="date"
+                value={form.date_debut}
+                onChange={e => setForm({ ...form, date_debut: e.target.value })}
+                onFocus={() => setFocusedField('date_debut')}
+                onBlur={() => setFocusedField(null)}
+              />
             </div>
-            <div className="db-form-field">
-              <label className="db-form-label">Date fin</label>
-              <input className="db-form-input" type="date" value={form.date_fin}
-                onChange={e => setForm({ ...form, date_fin: e.target.value })} />
+
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Date fin</label>
+              <input
+                style={getInputStyle('date_fin')}
+                type="date"
+                value={form.date_fin}
+                onChange={e => setForm({ ...form, date_fin: e.target.value })}
+                onFocus={() => setFocusedField('date_fin')}
+                onBlur={() => setFocusedField(null)}
+              />
             </div>
-            <div className="db-form-field">
-              <label className="db-form-label">Prix (MAD)</label>
-              <input className="db-form-input" type="number" value={form.prix}
-                onChange={e => setForm({ ...form, prix: e.target.value })} />
+
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Prix (MAD)</label>
+              <input
+                style={getInputStyle('prix')}
+                type="number"
+                placeholder="Ex: 300"
+                value={form.prix}
+                onChange={e => setForm({ ...form, prix: e.target.value })}
+                onFocus={() => setFocusedField('prix')}
+                onBlur={() => setFocusedField(null)}
+              />
             </div>
-            <div className="db-form-field">
-              <label className="db-form-label">Statut</label>
-              <select className="db-form-input" value={form.statut}
-                onChange={e => setForm({ ...form, statut: e.target.value })}>
+
+            <div style={fieldStyle}>
+              <label style={labelStyle}>Statut</label>
+              <select
+                style={getInputStyle('statut')}
+                value={form.statut}
+                onChange={e => setForm({ ...form, statut: e.target.value })}
+                onFocus={() => setFocusedField('statut')}
+                onBlur={() => setFocusedField(null)}
+              >
                 <option value="actif">Actif</option>
                 <option value="suspendu">Suspendu</option>
                 <option value="expire">Expiré</option>
                 <option value="renouvele">Renouvelé</option>
               </select>
             </div>
-            <div className="db-form-field" style={{ gridColumn: '1/-1' }}>
-              <button className="db-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleSubmit}>
+
+            {/* Bouton submit */}
+            <div style={{ gridColumn: '1/-1', marginTop: 8 }}>
+              <button
+                onClick={handleSubmit}
+                style={{
+                  background: '#4a5568',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '14px 32px',
+                  fontSize: '15px',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = '#3d4a5c'}
+                onMouseLeave={e => e.currentTarget.style.background = '#4a5568'}
+              >
                 <i className={`ti ${editId ? 'ti-device-floppy' : 'ti-plus'}`} />
-                {editId ? 'Enregistrer modifications' : 'Ajouter abonnement'}
+                {editId ? 'Enregistrer modifications' : 'Ajouter'}
               </button>
             </div>
+
           </div>
         </div>
       )}

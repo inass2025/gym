@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Plus, Edit2, Trash2, ChevronLeft, ChevronRight,
-  MapPin, Users, Calendar, Clock, Dumbbell,
+  MapPin, Users, Calendar, Dumbbell,
   Inbox, ClipboardList, Zap, CheckCircle, XCircle,
   AlertCircle, Save, X
 } from 'lucide-react';
@@ -9,22 +9,22 @@ import api from '../../Api/Axios.js';
 import './CoachPlanning.css';
 
 const JOURS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MOIS  = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 
 export default function CoachPlanning() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-  const [activeTab, setActiveTab] = useState('aujourd_hui');
-  const [cours, setCours] = useState([]);
+  const [activeTab, setActiveTab]     = useState('aujourd_hui');
+  const [cours, setCours]             = useState([]);
   const [reservations, setReservations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading]         = useState(true);
 
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [currentYear,  setCurrentYear]  = useState(today.getFullYear());
 
-  const [showForm, setShowForm] = useState(false);
-  const [editingCours, setEditingCours] = useState(null);
+  const [showForm,      setShowForm]      = useState(false);
+  const [editingCours,  setEditingCours]  = useState(null);
   const [form, setForm] = useState({
     nom: '', description: '', date: '', heur: '',
     capacite: '', salle: '', niveau: 'Débutant'
@@ -37,22 +37,22 @@ export default function CoachPlanning() {
     try {
       const [coursRes, resRes] = await Promise.all([
         api.get('/api/cours'),
-        api.get('/api/reservation'),
+        api.get('/api/reservations'),   // <-- fix: pluriel
       ]);
-      const mesCours = coursRes.data.filter(c => c.coach_id === user.id);
+      const mesCours    = coursRes.data.filter(c => c.coach_id === user.id);
       const mesCoursIds = mesCours.map(c => c.id);
-      const mesRes = resRes.data.filter(r => mesCoursIds.includes(r.cours_id));
+      const mesRes      = resRes.data.filter(r => mesCoursIds.includes(r.cours_id));
       setCours(mesCours);
       setReservations(mesRes);
     } catch (_) {}
     setLoading(false);
   };
 
-  const todayStr = today.toISOString().split('T')[0];
-  const seancesAujourdHui = cours.filter(c => c.date?.startsWith(todayStr));
+  const todayStr             = today.toISOString().split('T')[0];
+  const seancesAujourdHui    = cours.filter(c => c.date?.startsWith(todayStr));
   const reservationsEnAttente = reservations.filter(r => r.status === 'en_attente' || r.status === 'confirmé');
 
-  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+  const getDaysInMonth    = (month, year) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (month, year) => {
     const day = new Date(year, month, 1).getDay();
     return day === 0 ? 6 : day - 1;
@@ -67,7 +67,6 @@ export default function CoachPlanning() {
     if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1); }
     else setCurrentMonth(m => m - 1);
   };
-
   const nextMonth = () => {
     if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1); }
     else setCurrentMonth(m => m + 1);
@@ -84,10 +83,13 @@ export default function CoachPlanning() {
   const openEditForm = (c) => {
     setEditingCours(c);
     setForm({
-      nom: c.nom || '', description: c.description || '',
-      date: c.date || '', heur: c.heur || '',
-      capacite: c.capacite || '', salle: c.salle || '',
-      niveau: c.niveau || 'Débutant'
+      nom:         c.nom         || '',
+      description: c.description || '',
+      date:        c.date        || '',
+      heur:        c.heur        || '',
+      capacite:    c.capacite    || '',
+      salle:       c.salle       || '',
+      niveau:      c.niveau      || 'Débutant',
     });
     setShowForm(true);
   };
@@ -102,7 +104,10 @@ export default function CoachPlanning() {
         setCours(prev => [...prev, res.data]);
       }
       setShowForm(false);
-    } catch (err) { console.log(err.response?.data); }
+    } catch (err) {
+      console.log(err.response?.data);
+      alert(JSON.stringify(err.response?.data));
+    }
   };
 
   const handleDelete = async (id) => {
@@ -127,26 +132,22 @@ export default function CoachPlanning() {
     } catch (_) {}
   };
 
-  const formatHeure = (heur) => {
-    if (!heur) return '—';
-    return heur.slice(0, 5);
-  };
-
-  const formatDate = (date) => {
-    if (!date) return '—';
-    return new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-  };
+  const formatHeure = (heur) => heur ? heur.slice(0, 5) : '—';
+  const formatDate  = (date) => date
+    ? new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+    : '—';
 
   const TABS = [
-    { key: 'aujourd_hui', label: "Aujourd'hui", icon: <Zap size={15} /> },
-    { key: 'calendrier',  label: 'Calendrier',  icon: <Calendar size={15} /> },
-    { key: 'seances',     label: 'Séances',     icon: <Dumbbell size={15} /> },
-    { key: 'reservations',label: 'Réservations',icon: <ClipboardList size={15} /> },
+    { key: 'aujourd_hui',  label: "Aujourd'hui", icon: <Zap size={15} />           },
+    { key: 'calendrier',   label: 'Calendrier',  icon: <Calendar size={15} />      },
+    { key: 'seances',      label: 'Séances',     icon: <Dumbbell size={15} />      },
+    { key: 'reservations', label: 'Réservations',icon: <ClipboardList size={15} /> },
   ];
 
   return (
     <div className="cp">
-      {/* Header */}
+
+      {/* ── Header ── */}
       <div className="cp__header">
         <div>
           <h1>Mon <span>Planning</span></h1>
@@ -157,7 +158,7 @@ export default function CoachPlanning() {
         </button>
       </div>
 
-      {/* Tabs */}
+      {/* ── Tabs ── */}
       <div className="coach-profil__tabs">
         {TABS.map(t => (
           <button
@@ -177,13 +178,12 @@ export default function CoachPlanning() {
         <div className="cp__loading">Chargement...</div>
       ) : (
         <>
-          {/* ===== TAB AUJOURD'HUI ===== */}
+          {/* ===== AUJOURD'HUI ===== */}
           {activeTab === 'aujourd_hui' && (
             <div className="cp__today">
               <div className="cp__today-date">
                 {today.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
-
               {seancesAujourdHui.length === 0 ? (
                 <div className="cp__empty">
                   <Inbox size={36} strokeWidth={1.3} />
@@ -207,7 +207,7 @@ export default function CoachPlanning() {
                           </div>
                         </div>
                         <div className="cp__seance-actions">
-                          <button className="btn-edit" onClick={() => openEditForm(c)}><Edit2 size={14} /></button>
+                          <button className="btn-edit"   onClick={() => openEditForm(c)}><Edit2  size={14} /></button>
                           <button className="btn-delete" onClick={() => handleDelete(c.id)}><Trash2 size={14} /></button>
                         </div>
                       </div>
@@ -218,26 +218,23 @@ export default function CoachPlanning() {
             </div>
           )}
 
-          {/* ===== TAB CALENDRIER ===== */}
+          {/* ===== CALENDRIER ===== */}
           {activeTab === 'calendrier' && (
             <div className="cp__calendar-wrap">
               <div className="cp__cal-header">
-                <button className="cp__cal-nav" onClick={prevMonth}><ChevronLeft size={18} /></button>
+                <button className="cp__cal-nav" onClick={prevMonth}><ChevronLeft  size={18} /></button>
                 <h3>{MOIS[currentMonth]} {currentYear}</h3>
                 <button className="cp__cal-nav" onClick={nextMonth}><ChevronRight size={18} /></button>
               </div>
-
               <div className="cp__cal-grid">
-                {JOURS.map(j => (
-                  <div key={j} className="cp__cal-day-label">{j}</div>
-                ))}
+                {JOURS.map(j => <div key={j} className="cp__cal-day-label">{j}</div>)}
                 {Array.from({ length: getFirstDayOfMonth(currentMonth, currentYear) }).map((_, i) => (
                   <div key={`empty-${i}`} className="cp__cal-day cp__cal-day--empty" />
                 ))}
                 {Array.from({ length: getDaysInMonth(currentMonth, currentYear) }).map((_, i) => {
-                  const day = i + 1;
+                  const day       = i + 1;
                   const daysCours = getCoursDuJour(day);
-                  const isToday = day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+                  const isToday   = day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
                   return (
                     <div key={day} className={`cp__cal-day ${isToday ? 'cp__cal-day--today' : ''} ${daysCours.length > 0 ? 'cp__cal-day--has-cours' : ''}`}>
                       <span className="cp__cal-day-num">{day}</span>
@@ -253,7 +250,7 @@ export default function CoachPlanning() {
             </div>
           )}
 
-          {/* ===== TAB SÉANCES ===== */}
+          {/* ===== SÉANCES ===== */}
           {activeTab === 'seances' && (
             <div className="cp__seances">
               {cours.length === 0 ? (
@@ -264,8 +261,8 @@ export default function CoachPlanning() {
                 </div>
               ) : (
                 <div className="cp__seances-list">
-                  {cours.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => {
-                    const nbRes = reservations.filter(r => r.cours_id === c.id).length;
+                  {[...cours].sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => {
+                    const nbRes  = reservations.filter(r => r.cours_id === c.id).length;
                     const isPast = c.date && new Date(c.date) < today;
                     return (
                       <div key={c.id} className={`cp__seance-card ${isPast ? 'cp__seance-card--past' : ''}`}>
@@ -285,7 +282,7 @@ export default function CoachPlanning() {
                           </div>
                         </div>
                         <div className="cp__seance-actions">
-                          <button className="btn-edit" onClick={() => openEditForm(c)}><Edit2 size={14} /> Modifier</button>
+                          <button className="btn-edit"   onClick={() => openEditForm(c)}><Edit2  size={14} /> Modifier</button>
                           <button className="btn-delete" onClick={() => handleDelete(c.id)}><Trash2 size={14} /></button>
                         </div>
                       </div>
@@ -296,7 +293,7 @@ export default function CoachPlanning() {
             </div>
           )}
 
-          {/* ===== TAB RÉSERVATIONS ===== */}
+          {/* ===== RÉSERVATIONS ===== */}
           {activeTab === 'reservations' && (
             <div className="cp__reservations">
               {reservations.length === 0 ? (
@@ -319,8 +316,8 @@ export default function CoachPlanning() {
                       </div>
                       <div className="cp__res-right">
                         <span className={`cp__status cp__status--${r.status}`}>
-                          {r.status === 'accepté'  && <><CheckCircle size={12} /> Accepté</>}
-                          {r.status === 'refusé'   && <><XCircle size={12} /> Refusé</>}
+                          {r.status === 'accepté'  && <><CheckCircle  size={12} /> Accepté</>}
+                          {r.status === 'refusé'   && <><XCircle      size={12} /> Refusé</>}
                           {(r.status === 'confirmé' || r.status === 'en_attente') && <><AlertCircle size={12} /> En attente</>}
                         </span>
                         {(r.status === 'en_attente' || r.status === 'confirmé') && (
@@ -351,7 +348,7 @@ export default function CoachPlanning() {
               <h3>
                 {editingCours
                   ? <><Edit2 size={16} /> Modifier la séance</>
-                  : <><Plus size={16} /> Nouvelle séance</>}
+                  : <><Plus  size={16} /> Nouvelle séance</>}
               </h3>
               <button className="btn-cancel" onClick={() => setShowForm(false)}><X size={16} /></button>
             </div>
@@ -402,6 +399,7 @@ export default function CoachPlanning() {
           </div>
         </div>
       )}
+
     </div>
   );
 }
