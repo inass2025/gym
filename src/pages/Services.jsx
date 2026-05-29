@@ -54,9 +54,8 @@ export default function Sevice() {
             <div className="fs-card-body">
               <h3 className="fs-card-title">{card.title}</h3>
               <p className="fs-card-text">{card.desc}</p>
-              <button className="fs-btn"> <Link to="/contact">
-                            Contact Us
-                          </Link>
+              <button className="fs-btn">
+                           Learn More
                           </button>
             </div>
           </div>

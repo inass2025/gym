@@ -95,8 +95,9 @@ Journey With Usn<br />
         </div>
 
         {/* CTA */}
-        <Link to="/MoreAbout" className="about__cta reveal" data-delay="5">
-          <span className="about__cta-text">Learn More</span>
+        
+        <Link to="/contact" className="about__cta reveal" data-delay="5">
+          <span className="about__cta-text">contact Us</span>
           <span className="about__cta-arrow">→</span>
         </Link>
 

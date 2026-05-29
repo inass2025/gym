@@ -90,10 +90,10 @@ export default function Abonnement() {
     if (!carte.nom.trim())                            { setErrCarte("Nom requis."); return false; }
     setErrCarte(""); return true;
   }
-
   async function finaliser() {
     if (!validerCarte()) return;
     setLoading(true);
+
     const adherentId = getAdherentId();
     const debut = new Date();
     const fin   = new Date();
@@ -101,17 +101,25 @@ export default function Abonnement() {
 
     try {
       const resAbo = await api.post("/abonnement/souscrire", {
-        type: plan.type, prix: prixFinal, statut: "actif",
-        date_debut: toDate(debut), date_fin: toDate(fin),
+        type: plan.type,
+        prix: prixFinal,
+        statut: "actif",
+        date_debut: toDate(debut),
+        date_fin: toDate(fin),
         adherent_id: adherentId,
       });
+
       const abonnementId = resAbo.data?.abonnement?.id || resAbo.data?.id || null;
 
-      await api.post("/paiement", {
-        montant: prixFinal, date_paiement: toDate(debut),
-        mrthode: methode,   statut: "payé",
-        adherent_id: adherentId, abonnement_id: abonnementId,
+      await api.post("/paiements", {
+        montant: prixFinal,
+        date_paiement: toDate(debut),
+        methode: methode,
+        statut: "payé",
+        adherent_id: adherentId,
+        abonnement_id: abonnementId,
       });
+
       setEtape("succes");
     } catch (e) {
       alert("Erreur : " + (e.response?.data?.message || "Réessayez."));
@@ -119,6 +127,7 @@ export default function Abonnement() {
       setLoading(false);
     }
   }
+  
 
   function copierCode(c) {
     navigator.clipboard.writeText(c).catch(() => {});
