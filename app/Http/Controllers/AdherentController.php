@@ -147,16 +147,24 @@ class AdherentController extends Controller
     // Supprimer un adhérent
     // =========================================================
     public function destroy(Adherent $adherent): JsonResponse
-    {
-        // Supprimer la photo du storage si elle existe
-        if ($adherent->photo) {
-            Storage::disk('public')->delete($adherent->photo);
-        }
-
-        $adherent->delete();
-
-        return response()->json(['message' => 'Adhérent supprimé avec succès.']);
+{
+    if ($adherent->photo) {
+        Storage::disk('public')->delete($adherent->photo);
     }
+
+    // Supprimer toutes les relations liées
+    $adherent->abonnements()->delete();
+    $adherent->reservation()->delete();
+    $adherent->performance()->delete();
+    $adherent->notification()->delete();
+    $adherent->message()->delete();
+    $adherent->paiements()->delete();
+    \App\Models\Programme::where('adherent_id', $adherent->id)->delete();
+
+    $adherent->delete();
+
+    return response()->json(['message' => 'Adhérent supprimé avec succès.']);
+}
 
 
     // =========================================================

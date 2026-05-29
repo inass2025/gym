@@ -17,7 +17,19 @@ class PaiementController extends Controller
 
 public function store(Request $request)
 {
-    $paiment = Paiment::create($request->all());
+    $data = $request->validate([
+        'montant'       => 'required|numeric',
+        'date_paiement' => 'required|date',
+        'statut'        => 'required|string',
+        'adherent_id'   => 'required',
+        'abonnement_id' => 'nullable',
+        'methode'       => 'nullable|string',  // ← nullable
+    ]);
+
+    // default value إلا ماجاتش
+    $data['methode'] = $data['methode'] ?? 'carte';
+
+    $paiment = Paiment::create($data);
     return response()->json($paiment, 201);
 }
     public function show($id)

@@ -9,13 +9,13 @@ class Paiment extends Model
     protected $table = 'paiement';
 
     protected $fillable = [
-        'montant',
-        'date_paiement',
-        'mrthode',        // ✅ khllitha kma hiya
-        'statut',
-        'adherent_id',
-        'abonnement_id',
-    ];
+    'montant',
+    'date_paiement',
+    'statut',
+    'methode',       
+    'adherent_id',
+    'abonnement_id',
+];
 
     // ✅ Kayna deja
     public function adherent()

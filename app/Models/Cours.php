@@ -15,7 +15,7 @@ class Cours extends Model
         'date',
         'capacite',
         'salle',
-        'coach_id', // ✅ ajouté
+        'coach_id', 
     ];
 
     // ✅ coach = adherent avec role "coach"

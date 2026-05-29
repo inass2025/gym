@@ -16,6 +16,7 @@ class Abonnement extends Model
         'prix',
         'statut',
         'adherent_id',
+        
     ];
 
     // ✅ Kayna deja

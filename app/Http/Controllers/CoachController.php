@@ -166,17 +166,31 @@ class CoachController extends Controller
     }
 
     // ✅ 6. SUPPRIMER un coach
-    public function destroy($id)
-    {
-        try {
-            $coach = Adherent::where('id', $id)->where('role', 'coach')->firstOrFail();
-            $coach->delete();
-            return response()->json(['message' => 'Coach supprimé']);
+   public function destroy($id)
+{
+    try {
+        $coach = Adherent::where('id', $id)->where('role', 'coach')->firstOrFail();
 
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Coach non trouvé'], 404);
-        }
+        // Supprimer toutes les relations liées
+        $coach->abonnements()->delete();
+        $coach->reservation()->delete();
+        $coach->performance()->delete();
+        $coach->notification()->delete();
+        $coach->message()->delete();
+        
+        // Programmes liés au coach
+        \App\Models\Programme::where('coach_id', $id)->delete();
+
+        $coach->delete();
+
+        return response()->json(['message' => 'Coach supprimé avec succès.']);
+
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return response()->json(['message' => 'Coach non trouvé.'], 404);
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
     }
+}
 
     // ✅ 7. BLOQUER / DÉBLOQUER (toggle)
     public function toggleBloque($id)
