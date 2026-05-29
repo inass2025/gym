@@ -10,28 +10,29 @@ use Illuminate\Support\Facades\Hash;
 class CoachController extends Controller
 {
     // ✅ 1. LISTE tous les coachs
-    public function index()
-    {
-        try {
-            $coachs = Adherent::where('role', 'coach')->get();
+   public function index()
+{
+    try {
+        $coachs = Adherent::where('role', 'coach')->get();
 
-            $coachs = $coachs->map(function ($coach) {
-                if (Schema::hasColumn('adherents', 'coach_id')) {
-                    $coach->nombre_clients = Adherent::where('coach_id', $coach->id)
-                                                     ->where('role', 'adherent')
-                                                     ->count();
-                } else {
-                    $coach->nombre_clients = 0;
-                }
-                return $coach;
-            });
+        // ✅ Check WAHED merra barra men loop
+        $hasCoachId = Schema::hasColumn('adherents', 'coach_id');
 
-            return response()->json($coachs);
+        $coachs = $coachs->map(function ($coach) use ($hasCoachId) {
+            $coach->nombre_clients = $hasCoachId
+                ? Adherent::where('coach_id', $coach->id)
+                        ->where('role', 'adherent')
+                        ->count()
+                : 0;
+            return $coach;
+        });
 
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
-        }
+        return response()->json($coachs);
+
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 500);
     }
+}
 
     // ✅ 2. VOIR un coach (profil)
     public function show($id)

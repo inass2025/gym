@@ -107,4 +107,99 @@ public function check(Request $request)
         'hasAbonnement' => $abonnement ? true : false
     ]);
 }
+
+
+
+// ✅ Suspendre abonnement
+public function suspendre($id)
+{
+    $abonnement = Abonnement::find($id);
+    if (!$abonnement) {
+        return response()->json(['message' => 'Abonnement introuvable'], 404);
+    }
+
+    $abonnement->update(['statut' => 'suspendu']);
+
+    return response()->json([
+        'message'    => 'Abonnement suspendu',
+        'abonnement' => $abonnement
+    ]);
+}
+
+// ✅ Renouveler abonnement
+public function renouveler(Request $request, $id)
+{
+    $abonnement = Abonnement::find($id);
+    if (!$abonnement) {
+        return response()->json(['message' => 'Abonnement introuvable'], 404);
+    }
+
+    $request->validate([
+        'duree_mois' => 'required|integer|min:1',
+    ]);
+
+    $abonnement->update([
+        'date_fin' => \Carbon\Carbon::parse($abonnement->date_fin)
+                        ->addMonths($request->duree_mois),
+        'statut'   => 'actif',
+    ]);
+
+    return response()->json([
+        'message'    => 'Abonnement renouvelé',
+        'abonnement' => $abonnement
+    ]);
+}
+
+// ✅ Historique abonnements dyal adherent
+public function historique($adherent_id)
+{
+    $abonnements = Abonnement::where('adherent_id', $adherent_id)
+                    ->with('adherent')
+                    ->orderBy('date_debut', 'desc')
+                    ->get();
+
+    return response()->json($abonnements);
+}
+
+// ✅ Abonnements li ghadi yexpiro f 7 jours
+public function expirationProche()
+{
+    $abonnements = Abonnement::where('statut', 'actif')
+                    ->whereBetween('date_fin', [
+                        now(),
+                        now()->addDays(7)
+                    ])
+                    ->with('adherent')
+                    ->get()
+                    ->map(function ($abonnement) {
+                        return [
+                            'id'             => $abonnement->id,
+                            'adherent'       => $abonnement->adherent->nom ?? '',
+                            'date_fin'       => $abonnement->date_fin,
+                            'jours_restants' => now()->diffInDays($abonnement->date_fin),
+                        ];
+                    });
+
+    return response()->json($abonnements);
+}
+
+// ✅ Expiration automatique
+public function expireAutomatique()
+{
+    $count = Abonnement::where('statut', 'actif')
+                ->where('date_fin', '<', now())
+                ->update(['statut' => 'expire']);
+
+    return response()->json([
+        'message' => "$count abonnements expirés automatiquement"
+    ]);
+}
+
+
+// ✅ Method dyal admin — jawb KOLHOM
+public function all()
+{
+    $abonnements = Abonnement::with('adherent')->latest()->get();
+    return response()->json($abonnements);
+}
 }

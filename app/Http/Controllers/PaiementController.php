@@ -13,7 +13,7 @@ class PaiementController extends Controller
         return response()->json($paiements, 200);
     }
 
- 
+
 
 public function store(Request $request)
 {
@@ -48,4 +48,41 @@ public function store(Request $request)
         $paiement->delete();
         return response()->json(['message' => 'Paiement supprimé'], 200);
     }
+
+
+
+// ✅ Paiements en retard
+public function enRetard()
+{
+    $paiements = Paiment::where('statut', 'retard')
+                ->with(['adherent', 'abonnement'])
+                ->get();
+
+    return response()->json($paiements);
+}
+
+// ✅ Statistiques revenus
+public function statistiques()
+{
+    return response()->json([
+        'total_revenus'       => Paiment::where('statut', 'paye')->sum('montant'),
+        'revenus_ce_mois'     => Paiment::where('statut', 'paye')
+                                    ->whereMonth('date_paiement', now()->month)
+                                    ->whereYear('date_paiement', now()->year)
+                                    ->sum('montant'),
+        'paiements_en_retard' => Paiment::where('statut', 'retard')->count(),
+        'total_paiements'     => Paiment::count(),
+    ]);
+}
+
+// ✅ Historique paiements dyal adherent
+public function historique($adherent_id)
+{
+    $paiements = Paiment::where('adherent_id', $adherent_id)
+                ->with('abonnement')
+                ->orderBy('date_paiement', 'desc')
+                ->get();
+
+    return response()->json($paiements);
+}
 }

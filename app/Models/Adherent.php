@@ -49,11 +49,10 @@ protected $casts = [
         return $this->hasMany(Reservation::class);
     }
 
-    public function abonnement()
-    {
-        return $this->hasMany(Abonnement::class);
-    }
-
+    public function abonnements()
+{
+    return $this->hasMany(Abonnement::class);
+}
     public function performance()
     {
         return $this->hasMany(Performance::class);
@@ -68,4 +67,16 @@ protected $casts = [
     {
         return $this->hasMany(Notification::class);
     }
+
+public function paiements()
+{
+    return $this->hasMany(Paiment::class);
+}
+public function abonnementActif()
+{
+    return $this->hasOne(Abonnement::class)
+                ->where('statut', 'actif')
+                ->latest();
+}
+    
 }
