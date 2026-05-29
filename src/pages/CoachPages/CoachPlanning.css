@@ -1,47 +1,22 @@
 /* ===== CSS VARIABLES ===== */
 :root {
-  --slate:    #3D4F5A;
-  --slate-h:  #4e6373;
-  --fog:      #E2DECE;
-  --aloe:     #73795D;
-  --aloe-h:   #8f9674;
-  --charcoal: #2E2C26;
-
-  --bg-page:    #2E2C26;
-  --bg-card:    #3d3b34;
-  --bg-input:   #4f4d45;
-  --border:     rgba(226,222,206,0.1);
-  --border-h:   rgba(226,222,206,0.22);
-  --accent:     #3D4F5A;
-  --accent-h:   #4e6373;
-  --text-pri:   #E2DECE;
-  --text-sec:   rgba(226,222,206,0.58);
-  --text-hint:  rgba(226,222,206,0.32);
-  --green:      #8f9674;
-  --green-bg:   rgba(115,121,93,0.2);
+  --bg-page:    #13151b;
+  --bg-card:    #1c1f26;
+  --bg-input:   #252830;
+  --border:     rgba(255, 255, 255, 0.07);
+  --border-h:   rgba(255, 255, 255, 0.14);
+  --accent:     #4a5a4e;
+  --accent-h:   #5a6e5e;
+  --text-pri:   #e8e6e0;
+  --text-sec:   rgba(232,230,224,0.58);
+  --text-hint:  rgba(232,230,224,0.32);
+  --fog:        #e8e6e0;
+  --green:      #8a9e8e;
+  --green-bg:   rgba(74,90,78,0.2);
   --amber:      #b09a6a;
   --amber-bg:   rgba(176,154,106,0.15);
   --danger:     #c06868;
   --danger-bg:  rgba(192,104,104,0.14);
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-page:   #f0ede5;
-    --bg-card:   #ffffff;
-    --bg-input:  #f0ede5;
-    --border:    rgba(61,79,90,0.13);
-    --border-h:  rgba(61,79,90,0.28);
-    --text-pri:  #2E2C26;
-    --text-sec:  rgba(46,44,38,0.6);
-    --text-hint: rgba(46,44,38,0.38);
-    --green:     #5a6348;
-    --green-bg:  rgba(115,121,93,0.13);
-    --amber:     #8a7440;
-    --amber-bg:  rgba(168,148,96,0.13);
-    --danger:    #9e4040;
-    --danger-bg: rgba(192,96,96,0.1);
-  }
 }
 
 /* ===== BASE ===== */
@@ -63,7 +38,7 @@
 }
 
 .cp__header h1 span {
-  color: var(--accent);
+  color: #a8b89e;
   font-style: italic;
 }
 
@@ -80,20 +55,20 @@
   padding: 10px 22px !important;
   font-size: 14px;
   border-radius: 10px !important;
-  background: var(--accent) !important;
-  color: var(--fog) !important;
+  background: #4a5a4e !important;
+  color: #e8e6e0 !important;
   border: none !important;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: opacity 0.2s;
 }
 
-.cp__btn-add:hover { background: var(--accent-h) !important; }
+.cp__btn-add:hover { opacity: 0.85; }
 
 /* ===== BADGE ===== */
 .cp__badge-count {
-  background: var(--accent);
-  color: var(--fog);
+  background: #4a5a4e;
+  color: #e8e6e0;
   font-size: 10px;
   font-weight: 700;
   padding: 1px 6px;
@@ -107,7 +82,6 @@
   gap: 4px;
   margin-bottom: 28px;
   border-bottom: 1px solid var(--border);
-  padding-bottom: 0;
 }
 
 .coach-profil__tab {
@@ -136,7 +110,7 @@
 .coach-profil__tab.active {
   background: var(--bg-card);
   border-color: var(--border);
-  color: var(--accent);
+  color: #a8b89e;
 }
 
 /* ===== LOADING / EMPTY ===== */
@@ -159,32 +133,20 @@
   color: var(--text-hint);
 }
 
-.cp__empty p {
-  font-size: 18px;
-  margin: 0;
-  color: var(--text-sec);
-}
-
-.cp__empty span {
-  color: var(--text-hint);
-  font-size: 14px;
-}
+.cp__empty p { font-size: 18px; margin: 0; color: var(--text-sec); }
+.cp__empty span { font-size: 14px; }
 
 /* ===== TODAY ===== */
 .cp__today-date {
   font-size: 15px;
-  color: var(--accent);
+  color: #a8b89e;
   font-weight: 600;
   margin-bottom: 20px;
   text-transform: capitalize;
 }
 
 /* ===== SÉANCES LIST ===== */
-.cp__seances-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.cp__seances-list { display: flex; flex-direction: column; gap: 12px; }
 
 .cp__seance-card {
   display: flex;
@@ -202,16 +164,13 @@
   transform: translateY(-2px);
 }
 
-.cp__seance-card--today {
-  border-left: 3px solid var(--accent);
-}
-
+.cp__seance-card--today { border-left: 3px solid #4a5a4e; }
 .cp__seance-card--past { opacity: 0.5; }
 
 .cp__seance-time {
   font-size: 22px;
   font-weight: 700;
-  color: var(--accent);
+  color: #a8b89e;
   min-width: 60px;
   text-align: center;
 }
@@ -230,11 +189,7 @@
   text-transform: uppercase;
 }
 
-.cp__seance-hour {
-  font-size: 13px;
-  color: var(--accent);
-  font-weight: 600;
-}
+.cp__seance-hour { font-size: 13px; color: #a8b89e; font-weight: 600; }
 
 .cp__seance-info { flex: 1; }
 
@@ -251,11 +206,7 @@
   margin: 0 0 10px;
 }
 
-.cp__seance-tags {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+.cp__seance-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .cp__tag {
   display: inline-flex;
@@ -264,31 +215,26 @@
   font-size: 11px;
   padding: 3px 10px;
   border-radius: 20px;
-  background: rgba(61,79,90,0.15);
-  color: var(--accent);
+  background: rgba(74,90,78,0.15);
+  color: #a8b89e;
   font-weight: 500;
-  border: 1px solid rgba(61,79,90,0.2);
+  border: 1px solid rgba(74,90,78,0.2);
 }
 
-.cp__tag--débutant      { background: var(--green-bg); color: var(--green); border-color: rgba(115,121,93,0.25); }
+.cp__tag--débutant      { background: var(--green-bg); color: var(--green); border-color: rgba(74,90,78,0.25); }
 .cp__tag--intermédiaire { background: var(--amber-bg); color: var(--amber); border-color: rgba(176,154,106,0.25); }
-.cp__tag--avancé        { background: rgba(61,79,90,0.15); color: var(--accent); border-color: rgba(61,79,90,0.3); }
+.cp__tag--avancé        { background: rgba(74,90,78,0.15); color: #a8b89e; border-color: rgba(74,90,78,0.3); }
 
-.cp__seance-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-shrink: 0;
-}
+.cp__seance-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
 
 /* ===== BUTTONS ===== */
 .btn-edit {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(61,79,90,0.12);
-  border: 1px solid rgba(61,79,90,0.25);
-  color: var(--accent);
+  background: rgba(74,90,78,0.14);
+  border: 1px solid rgba(74,90,78,0.25);
+  color: #a8b89e;
   padding: 6px 14px;
   border-radius: 8px;
   cursor: pointer;
@@ -297,7 +243,7 @@
   transition: all 0.2s;
 }
 
-.btn-edit:hover { background: rgba(61,79,90,0.22); }
+.btn-edit:hover { background: rgba(74,90,78,0.25); }
 
 .btn-delete {
   display: inline-flex;
@@ -319,18 +265,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--accent);
-  color: var(--fog);
+  background: #4a5a4e;
+  color: #e8e6e0;
   border: none;
   padding: 10px 22px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: opacity 0.2s;
 }
 
-.btn-save:hover { background: var(--accent-h); }
+.btn-save:hover { opacity: 0.85; }
 
 .btn-cancel {
   display: inline-flex;
@@ -385,7 +331,7 @@
   transition: all 0.2s;
 }
 
-.cp__cal-nav:hover { background: var(--accent); color: var(--fog); border-color: var(--accent); }
+.cp__cal-nav:hover { background: #4a5a4e; color: #e8e6e0; border-color: #4a5a4e; }
 
 .cp__cal-grid {
   display: grid;
@@ -413,7 +359,7 @@
 }
 
 .cp__cal-day--empty { background: transparent; border-color: transparent; }
-.cp__cal-day--today { border-color: var(--accent); background: rgba(61,79,90,0.15); }
+.cp__cal-day--today { border-color: #4a5a4e; background: rgba(74,90,78,0.15); }
 .cp__cal-day--has-cours { cursor: pointer; }
 .cp__cal-day--has-cours:hover { border-color: var(--border-h); }
 
@@ -425,12 +371,12 @@
   margin-bottom: 4px;
 }
 
-.cp__cal-day--today .cp__cal-day-num { color: var(--accent); font-weight: 700; }
+.cp__cal-day--today .cp__cal-day-num { color: #a8b89e; font-weight: 700; }
 
 .cp__cal-event {
   font-size: 10px;
-  background: rgba(61,79,90,0.22);
-  color: var(--accent);
+  background: rgba(74,90,78,0.22);
+  color: #a8b89e;
   border-radius: 4px;
   padding: 2px 6px;
   margin-bottom: 3px;
@@ -441,7 +387,7 @@
   transition: background 0.2s;
 }
 
-.cp__cal-event:hover { background: rgba(61,79,90,0.38); }
+.cp__cal-event:hover { background: rgba(74,90,78,0.38); }
 
 /* ===== RÉSERVATIONS ===== */
 .cp__res-list { display: flex; flex-direction: column; gap: 10px; }
@@ -463,18 +409,17 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--accent);
+  background: #4a5a4e;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   font-weight: 700;
-  color: var(--fog);
+  color: #e8e6e0;
   flex-shrink: 0;
 }
 
 .cp__res-info { flex: 1; }
-
 .cp__res-info h4 { font-size: 15px; font-weight: 600; margin: 0 0 3px; color: var(--text-pri); }
 .cp__res-info p  { font-size: 13px; color: var(--text-sec); margin: 0 0 3px; }
 .cp__res-date    { font-size: 11px; color: var(--text-hint); }
@@ -503,7 +448,7 @@
   align-items: center;
   gap: 5px;
   background: var(--green-bg);
-  border: 1px solid rgba(115,121,93,0.3);
+  border: 1px solid rgba(74,90,78,0.3);
   color: var(--green);
   padding: 5px 12px;
   border-radius: 7px;
@@ -513,7 +458,7 @@
   transition: all 0.2s;
 }
 
-.cp__btn-accept:hover { background: rgba(115,121,93,0.28); }
+.cp__btn-accept:hover { background: rgba(74,90,78,0.28); }
 
 .cp__btn-refuse {
   display: inline-flex;
@@ -536,7 +481,7 @@
 .cp__modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(46,44,38,0.72);
+  background: rgba(0,0,0,0.72);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -569,17 +514,14 @@
   gap: 8px;
   font-size: 18px;
   font-weight: 600;
-  color: var(--accent);
+  color: #a8b89e;
   margin: 0;
 }
 
 .cp__modal-body { padding: 0 28px; }
-
 .cp__form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
 .cp__modal-footer { display: flex; gap: 10px; padding: 24px 28px; margin-top: 8px; }
 
-/* form fields */
 .coach-profil__field { display: flex; flex-direction: column; gap: 6px; }
 
 .coach-profil__field label {
@@ -610,4 +552,4 @@
 
 .cp__modal .coach-profil__field input:focus,
 .cp__modal .coach-profil__field select:focus,
-.cp__modal .coach-profil__field textarea:focus { border-color: var(--accent); }
+.cp__modal .coach-profil__field textarea:focus { border-color: #4a5a4e; }

@@ -4,11 +4,11 @@
   top: 0;
   width: 260px;
   height: 100vh;
-  background: var(--sidebar-bg);
+  background: #1c1f26;
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
   gap: 0;
 }
 
@@ -21,7 +21,7 @@
   margin-bottom: 28px;
   font-size: 16px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #e8e6e0;
   letter-spacing: -0.2px;
 }
 
@@ -29,7 +29,7 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: #3D4F5A;
+  background: #4a5a4e;
   color: #fff;
   display: flex;
   align-items: center;
@@ -39,9 +39,9 @@
 
 .coach-sidebar__theme-toggle {
   margin-left: auto;
-  background: var(--hover-bg);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #9a9890;
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -54,8 +54,8 @@
 }
 
 .coach-sidebar__theme-toggle:hover {
-  color: #3D4F5A;
-  border-color: #3D4F5A;
+  color: #a8b89e;
+  border-color: #4a5a4e;
 }
 
 /* ===== PROFILE ===== */
@@ -65,16 +65,16 @@
   align-items: center;
   margin-bottom: 24px;
   padding: 20px 8px;
-  background: var(--hover-bg);
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 14px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .coach-sidebar__avatar {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3D4F5A, #73795D);
+  background: linear-gradient(135deg, #4a5a4e, #6b7a5e);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@
 }
 
 .coach-sidebar__name {
-  color: var(--text-primary);
+  color: #e8e6e0;
   font-weight: 600;
   font-size: 14px;
   margin: 0 0 4px;
@@ -101,9 +101,9 @@
 }
 
 .coach-sidebar__badge {
-  background: rgba(61,79,90,0.18);
-  color: #3D4F5A;
-  border: 1px solid rgba(61,79,90,0.3);
+  background: rgba(74, 90, 78, 0.2);
+  color: #8a9e8e;
+  border: 1px solid rgba(74, 90, 78, 0.35);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -113,7 +113,7 @@
 
 /* ===== NAV ===== */
 .coach-sidebar__section {
-  color: var(--text-muted);
+  color: #5a5855;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--text-secondary);
+  color: #9a9890;
   text-decoration: none;
   padding: 10px 12px;
   border-radius: 10px;
@@ -147,8 +147,8 @@
 }
 
 .coach-sidebar__nav a:hover {
-  background: var(--hover-bg);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e8e6e0;
 }
 
 .coach-sidebar__nav a:hover .nav-icon {
@@ -156,10 +156,10 @@
 }
 
 .coach-sidebar__nav a.active {
-  background: rgba(61,79,90,0.14);
-  color: #3D4F5A;
+  background: rgba(74, 90, 78, 0.18);
+  color: #a8b89e;
   font-weight: 600;
-  border: 1px solid rgba(61,79,90,0.2);
+  border: 1px solid rgba(74, 90, 78, 0.25);
 }
 
 .coach-sidebar__nav a.active .nav-icon {
@@ -172,8 +172,8 @@
   align-items: center;
   gap: 8px;
   background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  color: #9a9890;
   font-size: 13px;
   cursor: pointer;
   padding: 10px 12px;
@@ -186,6 +186,6 @@
 
 .coach-sidebar__logout:hover {
   color: #c0392b;
-  border-color: rgba(192,57,43,0.3);
-  background: rgba(192,57,43,0.07);
+  border-color: rgba(192, 57, 43, 0.3);
+  background: rgba(192, 57, 43, 0.07);
 }

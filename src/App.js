@@ -1,5 +1,4 @@
 import './App.css';
-import './context/theme.css';
 import Layout from './components/layout';
 import Home from './components/interface';
 import Login from './pages/Login';

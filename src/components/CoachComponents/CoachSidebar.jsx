@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import { useTheme } from "../../context/ThemeContext.jsx";
 import api from "../../Api/Axios.js";
 import {
   LayoutDashboard,
@@ -17,7 +16,7 @@ import "./CoachSidebar.css";
 
 export default function CoachSidebar() {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
+  // const { theme, toggleTheme } = useTheme();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const photo = user.photo
     ? `http://localhost:8000/storage/${user.photo}`
@@ -50,13 +49,13 @@ export default function CoachSidebar() {
           <Dumbbell size={20} />
         </div>
         <span>GymMaster</span>
-        <button
+        {/* <button
           className="coach-sidebar__theme-toggle"
           onClick={toggleTheme}
           title="Changer le thème"
         >
           {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
+        </button> */}
       </div>
 
       {/* Profile */}
