@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cours', function (Blueprint $table) {
     $table->id();
     $table->string('nom');
-    $table->text('description')->nullable();  // ← bdlha
+    $table->text('description')->nullable();  
     $table->time('heur')->nullable();
     $table->date('date');
     $table->string('capacite');

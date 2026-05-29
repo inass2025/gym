@@ -9,21 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('adherents', function (Blueprint $table) {
+   public function up(): void
+{
+    Schema::table('adherents', function (Blueprint $table) {
+        if (!Schema::hasColumn('adherents', 'certifs')) {
             $table->json('certifs')->nullable();
-            $table->json('experiences')->nullable();
-        });
-    }
+        }
+    });
+}
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('adherents', function (Blueprint $table) {
-            //
-        });
-    }
+public function down(): void
+{
+    Schema::table('adherents', function (Blueprint $table) {
+        if (Schema::hasColumn('adherents', 'certifs')) {
+            $table->dropColumn('certifs');
+        }
+    });
+}
 };

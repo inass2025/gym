@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-public function up(): void
-{
-    Schema::table('message', function (Blueprint $table) {
-        $table->unsignedBigInteger('receiver_id')->nullable()->change();
-    });
-}
+    public function up(): void
+    {
+        Schema::table('message', function (Blueprint $table) {
+            if (!Schema::hasColumn('message', 'receiver_id')) {
+                $table->unsignedBigInteger('receiver_id')->nullable();
+            }
+        });
+    }
 
-public function down(): void
-{
-    Schema::table('message', function (Blueprint $table) {
-        $table->unsignedBigInteger('receiver_id')->nullable(false)->change();
-    });
-}
+    public function down(): void
+    {
+        Schema::table('message', function (Blueprint $table) {
+            if (Schema::hasColumn('message', 'receiver_id')) {
+                $table->dropColumn('receiver_id');
+            }
+        });
+    }
 };
