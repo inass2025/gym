@@ -7,16 +7,16 @@ import About from './pages/About';
 import MoreAbout from './pages/MoreAbout';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
-import AdherentPage from './AderentPages/AdherentPage';
-import LayoutAd from './AdherentComponents/layout';
-import Dashboard from './AderentPages/dashboard';
-import MyReservations from './AderentPages/MyReservations';
-import Abonnement from './AderentPages/Abonnement';
-import Chat from './AderentPages/message';
-import Performances from './AderentPages/Performances';
-import MesAbonnements from './AderentPages/MesAbonnements';
-import MonProgramme from './AderentPages/MonProgramme';
-import NotificationBell from './AderentPages/NotificationBell';
+import AdherentPage from './pages/AdherentPages/AdherentPage';
+import LayoutAd from './components/AdherentComponents/layout';
+import Dashboard from './pages/AdherentPages/dashboard';
+import MyReservations from './pages/AdherentPages/MyReservations';
+import Abonnement from './pages/AdherentPages/Abonnement';
+import Chat from './pages/AdherentPages/message';
+import Performances from './pages/AdherentPages/Performances';
+import MesAbonnements from './pages/AdherentPages/MesAbonnements';
+import MonProgramme from './pages/AdherentPages/MonProgramme';
+import NotificationBell from './pages/AdherentPages/NotificationBell';
 // Coach imports
 import CoachLayout from './components/CoachComponents/CoachLayout';
 import CoachDashboard from './pages/CoachPages/CoachDashboard';
@@ -25,18 +25,21 @@ import CoachProgrammes from './pages/CoachPages/CoachProgrammes';
 
 
 //admin imports
-import LayoutAdmin from './AdminComponents/AdminLayout';
-import GestionAdherent from './AdminPages/GestionAdherent';
- import GestionCours from './AdminPages/GestionCours';
+import AdminLayout from './components/AdminComponents/AdminLayout';
+import GestionAdherent from './pages/AdminPages/GestionAdherent';
+import GestionCours from './pages/AdminPages/GestionCours';
+// import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
-
-import CoachGestion from './AdminPages/GoachGestion';
+import CoachGestion from './pages/AdminPages/GoachGestion';
 
 // import CoachParticipants from './pages/CoachPages/CoachParticipants';
 import CoachClients from './pages/CoachPages/CoachClients';
 import CoachPlanning from './pages/CoachPages/CoachPlanning';
 import CoachChat from './pages/CoachPages/CoachChat';
 import PrivateRoute from './components/PrivateRoute';
+
+import Abonnements from './pages/AdminPages/Abonnement';
+import Paiements   from './pages/AdminPages/Paiements';
 
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -88,15 +91,13 @@ function App() {
 </Route>
 
 {/* 🔴 Admin Layout */}
-<Route path="/Admin" element={
-  <PrivateRoute allowedRoles={['admin']}>
-    <LayoutAdmin />
-  </PrivateRoute>
-}>
-  <Route path="coaches" element={<CoachGestion />} />
-  <Route path="Adherent" element={<GestionAdherent />} />
-
-<Route path="cours" element={<GestionCours />} />
+<Route path="/admin" element={<AdminLayout />}>
+  
+  <Route path="coaches"      element={<CoachGestion />} />
+  <Route path="Adherent"     element={<GestionAdherent />} />
+  <Route path="cours"        element={<GestionCours />} />
+  <Route path="abonnements"  element={<Abonnements />} />
+  <Route path="paiements"    element={<Paiements />} />
 </Route>
       </Routes>
     </BrowserRouter>

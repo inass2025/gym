@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import AdherentSidebar from './AdherentSidebar';
-import CoursList from '../AderentPages/CoursList';
-import NotificationBell from '../AderentPages/NotificationBell';
+import CoursList        from '../../pages/AdherentPages/CoursList';
+import NotificationBell from '../../pages/AdherentPages/NotificationBell';
 import './Layout.css';
 
 const PAGE_TITLES = {

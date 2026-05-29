@@ -6,8 +6,8 @@ const NAV_ITEMS = [
   { to: 'coaches',      label: 'Coachs'       },
   { to: 'Adherent',      label: 'Membres'      },
   { to: 'cours',     label: 'cours'     },
-  { to: 'programs',   label: 'Programmes'   },
-  { to: 'reports',      label: 'Rapports'     },
+  { to: 'abonnements',  label: 'Abonnements'  },
+  { to: 'paiements',    label: 'Paiements'    },
 ];
 
 export default function AdminLayout() {
@@ -58,14 +58,15 @@ export default function AdminLayout() {
               <span className="cl-nav-indicator" />
             </NavLink>
           ))}
+
         </nav>
 
         {/* Bottom: profile + logout */}
         <div className="cl-sidebar__bottom">
           <div className="cl-sidebar__profile">
-            <div className="cl-avatar">AK</div>
+            <div className="cl-avatar">A</div>
             <div className="cl-profile-info">
-              <span className="cl-profile-name">Admin Karim</span>
+              <span className="cl-profile-name">Admin</span>
               <span className="cl-profile-email">admin@gympro.ma</span>
             </div>
           </div>
@@ -86,8 +87,6 @@ export default function AdminLayout() {
         <header className="cl-navbar">
           <div className="cl-navbar__left">
             <div className="cl-breadcrumb">
-              <span className="cl-breadcrumb__gym">GymPro</span>
-              <span className="cl-breadcrumb__sep">/</span>
               <span className="cl-breadcrumb__page" id="cl-page-title">Dashboard</span>
             </div>
           </div>
@@ -104,7 +103,7 @@ export default function AdminLayout() {
               🔔
               <span className="cl-notif-dot" />
             </button>
-            <div className="cl-navbar__avatar">AK</div>
+            <div className="cl-navbar__avatar">A</div>
           </div>
         </header>
 
