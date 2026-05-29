@@ -144,3 +144,35 @@
   background: var(--olive);
   color: var(--dark);
 }
+.fs-details {
+  margin: 14px 0;
+  border-top: 1px solid #73795D;
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fs-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #73795D;
+}
+
+.fs-detail-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999;
+}
+
+.fs-detail-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3D4F5A;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
