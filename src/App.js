@@ -27,7 +27,7 @@ import CoachProgrammes from './pages/CoachPages/CoachProgrammes';
 import AdminLayout from './components/AdminComponents/AdminLayout';
 import GestionAdherent from './pages/AdminPages/GestionAdherent';
 import GestionCours from './pages/AdminPages/GestionCours';
-// import AdminDashboard from './pages/AdminPages/AdminDashboard';
+import DashboardAdmin from './pages/AdminPages/DashboardAdmin';
 
 import CoachGestion from './pages/AdminPages/GoachGestion';
 
@@ -41,7 +41,7 @@ import Abonnements from './pages/AdminPages/Abonnement';
 import Paiements   from './pages/AdminPages/Paiements';
 
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 function App() {
   return (
@@ -90,8 +90,9 @@ function App() {
 </Route>
 
 {/* 🔴 Admin Layout */}
-<Route path="/admin" element={<AdminLayout />}>
-  
+  <Route path="/admin" element={<AdminLayout />}>
+  <Route index element={<Navigate to="dashboard" replace />} />
+  <Route path="dashboard"    element={<DashboardAdmin />} />
   <Route path="coaches"      element={<CoachGestion />} />
   <Route path="Adherent"     element={<GestionAdherent />} />
   <Route path="cours"        element={<GestionCours />} />

@@ -2,7 +2,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import './AdminLayout.css';
 
 const NAV_ITEMS = [
-  
+  { to: 'dashboard', label: 'Dashboard' },
   { to: 'coaches',      label: 'Coachs'       },
   { to: 'Adherent',      label: 'Membres'      },
   { to: 'cours',     label: 'cours'     },

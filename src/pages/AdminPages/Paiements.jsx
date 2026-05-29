@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import './DashboardAdmin.css';
 
 const API   = 'http://localhost:8000/api';
 const token = () => localStorage.getItem('token');
+const auth  = () => ({ headers: { Authorization: `Bearer ${token()}` } });
 
 export default function Paiements() {
   const [paiements, setPaiements] = useState([]);
@@ -17,12 +19,11 @@ export default function Paiements() {
     mrthode: 'cash', statut: 'paye'
   });
 
-  // ── Fetch paiements ──
   const fetchPaiements = async () => {
     try {
       const [p, s] = await Promise.all([
-        axios.get(`${API}/paiements`,             { headers: { Authorization: `Bearer ${token()}` } }),
-        axios.get(`${API}/paiements/statistiques`, { headers: { Authorization: `Bearer ${token()}` } }),
+        axios.get(`${API}/paiements`,              auth()),
+        axios.get(`${API}/paiements/statistiques`, auth()),
       ]);
       setPaiements(p.data);
       setStats(s.data);
@@ -35,148 +36,175 @@ export default function Paiements() {
 
   useEffect(() => { fetchPaiements(); }, []);
 
-  // ── Ajouter ──
   const handleSubmit = async () => {
     try {
-      await axios.post(`${API}/paiements`, form, {
-        headers: { Authorization: `Bearer ${token()}` }
-      });
+      await axios.post(`${API}/paiements`, form, auth());
       setForm({ adherent_id: '', abonnement_id: '', montant: '', date_paiement: '', mrthode: 'cash', statut: 'paye' });
       setShowForm(false);
       fetchPaiements();
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
   };
 
-  // ── Delete ──
   const handleDelete = async (id) => {
     if (!window.confirm('Supprimer ce paiement ?')) return;
-    await axios.delete(`${API}/paiements/${id}`, {
-      headers: { Authorization: `Bearer ${token()}` }
-    });
+    await axios.delete(`${API}/paiements/${id}`, auth());
     fetchPaiements();
   };
 
-  const statutColor = (s) => ({ paye: '#22c55e', en_attente: '#f59e0b', retard: '#ef4444' }[s] || '#94a3b8');
+  const STAT_CARDS = stats ? [
+    { icon: 'ti-coin',           label: 'Total revenus',   value: `${stats.total_revenus} MAD`,   cls: 'db-stat-sage'  },
+    { icon: 'ti-calendar-stats', label: 'Revenus ce mois', value: `${stats.revenus_ce_mois} MAD`, cls: 'db-stat-slate' },
+    { icon: 'ti-alert-triangle', label: 'En retard',       value: stats.paiements_en_retard,      cls: 'db-stat-red'   },
+    { icon: 'ti-receipt',        label: 'Total paiements', value: stats.total_paiements,          cls: 'db-stat-amber' },
+  ] : [];
+
+  const statutBadge = (s) => ({
+    paye:       { cls: 'badge-actif',  label: 'Payé'       },
+    en_attente: { cls: 'badge-warn',   label: 'En attente' },
+    retard:     { cls: 'badge-bloque', label: 'Retard'     },
+  }[s] || { cls: '', label: s });
+
+  if (loading) return (
+    <div className="db-loading">
+      <i className="ti ti-loader-2 db-spin" />
+      <span>Chargement…</span>
+    </div>
+  );
 
   return (
-    <div>
+    <div className="db-page">
 
-      {/* ── Stats cards ── */}
-      {stats && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, marginBottom: 28 }}>
-          {[
-            { label: 'Total Revenus',    value: `${stats.total_revenus} MAD`,       color: '#22c55e' },
-            { label: 'Ce mois',          value: `${stats.revenus_ce_mois} MAD`,     color: '#3b82f6' },
-            { label: 'En retard',        value: stats.paiements_en_retard,          color: '#ef4444' },
-            { label: 'Total paiements',  value: stats.total_paiements,              color: '#f59e0b' },
-          ].map(card => (
-            <div key={card.label} style={{ background: '#1e1d1b', borderRadius: 12, padding: '18px 20px', borderLeft: `3px solid ${card.color}` }}>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>{card.label}</p>
-              <p style={{ color: card.color, fontSize: 22, fontWeight: 700, fontFamily: 'Syne,sans-serif' }}>{card.value}</p>
-            </div>
-          ))}
+      {/* ── EN-TÊTE ── */}
+      <div className="db-entete">
+        <div>
+          <h1 className="db-titre">Gestion des <span>Paiements</span></h1>
+          <p className="db-sous-titre">Suivi des revenus et transactions</p>
         </div>
-      )}
-
-      {/* ── Header ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h2 style={{ color: '#fff', fontFamily: 'Syne,sans-serif', fontSize: 22 }}>
-          💰 Gestion des Paiements
-        </h2>
         <button
+          className="db-btn-primary"
           onClick={() => setShowForm(!showForm)}
-          style={{ background: 'linear-gradient(135deg,#73795D,#3D4F5A)', color: '#fff', padding: '9px 20px', borderRadius: 8, fontWeight: 600 }}
         >
-          {showForm ? '✕ Fermer' : '+ Ajouter'}
+          <i className={`ti ${showForm ? 'ti-x' : 'ti-plus'}`} />
+          {showForm ? 'Fermer' : 'Ajouter'}
         </button>
       </div>
 
-      {/* ── Formulaire ── */}
-      {showForm && (
-        <div style={{ background: '#1e1d1b', borderRadius: 12, padding: 24, marginBottom: 24, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          {[
-            { label: 'ID Adhérent',    key: 'adherent_id',   type: 'number' },
-            { label: 'ID Abonnement',  key: 'abonnement_id', type: 'number' },
-            { label: 'Montant (MAD)',  key: 'montant',       type: 'number' },
-            { label: 'Date paiement',  key: 'date_paiement', type: 'date'   },
-          ].map(f => (
-            <div key={f.key}>
-              <label style={labelStyle}>{f.label}</label>
-              <input style={inputStyle} type={f.type} value={form[f.key]}
-                onChange={e => setForm({ ...form, [f.key]: e.target.value })} />
+      {/* ── CARTES STATS ── */}
+      <div className="db-stats-grid" style={{ gridTemplateColumns: 'repeat(4,1fr)' }}>
+        {STAT_CARDS.map(card => (
+          <div key={card.label} className={`db-stat-card ${card.cls}`}>
+            <div className="db-stat-icon">
+              <i className={`ti ${card.icon}`} />
             </div>
-          ))}
-          <div>
-            <label style={labelStyle}>Méthode</label>
-            <select style={inputStyle} value={form.mrthode}
-              onChange={e => setForm({ ...form, mrthode: e.target.value })}>
-              <option value="cash">Cash</option>
-              <option value="carte">Carte</option>
-              <option value="virement">Virement</option>
-            </select>
+            <div className="db-stat-body">
+              <p className="db-stat-label">{card.label}</p>
+              <p className="db-stat-value">{card.value}</p>
+            </div>
           </div>
-          <div>
-            <label style={labelStyle}>Statut</label>
-            <select style={inputStyle} value={form.statut}
-              onChange={e => setForm({ ...form, statut: e.target.value })}>
-              <option value="paye">Payé</option>
-              <option value="en_attente">En attente</option>
-              <option value="retard">Retard</option>
-            </select>
+        ))}
+      </div>
+
+      {/* ── FORMULAIRE ── */}
+      {showForm && (
+        <div className="db-card" style={{ marginBottom: 24 }}>
+          <div className="db-card-header">
+            <h2 className="db-card-titre">
+              <i className="ti ti-plus" /> Nouveau paiement
+            </h2>
           </div>
-          <div style={{ gridColumn: '1/-1' }}>
-            <button onClick={handleSubmit}
-              style={{ background: 'linear-gradient(135deg,#73795D,#3D4F5A)', color: '#fff', padding: '10px 28px', borderRadius: 8, fontWeight: 600, width: '100%' }}>
-              ➕ Ajouter paiement
-            </button>
+          <div className="db-form-grid">
+            {[
+              { label: 'ID Adhérent',   key: 'adherent_id',   type: 'number' },
+              { label: 'ID Abonnement', key: 'abonnement_id', type: 'number' },
+              { label: 'Montant (MAD)', key: 'montant',       type: 'number' },
+              { label: 'Date paiement', key: 'date_paiement', type: 'date'   },
+            ].map(f => (
+              <div key={f.key} className="db-form-field">
+                <label className="db-form-label">{f.label}</label>
+                <input
+                  className="db-form-input"
+                  type={f.type}
+                  value={form[f.key]}
+                  onChange={e => setForm({ ...form, [f.key]: e.target.value })}
+                />
+              </div>
+            ))}
+            <div className="db-form-field">
+              <label className="db-form-label">Méthode</label>
+              <select className="db-form-input" value={form.mrthode}
+                onChange={e => setForm({ ...form, mrthode: e.target.value })}>
+                <option value="cash">Cash</option>
+                <option value="carte">Carte</option>
+                <option value="virement">Virement</option>
+              </select>
+            </div>
+            <div className="db-form-field">
+              <label className="db-form-label">Statut</label>
+              <select className="db-form-input" value={form.statut}
+                onChange={e => setForm({ ...form, statut: e.target.value })}>
+                <option value="paye">Payé</option>
+                <option value="en_attente">En attente</option>
+                <option value="retard">Retard</option>
+              </select>
+            </div>
+            <div className="db-form-field" style={{ gridColumn: '1/-1' }}>
+              <button className="db-btn-primary" style={{ width: '100%', justifyContent: 'center' }} onClick={handleSubmit}>
+                <i className="ti ti-plus" /> Ajouter paiement
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* ── Tableau ── */}
-      {loading ? (
-        <p style={{ color: 'rgba(255,255,255,0.4)' }}>Chargement...</p>
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={tableStyle}>
-            <thead>
-              <tr>
-                {['ID', 'Adhérent', 'Abonnement', 'Montant', 'Date', 'Méthode', 'Statut', 'Actions'].map(h => (
-                  <th key={h} style={thStyle}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {paiements.map(p => (
-                <tr key={p.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={tdStyle}>{p.id}</td>
-                  <td style={tdStyle}>{p.adherent_id}</td>
-                  <td style={tdStyle}>{p.abonnement_id}</td>
-                  <td style={tdStyle}>{p.montant} MAD</td>
-                  <td style={tdStyle}>{p.date_paiement}</td>
-                  <td style={tdStyle}>{p.mrthode}</td>
-                  <td style={tdStyle}>
-                    <span style={{ background: statutColor(p.statut), color: '#fff', padding: '3px 10px', borderRadius: 20, fontSize: 12 }}>
-                      {p.statut}
-                    </span>
-                  </td>
-                  <td style={tdStyle}>
-                    <button onClick={() => handleDelete(p.id)} style={{ background: '#ef4444', color: '#fff', border: 'none', borderRadius: 6, padding: '5px 9px', cursor: 'pointer' }}>🗑️</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* ── TABLEAU ── */}
+      <div className="db-card">
+        <div className="db-card-header">
+          <h2 className="db-card-titre">
+            <i className="ti ti-list" /> Liste des paiements
+          </h2>
         </div>
-      )}
+        {paiements.length === 0 ? (
+          <p className="db-empty">Aucun paiement enregistré.</p>
+        ) : (
+          <div style={{ overflowX: 'auto' }}>
+            <table className="db-table">
+              <thead>
+                <tr>
+                  {['ID', 'Adhérent', 'Abonnement', 'Montant', 'Date', 'Méthode', 'Statut', 'Actions'].map(h => (
+                    <th key={h}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {paiements.map(p => {
+                  const badge = statutBadge(p.statut);
+                  return (
+                    <tr key={p.id}>
+                      <td className="db-td-muted">#{p.id}</td>
+                      <td className="db-td-name">#{p.adherent_id}</td>
+                      <td className="db-td-muted">#{p.abonnement_id}</td>
+                      <td className="db-td-name">{p.montant} MAD</td>
+                      <td className="db-td-muted">{p.date_paiement}</td>
+                      <td className="db-td-muted" style={{ textTransform: 'capitalize' }}>{p.mrthode}</td>
+                      <td>
+                        <span className={badge.cls}>
+                          <span className="badge-dot" /> {badge.label}
+                        </span>
+                      </td>
+                      <td>
+                        <button className="db-action-btn db-action-danger" onClick={() => handleDelete(p.id)} title="Supprimer">
+                          <i className="ti ti-trash" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
-
-const labelStyle = { display: 'block', color: 'rgba(255,255,255,0.5)', fontSize: 11, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 };
-const inputStyle  = { width: '100%', background: '#2a2927', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '9px 12px', color: '#fff', fontSize: 13, outline: 'none' };
-const tableStyle  = { width: '100%', borderCollapse: 'collapse', background: '#1e1d1b', borderRadius: 12, overflow: 'hidden' };
-const thStyle     = { padding: '12px 16px', textAlign: 'left', color: 'rgba(255,255,255,0.35)', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1.2, borderBottom: '1px solid rgba(255,255,255,0.07)' };
-const tdStyle     = { padding: '12px 16px', color: 'rgba(255,255,255,0.75)', fontSize: 13 };
