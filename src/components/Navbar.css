@@ -82,7 +82,7 @@
 
 .navbar__link:hover,
 .navbar__links li a:hover {
-  color: var(--pink);
+  color: #3D4F5A;
 }
 
 /* Lien actif (page courante) */
@@ -130,7 +130,7 @@
 
 .navbar__cta:hover {
   transform: scale(1.04);
-  box-shadow: 0 6px 24px rgba(207, 71, 139, 0.45);
+  box-shadow: 0 6px 24px #8bbedd;
 }
 
 .navbar__cta-icon {

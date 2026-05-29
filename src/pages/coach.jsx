@@ -5,13 +5,13 @@ const trainers = [
     id: 1,
     name: "Thomas Millar",
     role: "Exercise Trainer",
-    img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop&crop=face",
+    img: "/coaches/c1.jpeg",
   },
   {
     id: 2,
     name: "Evelyn",
     role: "Gym Trainer",
-    img: "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=300&h=300&fit=crop&crop=face",
+     img: "/coaches/c4.jpeg",
   },
   {
     id: 3,
@@ -23,7 +23,7 @@ const trainers = [
     id: 4,
     name: "Eliana",
     role: "Exercise Trainer",
-    img: "https://images.unsplash.com/photo-1609899537878-48a5a85b7e9e?w=300&h=300&fit=crop&crop=face",
+     img: "/coaches/c3.jpeg",
   },
 ];
 

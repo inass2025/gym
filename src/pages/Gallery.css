@@ -20,21 +20,21 @@
   align-items: flex-end;
   justify-content: space-between;
   padding: 36px 32px 20px;
-  border-bottom: 0.5px solid #ffb7db;
+  border-bottom: 0.5px solid #3D4F5A;
 }
 
 .hero-eyebrow {
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #ffb7db;
+  color: #757969;
   margin-bottom: 8px;
 }
 
 .hero-title {
   font-family: 'Playfair Display', serif;
   font-size: 48px;
-  color: #cf478b;
+  color: #73795D;
   line-height: 1;
   font-weight: 700;
 }
@@ -49,7 +49,7 @@
   display: flex;
   gap: 0;
   padding: 16px 32px;
-  border-bottom: 0.5px solid #ffb7db;
+  border-bottom: 0.5px solid #3D4F5A;
   flex-wrap: wrap;
 }
 
@@ -62,7 +62,7 @@
   font-size: 11px;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: #6976c0;
+  color: #3D4F5A;
   padding: 4px 16px 4px 0;
   cursor: pointer;
   border: none;
@@ -80,7 +80,7 @@
 }
 
 .f-sep {
-  color: #6976c0;
+  color: #3D4F5A;
   font-size: 12px;
   padding-right: 16px;
 }
@@ -142,15 +142,15 @@
 }
 
 /* ===== COULEURS DE FOND (fallback si image manquante) ===== */
-.photo-id-1 { background: #ffb7db; }
-.photo-id-2 { background: #ffb7db; }
-.photo-id-3 { background: #ffb7db; }
-.photo-id-4 { background: #ffb7db; }
-.photo-id-5 { background: #ffb7db; }
-.photo-id-6 { background: #ffb7db; }
-.photo-id-7 { background: #ffb7db; }
-.photo-id-8 { background: #ffb7db; }
-.photo-id-9 { background: #ffb7db; }
+.photo-id-1 { background: #3D4F5A; }
+.photo-id-2 { background: #3D4F5A; }
+.photo-id-3 { background: #3D4F5A; }
+.photo-id-4 { background: #3D4F5A; }
+.photo-id-5 { background: #3D4F5A; }
+.photo-id-6 { background: #3D4F5A; }
+.photo-id-7 { background: #3D4F5A; }
+.photo-id-8 { background: #3D4F5A; }
+.photo-id-9 { background: #3D4F5A; }
 
 /* Overlay au survol */
 .photo-overlay {
@@ -218,7 +218,7 @@
   justify-content: space-between;
   margin: 20px 32px 0;
   padding-top: 16px;
-  border-top: 0.5px solid #ffb7db;
+  border-top: 0.5px solid #3D4F5A;
 }
 
 .bb-text {

@@ -126,7 +126,7 @@
 }
 .hero__cta-primary:hover {
   transform: scale(1.04);
-  box-shadow: 0 8px 30px rgba(207, 71, 139, 0.5);
+  box-shadow: 0 8px 30px #5e92b3;
 }
 
 .hero__cta-secondary {
