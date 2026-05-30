@@ -7,31 +7,28 @@ const classes = [
     id: 1,
     image: '/image1.jpeg',
     title: 'Strength Training',
-    desc: 'Build muscle, increase strength, and improve overall fitness through guided resistance exercises and personalized training programs.',
+    desc: 'Build lean muscle, increase raw strength, and transform your physique through guided resistance training and personalized programs built around your body.',
     session: 'WEEKLY',
     duration: '60 MIN',
     level: 'BEGINNER',
-   
   },
   {
     id: 2,
     image: '/image2.jpeg',
     title: 'HIIT Workouts',
-    desc: 'Burn calories faster with high-intensity interval training designed to improve endurance, stamina, and cardiovascular health.',
-    session: 'MON-SAT',
-    duration: '60 MIN',
-    level: 'BEGINNER',
-    
+    desc: 'Torch calories and push your limits with high-intensity interval training designed to maximize fat burn, boost endurance, and improve heart health in every session.',
+    session: 'MON – SAT',
+    duration: '45 MIN',
+    level: 'INTERMEDIATE',
   },
   {
     id: 3,
     image: '/image3.jpeg',
     title: 'Functional Movement',
-    desc: 'Enhance flexibility, balance, and daily movement patterns through practical exercises that strengthen your entire body.',
+    desc: 'Move better, feel stronger. Our functional training improves your flexibility, balance, and coordination using real-world movements that strengthen your whole body.',
     session: 'WEEKLY',
     duration: '60 MIN',
-    level: 'INTERMEDIATE',
-    
+    level: 'ALL LEVELS',
   },
 ];
 
@@ -57,24 +54,22 @@ export default function Service() {
               <h3 className="fs-card-title">{card.title}</h3>
               <p className="fs-card-text">{card.desc}</p>
 
-              {/* Détails — visibles seulement si selected === card.id */}
               {selected === card.id && (
-  <div className="fs-details">
-    <div className="fs-detail-item">
-      <span className="fs-detail-label">Session</span>
-      <span className="fs-detail-value">{card.session}</span>
-    </div>
-    <div className="fs-detail-item">
-      <span className="fs-detail-label">Duration</span>
-      <span className="fs-detail-value">{card.duration}</span>
-    </div>
-    <div className="fs-detail-item">
-      <span className="fs-detail-label">Level</span>
-      <span className="fs-detail-value">{card.level}</span>
-    </div>
-  
-  </div>
-)}
+                <div className="fs-details">
+                  <div className="fs-detail-item">
+                    <span className="fs-detail-label">Session</span>
+                    <span className="fs-detail-value">{card.session}</span>
+                  </div>
+                  <div className="fs-detail-item">
+                    <span className="fs-detail-label">Duration</span>
+                    <span className="fs-detail-value">{card.duration}</span>
+                  </div>
+                  <div className="fs-detail-item">
+                    <span className="fs-detail-label">Level</span>
+                    <span className="fs-detail-value">{card.level}</span>
+                  </div>
+                </div>
+              )}
 
               <button
                 className="fs-btn"
@@ -84,7 +79,7 @@ export default function Service() {
               </button>
             </div>
           </div>
-  ))}
+        ))}
       </div>
     </section>
   );

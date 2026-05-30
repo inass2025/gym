@@ -9,6 +9,13 @@ function CoursCard({ cours, onReserved }) {
   const [error, setError]       = useState("");
   const navigate = useNavigate();
 
+  // Helper: استخرج string من قيمة ممكن تكون object أو string
+  const getString = (val) => {
+    if (!val) return "";
+    if (typeof val === "object") return val.nom || val.name || val.prenom || String(val.id || "");
+    return String(val);
+  };
+
   const isFull = cours.capacite <= 0;
 
   useEffect(() => {
@@ -29,14 +36,14 @@ function CoursCard({ cours, onReserved }) {
     setError("");
 
     api.get("/abonnements/check")
-  .then((res) => {
-    if (!res.data.hasAbonnement) {
-      alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
-      navigate("/adherent/Abonnement");
-      return Promise.reject("no-abonnement");
-    }
-    return api.post("/reserve", { cours_id: cours.id });
-  })
+      .then((res) => {
+        if (!res.data.hasAbonnement) {
+          alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
+          navigate("/adherent/Abonnement");
+          return Promise.reject("no-abonnement");
+        }
+        return api.post("/reserve", { cours_id: cours.id });
+      })
       .then((res) => {
         if (res) {
           setReserved(true);
@@ -44,7 +51,7 @@ function CoursCard({ cours, onReserved }) {
         }
       })
       .catch((err) => {
-        if (err === "no-abonnement") return; // déjà géré
+        if (err === "no-abonnement") return;
         setError(err.response?.data?.message || "Erreur lors de la réservation.");
       })
       .finally(() => setLoading(false));
@@ -56,20 +63,19 @@ function CoursCard({ cours, onReserved }) {
 
       <div className="card-content">
         <div className="card-top">
-          <div className="category-tag">{cours.coach || "Fitness"}</div>
-          <h2 className="title">{cours.nom}</h2>
+          <div className="category-tag">{getString(cours.coach) || "Fitness"}</div>
+          <h2 className="title">{getString(cours.nom)}</h2>
         </div>
 
         <div className="stats-row">
           <div className="stat">
             <span className="stat-label">📅 Jour</span>
-            <span className="stat-value">{cours.jours ?? cours.date}</span>
+            <span className="stat-value">{getString(cours.jours ?? cours.date)}</span>
           </div>
           <div className="stat">
             <span className="stat-label">🕐 Heure</span>
-            <span className="stat-value">{cours.horaire ?? cours.heur}</span>
+            <span className="stat-value">{getString(cours.horaire ?? cours.heur)}</span>
           </div>
-          {/* ✅ Capacité */}
           <div className="stat">
             <span className="stat-label">👥 Places</span>
             <span className={`stat-value ${isFull ? "capacity-full" : "capacity-ok"}`}>
@@ -80,7 +86,7 @@ function CoursCard({ cours, onReserved }) {
 
         <div className="footer-section">
           <div className="location">
-            <span className="pin">📍</span> {cours.salle}
+            <span className="pin">📍</span> {getString(cours.salle)}
           </div>
 
           <button

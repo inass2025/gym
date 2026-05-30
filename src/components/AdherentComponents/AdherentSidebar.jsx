@@ -1,10 +1,20 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  CreditCard,
+  CalendarCheck,
+  User,
+  BarChart2,
+  Wallet,
+  MessageSquare,
+  Dumbbell,
+  LogOut,
+} from 'lucide-react';
 import './AdherentSidebar.css';
 
 export default function AdherentSidebar() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const initials = (user.prenom?.[0] || 'Y') + (user.nom?.[0] || 'B');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -12,6 +22,20 @@ export default function AdherentSidebar() {
     localStorage.removeItem('role');
     navigate('/login');
   };
+
+  const navItems = [
+    { to: '/adherent', end: true, icon: <LayoutDashboard size={18} />, label: 'Dashboard' },
+    { to: '/adherent/Abonnement', icon: <CreditCard size={18} />, label: 'Abonnement' },
+  ];
+
+  const activityItems = [
+    { to: '/adherent/MyReservations', icon: <CalendarCheck size={18} />, label: 'Mes Réservations' },
+    { to: '/adherent/coach', icon: <User size={18} />, label: 'Profil' },
+    { to: '/adherent/performances', icon: <BarChart2 size={18} />, label: 'Performances' },
+    { to: '/adherent/MesAbonnements', icon: <Wallet size={18} />, label: 'Mes Abonnements' },
+    { to: '/adherent/chat', icon: <MessageSquare size={18} />, label: 'Chat' },
+    { to: '/adherent/MonProgramme', icon: <Dumbbell size={18} />, label: 'Mon Programme' },
+  ];
 
   return (
     <aside className="ad-sidebar">
@@ -26,48 +50,37 @@ export default function AdherentSidebar() {
       <nav className="ad-sidebar__nav">
 
         <p className="ad-sidebar__label">PRINCIPAL</p>
-        <NavLink to="/adherent" end className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">▦</span> Dashboard
-        </NavLink>
-        <NavLink to="/adherent/Abonnement" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">▬</span> Abonnement
-        </NavLink>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.end}
+            className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}
+          >
+            <span className="ad-link__icon">{item.icon}</span>
+            {item.label}
+          </NavLink>
+        ))}
 
         <p className="ad-sidebar__label">ACTIVITÉS</p>
-        <NavLink to="/adherent/MyReservations" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">▤</span> Mes Réservations
-        </NavLink>
-        <NavLink to="/adherent/coach" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">◈</span> Profile
-        </NavLink>
-        <NavLink to="/adherent/performances" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">📊 </span> Performances
-        </NavLink>
-           <NavLink to="/adherent/MesAbonnements" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon"> 
+        {activityItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}
+          >
+            <span className="ad-link__icon">{item.icon}</span>
+            {item.label}
+          </NavLink>
+        ))}
 
-💳</span> Mes Abonnement
-        </NavLink>
-        <NavLink to="/adherent/chat" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">◈</span> chat
-        </NavLink>
-          <NavLink to="/adherent/MonProgramme" className={({ isActive }) => isActive ? 'ad-link active' : 'ad-link'}>
-          <span className="ad-link__icon">
-
-🏋️‍♀️</span> Mon Programme
-        </NavLink>
-          
-        
-       
       </nav>
 
-
-<div class="ad-sidebar__logout">
-  <button class="ad-logout-btn">
-    <span class="ad-logout-btn__icon">⎋</span>
-    Déconnexion
-  </button>
-</div>
+      {/* LOGOUT */}
+      <button className="ad-sidebar__logout" onClick={handleLogout}>
+        
+        Déconnexion
+      </button>
 
     </aside>
   );

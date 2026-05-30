@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./NotificationBell.css";
@@ -58,7 +60,7 @@ export default function NotificationBell() {
         onClick={() => setOpen((o) => !o)}
         aria-label="Notifications"
       >
-        <i className="ti ti-bell" />🔔
+        <i className="ti ti-bell" />
         {unreadCount > 0 && <span className="nb-dot" />}
       </button>
 

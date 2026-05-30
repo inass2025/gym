@@ -91,18 +91,8 @@ export default function AdminLayout() {
             </div>
           </div>
           <div className="cl-navbar__right">
-            <div className="cl-search">
-              <span className="cl-search__icon">🔍</span>
-              <input
-                className="cl-search__input"
-                type="text"
-                placeholder="Rechercher..."
-              />
-            </div>
-            <button className="cl-navbar__notif" title="Notifications">
-              🔔
-              <span className="cl-notif-dot" />
-            </button>
+            
+           
             <div className="cl-navbar__avatar">A</div>
           </div>
         </header>

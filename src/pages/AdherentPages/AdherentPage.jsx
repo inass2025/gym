@@ -77,12 +77,15 @@ export default function AdherentPage() {
     Object.keys(form).forEach(key => { data.append(key, form[key] ?? '') })
     if (photoFile) data.append('photo', photoFile)
 
-    axios.post(`${API}/profile?_method=PUT`, data, {
+    // ✅ FIX : POST simple vers updateProfile, sans ?_method=PUT
+    axios.post(`${API}/profile`, data, {
       headers: { ...authHeaders(), 'Content-Type': 'multipart/form-data' },
     })
       .then(res => {
-        setUser(res.data)
-        fillForm(res.data)
+        // ✅ FIX : la réponse retourne { user: {...} } depuis updateProfile
+        const updated = res.data.user ?? res.data
+        setUser(updated)
+        fillForm(updated)
         setEditing(false)
         setSuccess(true)
         setPhotoFile(null)
@@ -90,9 +93,9 @@ export default function AdherentPage() {
         const stored = JSON.parse(localStorage.getItem('user') || '{}')
         localStorage.setItem('user', JSON.stringify({
           ...stored,
-          nom:    res.data.nom,
-          prenom: res.data.prenom,
-          photo:  res.data.photo,
+          nom:    updated.nom,
+          prenom: updated.prenom,
+          photo:  updated.photo,
         }))
         window.dispatchEvent(new Event('user-updated'))
       })
@@ -169,6 +172,7 @@ export default function AdherentPage() {
     color: '#F0EDE8',
     fontSize: 15,
     outline: 'none',
+    width: '100%',
   }
 
   if (loading) return (
@@ -221,7 +225,6 @@ export default function AdherentPage() {
             <div className="coach-profil__specialite">📅 Membre depuis {user.date_inscription}</div>
           )}
 
-          {/* Séparateur */}
           <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.07)', margin: '24px 0' }} />
 
           {/* Abonnement */}
@@ -306,8 +309,8 @@ export default function AdherentPage() {
                   ? (
                     <select name="sexe" value={form.sexe} onChange={handleChange} style={selectStyle}>
                       <option value="">—</option>
-                      <option>Homme</option>
-                      <option>Femme</option>
+                      <option value="homme">Homme</option>
+                      <option value="femme">Femme</option>
                     </select>
                   )
                   : <input value={user.sexe || '—'} disabled />
@@ -357,9 +360,9 @@ export default function AdherentPage() {
                   ? (
                     <select name="niveau" value={form.niveau} onChange={handleChange} style={selectStyle}>
                       <option value="">—</option>
-                      <option>Débutant</option>
-                      <option>Intermédiaire</option>
-                      <option>Avancé</option>
+                      <option value="debutant">Débutant</option>
+                      <option value="intermediaire">Intermédiaire</option>
+                      <option value="avance">Avancé</option>
                     </select>
                   )
                   : <input value={user.niveau || '—'} disabled />
@@ -464,9 +467,9 @@ export default function AdherentPage() {
                   </div>
                 )}
                 {[
-                  { label: 'ANCIEN MOT DE PASSE',    key: 'ancien' },
-                  { label: 'NOUVEAU MOT DE PASSE',   key: 'nouveau' },
-                  { label: 'CONFIRMER LE NOUVEAU',   key: 'confirmer' },
+                  { label: 'ANCIEN MOT DE PASSE',  key: 'ancien' },
+                  { label: 'NOUVEAU MOT DE PASSE', key: 'nouveau' },
+                  { label: 'CONFIRMER LE NOUVEAU', key: 'confirmer' },
                 ].map(({ label, key }) => (
                   <div className="coach-profil__field" key={key}>
                     <label>{label}</label>

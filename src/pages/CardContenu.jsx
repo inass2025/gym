@@ -3,11 +3,11 @@ import { NavLink } from 'react-router-dom';
 import './CardContenu.css';
 
 const classes = [
-  { id:1, title:'Fitness & Exercise Class', description:'Common cardiovascular exercise equipment includes treadmills, stationary bikes, and elliptical machines.', image:'m1.jpeg', duration:'60 min', level:'Débutant' },
-  { id:2, title:'Individual Instruction', description:'One-on-one coaching sessions tailored to your personal fitness goals.', image:'m2.jpeg', duration:'45 min', level:'Tous niveaux' },
-  { id:3, title:'Boxing Course', description:'Learn boxing fundamentals, improve coordination and burn calories.', image:'m3.jpeg', duration:'75 min', level:'Intermédiaire' },
-  { id:4, title:'Cross-Fit Exercise', description:'High-intensity functional movements to build strength and endurance.', image:'m5.jpeg', duration:'50 min', level:'Avancé' },
-  { id:5, title:'Pilates & Yoga', description:'Improve flexibility, balance and mental clarity through mindful movement.', image:'m4.jpeg', duration:'60 min', level:'Débutant' },
+  { id:1, title:'Fitness & Cardio', description:'Burn calories and boost endurance with guided cardio sessions on treadmills, stationary bikes, and elliptical machines.', image:'m1.jpeg', duration:'60 min', level:'Beginner' },
+  { id:2, title:'Personal Coaching', description:'One-on-one coaching sessions fully tailored to your personal fitness goals and body type.', image:'m2.jpeg', duration:'45 min', level:'All Levels' },
+  { id:3, title:'Boxing', description:'Master boxing fundamentals, sharpen your reflexes, and burn serious calories in every round.', image:'m3.jpeg', duration:'75 min', level:'Intermediate' },
+  { id:4, title:'CrossFit', description:'High-intensity functional movements designed to build strength, power, and endurance.', image:'m5.jpeg', duration:'50 min', level:'Advanced' },
+  { id:5, title:'Pilates & Yoga', description:'Improve flexibility, restore balance, and clear your mind through mindful low-impact movement.', image:'m4.jpeg', duration:'60 min', level:'Beginner' },
 ];
 
 export default function CardContenu() {
@@ -71,13 +71,15 @@ export default function CardContenu() {
               {current.duration}
             </div>
             <div className="sp-meta-item">
-              <span className="sp-meta-icon">⭐</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+</svg>
               {current.level}
             </div>
           </div>
         </div>
 
-          <NavLink to="/Login" className="sp-enroll" >S'inscrire se cours</NavLink>
+        <NavLink to="/Login" className="sp-enroll">Enroll in this Class</NavLink>
         <div className="sp-footer">
         </div>
 

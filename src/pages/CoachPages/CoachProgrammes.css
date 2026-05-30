@@ -10,7 +10,7 @@
 }
 
 .coach-profil__header h1 span {
-  color: #e83e8c;
+  color: #73795D;
   font-style: italic;
 }
 
@@ -48,9 +48,9 @@
 }
 
 .coach-profil__tab.active {
-  background: rgba(232,62,140,0.15);
-  border-color: rgba(232,62,140,0.35);
-  color: #e83e8c;
+  background:#eaf5c0 ;
+  border-color: #eaf5c0;
+  color: #73795D;
 }
 
 /* ===== LAYOUT INFOS ===== */
@@ -76,7 +76,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e83e8c, #0891b2);
+  background: linear-gradient(135deg, #73795D, #3D4F5A);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@
 }
 
 .coach-profil__badge {
-  color: #e83e8c;
+  color: #73795D;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -167,7 +167,7 @@
 
 .coach-profil__field input:not(:disabled),
 .coach-profil__field textarea:not(:disabled) {
-  border-color: #e83e8c;
+  border-color: #73795D;
 }
 
 .coach-profil__field input:disabled,
@@ -216,7 +216,7 @@
 .coach-profil__alert--err {
   background: rgba(255,59,59,0.1);
   border: 1px solid rgba(255,59,59,0.2);
-  color: #ff3b3b;
+  color: #3D4F5A;
 }
 
 /* ===== CERTIFS & EXPS ===== */
@@ -255,7 +255,7 @@
 
 .coach-profil__cert-year {
   font-size: 11px;
-  color: #e83e8c;
+  color: #73795D;
   font-weight: 700;
   margin-top: 4px;
   display: block;
@@ -271,7 +271,7 @@
 /* ===== BOUTONS ===== */
 .btn-edit {
   background: rgba(232,62,140,0.15);
-  color: #e83e8c;
+  color: #73795D;
   border: 1px solid rgba(232,62,140,0.3);
   padding: 8px 16px;
   border-radius: 8px;

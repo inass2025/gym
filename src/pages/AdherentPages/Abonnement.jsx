@@ -5,16 +5,16 @@ import "./Abonnement.css";
 // ── Data ───────────────────────────────────────────────────────────────────
 const PLANS = [
   {
-    type: "mensuel", label: "MENSUEL", prix: 199, duree: "1 MOIS", icon: "📅",
+    type: "mensuel", label: "Essential Plan", prix: 199, duree: "/ Mois", 
     features: ["Accès salle complète", "Cours collectifs", "Vestiaires & douches"],
   },
   {
-    type: "trimestriel", label: "TRIMESTRIEL", prix: 499, duree: "3 MOIS", icon: "⭐",
+    type: "trimestriel", label: "Essential Plan", prix: 499, duree: "/ 3 Mois",  
     features: ["Accès salle complète", "Cours collectifs", "Vestiaires & douches", "1 séance coaching offerte"],
     popular: true,
   },
   {
-    type: "annuel", label: "ANNUEL", prix: 1499, duree: "12 MOIS", icon: "👑",
+    type: "annuel", label: "Essential Plan", prix: 1499, duree: "/ An", 
     features: ["Accès salle complète", "Cours collectifs", "Vestiaires & douches", "Coaching illimité", "Accès 24h/24"],
   },
 ];
@@ -48,7 +48,7 @@ function Popup({ eyebrow, onClose, children }) {
 
 // ── Composant principal ────────────────────────────────────────────────────
 export default function Abonnement() {
-  const [etape, setEtape]         = useState(null); // null | confirm | promo | paiement | succes
+  const [etape, setEtape]         = useState(null);
   const [plan, setPlan]           = useState(null);
   const [code, setCode]           = useState("");
   const [reduction, setReduction] = useState(0);
@@ -90,6 +90,7 @@ export default function Abonnement() {
     if (!carte.nom.trim())                            { setErrCarte("Nom requis."); return false; }
     setErrCarte(""); return true;
   }
+
   async function finaliser() {
     if (!validerCarte()) return;
     setLoading(true);
@@ -127,7 +128,6 @@ export default function Abonnement() {
       setLoading(false);
     }
   }
-  
 
   function copierCode(c) {
     navigator.clipboard.writeText(c).catch(() => {});
@@ -143,7 +143,7 @@ export default function Abonnement() {
       {/* Header */}
       <div className="ab-header">
         <p className="ab-eyebrow">Rimberio Fitness</p>
-        <h1 className="ab-titre">Choisissez votre <span>Plan</span></h1>
+        <h1 className="ab-titre">Trouvez votre <span>Plan Parfait</span></h1>
         <p className="ab-sub">Sans engagement — résiliable à tout moment</p>
       </div>
 
@@ -153,12 +153,13 @@ export default function Abonnement() {
           <div key={p.type} className={`ab-carte ${p.popular ? "populaire" : ""}`}>
             {p.popular && <div className="ab-badge">★ Le plus populaire</div>}
             <div className="ab-top">
-              <span>{p.icon}</span>
               <h2>{p.label}</h2>
-              <p>{p.duree}</p>
+            </div>
+            <div className="ab-prix">
+              <span className="ab-montant">{p.prix}</span>
+              <span className="ab-prix-unit">MAD {p.duree}</span>
             </div>
             <hr className="ab-hr" />
-            <div className="ab-prix"><span className="ab-montant">{p.prix}</span> MAD</div>
             <ul className="ab-features">
               {p.features.map((f, i) => <li key={i}><span>✓</span>{f}</li>)}
             </ul>
