@@ -62,9 +62,9 @@ export default function AdherentSidebar() {
       </nav>
 
 
-<div class="ad-sidebar__logout">
-  <button class="ad-logout-btn">
-    <span class="ad-logout-btn__icon">⎋</span>
+<div className="ad-sidebar__logout">
+  <button className="ad-logout-btn">
+    <span className="ad-logout-btn__icon">⎋</span>
     Déconnexion
   </button>
 </div>

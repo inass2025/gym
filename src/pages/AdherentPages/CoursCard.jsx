@@ -11,6 +11,18 @@ function CoursCard({ cours, onReserved }) {
 
   const isFull = cours.capacite <= 0;
 
+  // ✅ Helper bach nkhrjo sm coach
+  const getCoachName = (coach) => {
+    if (!coach) return "Fitness";
+    if (typeof coach === "string") return coach;
+    if (typeof coach === "object") {
+      const prenom = coach.prenom || "";
+      const nom    = coach.nom    || "";
+      return `${prenom} ${nom}`.trim() || "Fitness";
+    }
+    return "Fitness";
+  };
+
   useEffect(() => {
     api.get("/my-reservations")
       .then((res) => {
@@ -29,14 +41,14 @@ function CoursCard({ cours, onReserved }) {
     setError("");
 
     api.get("/abonnements/check")
-  .then((res) => {
-    if (!res.data.hasAbonnement) {
-      alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
-      navigate("/adherent/Abonnement");
-      return Promise.reject("no-abonnement");
-    }
-    return api.post("/reserve", { cours_id: cours.id });
-  })
+      .then((res) => {
+        if (!res.data.hasAbonnement) {
+          alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
+          navigate("/adherent/Abonnement");
+          return Promise.reject("no-abonnement");
+        }
+        return api.post("/reserve", { cours_id: cours.id });
+      })
       .then((res) => {
         if (res) {
           setReserved(true);
@@ -44,7 +56,7 @@ function CoursCard({ cours, onReserved }) {
         }
       })
       .catch((err) => {
-        if (err === "no-abonnement") return; // déjà géré
+        if (err === "no-abonnement") return;
         setError(err.response?.data?.message || "Erreur lors de la réservation.");
       })
       .finally(() => setLoading(false));
@@ -56,7 +68,8 @@ function CoursCard({ cours, onReserved }) {
 
       <div className="card-content">
         <div className="card-top">
-          <div className="category-tag">{cours.coach || "Fitness"}</div>
+          {/* ✅ Hna l fix */}
+          <div className="category-tag">{getCoachName(cours.coach)}</div>
           <h2 className="title">{cours.nom}</h2>
         </div>
 
@@ -69,7 +82,6 @@ function CoursCard({ cours, onReserved }) {
             <span className="stat-label">🕐 Heure</span>
             <span className="stat-value">{cours.horaire ?? cours.heur}</span>
           </div>
-          {/* ✅ Capacité */}
           <div className="stat">
             <span className="stat-label">👥 Places</span>
             <span className={`stat-value ${isFull ? "capacity-full" : "capacity-ok"}`}>

@@ -236,7 +236,9 @@ export default function CoachDashboard() {
                     {c.prenom?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div className="cd-client-info">
-                    <span className="cd-client-name">{c.prenom} {c.nom}</span>
+                    <span className="cd-client-name">
+  {typeof c === 'object' ? `${c.prenom || ''} ${c.nom || ''}` : ''}
+</span>
                     <span className="cd-client-sub">{c.count} séance(s)</span>
                   </div>
                   <div className="cd-client-bar-wrap">
