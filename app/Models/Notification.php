@@ -6,18 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    protected $table = 'notifications';
+    protected $table = 'notifications'; // ← vérifier le nom exact
 
     protected $fillable = [
-        'message',
-        'date_envoi',
-        'type',
         'adherent_id',
+        'message',
+        'type',
+        'lu',
+        'date_envoie',
     ];
-
-
-    public function adherent()
-    {
-        return $this->belongsTo(Adherent::class);
-    }
 }

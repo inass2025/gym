@@ -22,7 +22,7 @@ use App\Http\Controllers\RegimeController;
 | 🔓 PUBLIC ROUTES — Sans authentification
 |--------------------------------------------------------------------------
 */
-
+Route::post('/notifications', [NotificationController::class, 'store']);
 // Auth
 Route::post('/register',       [AuthController::class, 'registerAdherent']);
 Route::post('/register-coach', [AuthController::class, 'registerCoach']);
@@ -101,7 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout',          [AuthController::class, 'logout']);
     Route::post('/change-password', [PasswordController::class, 'update']);
     Route::get('/profile',          [AdherentController::class, 'profile']);
-    Route::put('/profile',          [AdherentController::class, 'update']);
+    Route::put('/profile',          [AdherentController::class, 'updateProfile']);
 
     /*
     |--------------------------------------------------------------------------

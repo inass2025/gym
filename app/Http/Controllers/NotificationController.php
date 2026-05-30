@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use App\Models\Notification;
 use Illuminate\Http\JsonResponse;
 
@@ -34,5 +34,20 @@ class NotificationController extends Controller
             ->update(['lu' => true]);
 
         return response()->json(['success' => true]);
+    }
+     public function store(Request $request)
+    {
+        $notif = Notification::create([
+            'adherent_id' => $request->adherent_id,
+            'message'     => $request->message,
+            'type'        => $request->type ?? 'admin',
+            'lu'          => false,
+            'date_envoie' => now(),
+        ]);
+
+        return response()->json([
+            'message'      => 'Notification envoyée.',
+            'notification' => $notif,
+        ], 201);
     }
 }
