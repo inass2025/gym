@@ -76,9 +76,8 @@ export default function AdherentSidebar() {
 
       </nav>
 
-      {/* LOGOUT */}
       <button className="ad-sidebar__logout" onClick={handleLogout}>
-        
+        <LogOut size={16} />
         Déconnexion
       </button>
 

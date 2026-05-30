@@ -9,11 +9,21 @@ function CoursCard({ cours, onReserved }) {
   const [error, setError]       = useState("");
   const navigate = useNavigate();
 
-  // Helper: استخرج string من قيمة ممكن تكون object أو string
   const getString = (val) => {
     if (!val) return "";
     if (typeof val === "object") return val.nom || val.name || val.prenom || String(val.id || "");
     return String(val);
+  };
+
+  const getCoachName = (coach) => {
+    if (!coach) return "Fitness";
+    if (typeof coach === "string") return coach;
+    if (typeof coach === "object") {
+      const prenom = coach.prenom || "";
+      const nom    = coach.nom    || "";
+      return `${prenom} ${nom}`.trim() || "Fitness";
+    }
+    return "Fitness";
   };
 
   const isFull = cours.capacite <= 0;
@@ -63,8 +73,8 @@ function CoursCard({ cours, onReserved }) {
 
       <div className="card-content">
         <div className="card-top">
-          <div className="category-tag">{getString(cours.coach) || "Fitness"}</div>
-          <h2 className="title">{getString(cours.nom)}</h2>
+          <div className="category-tag">{getCoachName(cours.coach)}</div>
+          <h2 className="title">{cours.nom}</h2>
         </div>
 
         <div className="stats-row">
@@ -99,7 +109,7 @@ function CoursCard({ cours, onReserved }) {
             ) : reserved ? (
               "✓ Déjà réservé"
             ) : isFull ? (
-              " Complet"
+              "Complet"
             ) : (
               "Réserver"
             )}

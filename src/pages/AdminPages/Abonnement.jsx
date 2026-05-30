@@ -148,7 +148,7 @@ export default function Abonnements() {
           <p className="db-sous-titre">Suivi et gestion des abonnements membres</p>
         </div>
         <button
-          className="db-btn-primary"
+          className="db-btn-primar"
           onClick={() => { setShowForm(!showForm); setEditId(null); }}
         >
           <i className={`ti ${showForm ? 'ti-x' : 'ti-plus'}`} />

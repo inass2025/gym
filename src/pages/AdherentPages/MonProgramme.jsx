@@ -22,7 +22,11 @@ export default function MonProgramme() {
 
   if (loading) return <div className="loading">Chargement...</div>
   if (erreur)  return <div className="erreur">{erreur}</div>
+  
 
+
+
+if (!data) return <div className="loading">Chargement...</div>
   return (
     <div className="programme-page">
 
@@ -70,11 +74,11 @@ export default function MonProgramme() {
             )}
 
             <div className="card-coach">
-              <div className="coach-avatar">
-                {prog.coach.prenom[0]}{prog.coach.nom[0]}
-              </div>
-              Par {prog.coach.prenom} {prog.coach.nom}
-            </div>
+  <div className="coach-avatar">
+    {prog.coach?.prenom?.[0] || ''}{prog.coach?.nom?.[0] || ''}
+  </div>
+  Par {String(prog.coach?.prenom || '')} {String(prog.coach?.nom || '')}
+</div>
 
           </div>
         ))}

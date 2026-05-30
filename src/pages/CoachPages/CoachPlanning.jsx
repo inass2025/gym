@@ -37,7 +37,7 @@ export default function CoachPlanning() {
     try {
       const [coursRes, resRes] = await Promise.all([
         api.get('/api/cours'),
-        api.get('/api/reservations'),   // <-- fix: pluriel
+        api.get('/api/reservations'),   
       ]);
       const mesCours    = coursRes.data.filter(c => c.coach_id === user.id);
       const mesCoursIds = mesCours.map(c => c.id);
@@ -307,10 +307,16 @@ export default function CoachPlanning() {
                   {reservations.map(r => (
                     <div key={r.id} className="cp__res-card">
                       <div className="cp__res-avatar">
-                        {r.adherent?.prenom?.[0]?.toUpperCase() || '?'}
-                      </div>
+  {typeof r.adherent === 'object' 
+    ? r.adherent?.prenom?.[0]?.toUpperCase() 
+    : '?'}
+</div>
                       <div className="cp__res-info">
-                        <h4>{r.adherent?.prenom} {r.adherent?.nom}</h4>
+  <h4>
+    {typeof r.adherent === 'object' 
+      ? `${r.adherent?.prenom || ''} ${r.adherent?.nom || ''}` 
+      : ''}
+  </h4>
                         <p>{r.cours?.nom || `Cours #${r.cours_id}`}</p>
                         <span className="cp__res-date">{formatDate(r.created_at)}</span>
                       </div>
