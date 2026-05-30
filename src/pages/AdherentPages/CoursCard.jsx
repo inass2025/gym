@@ -28,15 +28,15 @@ function CoursCard({ cours, onReserved }) {
     setLoading(true);
     setError("");
 
-    api.get("/check-abonnement")
-      .then((res) => {
-        if (!res.data.hasAbonnement) {
-          alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
-          navigate("/adherent/Abonnement");
-          return Promise.reject("no-abonnement"); // ← stop la chaîne
-        }
-        return api.post("/reserve", { cours_id: cours.id });
-      })
+    api.get("/abonnements/check")
+  .then((res) => {
+    if (!res.data.hasAbonnement) {
+      alert("⚠️ Vous n'avez pas d'abonnement actif.\nVous allez être redirigé vers la page d'abonnement.");
+      navigate("/adherent/Abonnement");
+      return Promise.reject("no-abonnement");
+    }
+    return api.post("/reserve", { cours_id: cours.id });
+  })
       .then((res) => {
         if (res) {
           setReserved(true);

@@ -1,7 +1,7 @@
-import React from 'react';
-import {useEffect} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Services.css';
+
 const classes = [
   {
     id: 1,
@@ -11,7 +11,7 @@ const classes = [
     session: 'WEEKLY',
     duration: '60 MIN',
     level: 'BEGINNER',
-    coach: 'JACOB JONES',
+   
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const classes = [
     session: 'MON-SAT',
     duration: '60 MIN',
     level: 'BEGINNER',
-    coach: 'SAVANNAH N.',
+    
   },
   {
     id: 3,
@@ -31,20 +31,22 @@ const classes = [
     session: 'WEEKLY',
     duration: '60 MIN',
     level: 'INTERMEDIATE',
-    coach: 'ESTHER H.',
+    
   },
-
 ];
-export default function Sevice() {
+
+export default function Service() {
+  const [selected, setSelected] = useState(null);
+
   return (
-    <section className="fs-section" id="Sevices">
+    <section className="fs-section" id="Services">
       <p className="fs-label">Work Procedure</p>
       <h2 className="fs-heading">
         Simple Steps To <span>Reach</span>
         <br />
         Your <span>Objectives.</span>
       </h2>
- 
+
       <div className="fs-grid">
         {classes.map((card) => (
           <div key={card.id} className="fs-card">
@@ -54,12 +56,35 @@ export default function Sevice() {
             <div className="fs-card-body">
               <h3 className="fs-card-title">{card.title}</h3>
               <p className="fs-card-text">{card.desc}</p>
-              <button className="fs-btn">
-                           Learn More
-                          </button>
+
+              {/* Détails — visibles seulement si selected === card.id */}
+              {selected === card.id && (
+  <div className="fs-details">
+    <div className="fs-detail-item">
+      <span className="fs-detail-label">Session</span>
+      <span className="fs-detail-value">{card.session}</span>
+    </div>
+    <div className="fs-detail-item">
+      <span className="fs-detail-label">Duration</span>
+      <span className="fs-detail-value">{card.duration}</span>
+    </div>
+    <div className="fs-detail-item">
+      <span className="fs-detail-label">Level</span>
+      <span className="fs-detail-value">{card.level}</span>
+    </div>
+  
+  </div>
+)}
+
+              <button
+                className="fs-btn"
+                onClick={() => setSelected(selected === card.id ? null : card.id)}
+              >
+                {selected === card.id ? 'Show Less' : 'Learn More'}
+              </button>
             </div>
           </div>
-        ))}
+  ))}
       </div>
     </section>
   );

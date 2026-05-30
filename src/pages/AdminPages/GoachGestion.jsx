@@ -115,17 +115,21 @@ export default function CoachGestion() {
   // SUPPRIMER
   // =========================
 
-  async function supprimerCoach(id) {
-    if (!window.confirm("Voulez-vous supprimer ce coach ?")) return;
-    try {
-      const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-      if (!response.ok) throw new Error();
-      setMessage("Coach supprimé");
-      chargerCoachs();
-    } catch {
-      setMessage("Erreur suppression");
+ async function supprimerCoach(id) {
+  if (!window.confirm("Voulez-vous supprimer ce coach ?")) return;
+  try {
+    const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    const data = await response.json();
+    if (!response.ok) {
+      setMessage(data.message || "Erreur suppression");
+      return;
     }
+    setMessage("Coach supprimé avec succès.");
+    chargerCoachs();
+  } catch {
+    setMessage("Erreur réseau.");
   }
+}
 
 
   // =========================
