@@ -47,6 +47,9 @@ Route::patch('/notifications/adherent/{adherentId}/lu-tout', [NotificationContro
 // Reservations actions publiques
 Route::patch('/reservations/{id}/accepter', [ReservationController::class, 'accepter']);
 Route::patch('/reservations/{id}/refuser',  [ReservationController::class, 'refuser']);
+// Zid hadi ma3 les routes publiques
+Route::get('/reservation', [ReservationController::class, 'index']);
+
 
 // Adherents
 Route::get('/adherents',                      [AdherentController::class, 'index']);
