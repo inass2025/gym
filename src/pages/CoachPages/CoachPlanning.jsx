@@ -37,7 +37,7 @@ export default function CoachPlanning() {
     try {
       const [coursRes, resRes] = await Promise.all([
         api.get('/api/cours'),
-        api.get('/api/reservations'),   // <-- fix: pluriel
+        api.get('/api/reservations'),   
       ]);
       const mesCours    = coursRes.data.filter(c => c.coach_id === user.id);
       const mesCoursIds = mesCours.map(c => c.id);
