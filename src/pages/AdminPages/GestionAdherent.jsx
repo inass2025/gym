@@ -113,7 +113,7 @@ export default function GestionAdherent() {
   // ── Notification ──────────────────────────────────────────────────────────
   const ouvrirNotif = (a) => {
     setNotifTarget(a);
-    setNotifForm({ message: "", type: "admin" });
+    setNotifForm({ messagemaf: "", type: "admin" });
   };
 
   const handleEnvoyerNotif = async () => {
