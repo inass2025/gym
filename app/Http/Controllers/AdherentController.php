@@ -11,15 +11,10 @@ use Illuminate\Validation\Rule;
 
 class AdherentController extends Controller
 {
-    // =========================================================
-    // GET /api/adherents
-    // Liste tous les adhérents avec recherche + filtres
-    // =========================================================
     public function index(Request $request): JsonResponse
     {
         $query = Adherent::where('role', 'adherent');
 
-        // Recherche par nom / prénom / email
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('nom',    'like', "%{$search}%")
@@ -28,12 +23,10 @@ class AdherentController extends Controller
             });
         }
 
-        // Filtre niveau
         if ($niveau = $request->get('niveau')) {
             $query->where('niveau', $niveau);
         }
 
-        // Filtre bloqué
         if ($request->has('bloque')) {
             $query->where('bloque', $request->boolean('bloque'));
         }
@@ -44,11 +37,6 @@ class AdherentController extends Controller
         return response()->json($adherents);
     }
 
-
-    // =========================================================
-    // POST /api/adherents
-    // Créer un nouvel adhérent
-    // =========================================================
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -84,21 +72,11 @@ class AdherentController extends Controller
         ], 201);
     }
 
-
-    // =========================================================
-    // GET /api/adherents/{id}
-    // Afficher un adhérent (utilisé aussi pour le modal profil)
-    // =========================================================
     public function show(Adherent $adherent): JsonResponse
     {
         return response()->json($adherent);
     }
 
-
-    // =========================================================
-    // PUT /api/adherents/{id}
-    // Modifier un adhérent
-    // =========================================================
     public function update(Request $request, Adherent $adherent): JsonResponse
     {
         $validated = $request->validate([
@@ -118,14 +96,12 @@ class AdherentController extends Controller
             'bloque'         => 'nullable|boolean',
         ]);
 
-        // Hash password seulement si fourni
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
             unset($validated['password']);
         }
 
-        // Remplacer la photo si nouvelle fournie
         if ($request->hasFile('photo')) {
             if ($adherent->photo) {
                 Storage::disk('public')->delete($adherent->photo);
@@ -141,40 +117,28 @@ class AdherentController extends Controller
         ]);
     }
 
-
-    // =========================================================
-    // DELETE /api/adherents/{id}
-    // Supprimer un adhérent
-    // =========================================================
     public function destroy(Adherent $adherent): JsonResponse
-{
-    if ($adherent->photo) {
-        Storage::disk('public')->delete($adherent->photo);
+    {
+        if ($adherent->photo) {
+            Storage::disk('public')->delete($adherent->photo);
+        }
+
+        $adherent->abonnements()->delete();
+        $adherent->reservation()->delete();
+        $adherent->performance()->delete();
+        $adherent->notification()->delete();
+        $adherent->message()->delete();
+        $adherent->paiements()->delete();
+        \App\Models\Programme::where('adherent_id', $adherent->id)->delete();
+
+        $adherent->delete();
+
+        return response()->json(['message' => 'Adhérent supprimé avec succès.']);
     }
 
-    // Supprimer toutes les relations liées
-    $adherent->abonnements()->delete();
-    $adherent->reservation()->delete();
-    $adherent->performance()->delete();
-    $adherent->notification()->delete();
-    $adherent->message()->delete();
-    $adherent->paiements()->delete();
-    \App\Models\Programme::where('adherent_id', $adherent->id)->delete();
-
-    $adherent->delete();
-
-    return response()->json(['message' => 'Adhérent supprimé avec succès.']);
-}
-
-
-    // =========================================================
-    // PATCH /api/adherents/{id}/bloquer
-    // Basculer le statut bloqué / actif
-    // =========================================================
     public function bloquer(Adherent $adherent): JsonResponse
     {
         $adherent->update(['bloque' => !$adherent->bloque]);
-
         $statut = $adherent->bloque ? 'bloqué' : 'débloqué';
 
         return response()->json([
@@ -183,14 +147,8 @@ class AdherentController extends Controller
         ]);
     }
 
-
-    // =========================================================
-    // GET /api/adherents/{id}/profil
-    // Profil complet d'un adhérent (toutes les infos)
-    // =========================================================
     public function profil(Adherent $adherent): JsonResponse
     {
-        // Charger les relations si elles existent dans le modèle
         $adherent->loadMissing([
             'abonnement',
             'reservation',
@@ -212,19 +170,15 @@ class AdherentController extends Controller
             'objectif'         => $adherent->objectif,
             'niveau'           => $adherent->niveau,
             'bloque'           => $adherent->bloque,
-            'photo'            => $adherent->photo
-                                    ? asset('storage/' . $adherent->photo)
-                                    : null,
+            'photo'            => $adherent->photo ?? null,
             'abonnements'      => $adherent->abonnement,
             'reservations'     => $adherent->reservation,
             'performances'     => $adherent->performance,
         ]);
     }
 
-
     // =========================================================
-    // GET /api/profile   (adhérent connecté — Sanctum)
-    // Profil de l'utilisateur authentifié
+    // GET /api/profile  (Sanctum)
     // =========================================================
     public function profile(Request $request): JsonResponse
     {
@@ -245,16 +199,14 @@ class AdherentController extends Controller
             'objectif'         => $user->objectif,
             'niveau'           => $user->niveau,
             'bloque'           => $user->bloque,
-            'photo'            => $user->photo
-                                    ? asset('storage/' . $user->photo)
-                                    : null,
+            'role'             => $user->role,
+            // ✅ path relatif fqt — mashi full URL
+            'photo'            => $user->photo ?? null,
         ]);
     }
 
-
     // =========================================================
-    // PUT /api/profile   (adhérent connecté — Sanctum)
-    // Modifier son propre profil
+    // POST /api/profile  (Sanctum) — method spoofing PUT
     // =========================================================
     public function updateProfile(Request $request): JsonResponse
     {
@@ -271,6 +223,7 @@ class AdherentController extends Controller
             'sexe'           => 'nullable|in:homme,femme',
             'poids'          => 'nullable|numeric|min:0|max:300',
             'taille'         => 'nullable|numeric|min:0|max:250',
+            // ✅ string max — yqbal ga3 les valeurs
             'objectif'       => 'nullable|string|max:255',
             'niveau'         => 'nullable|in:debutant,intermediaire,avance',
             'photo'          => 'nullable|image|max:2048',
@@ -282,18 +235,61 @@ class AdherentController extends Controller
             unset($validated['password']);
         }
 
+        // ✅ FIX — photo handling sahih
         if ($request->hasFile('photo')) {
             if ($user->photo) {
                 Storage::disk('public')->delete($user->photo);
             }
             $validated['photo'] = $request->file('photo')->store('photos', 'public');
+        } else {
+            // ✅ mtsadch photo field ila mawjudch fichier
+            unset($validated['photo']);
         }
 
         $user->update($validated);
+        $user->refresh();
 
         return response()->json([
             'message' => 'Profil mis à jour avec succès.',
-            'user'    => $user->fresh(),
+            'user'    => [
+                'id'               => $user->id,
+                'nom'              => $user->nom,
+                'prenom'           => $user->prenom,
+                'email'            => $user->email,
+                'telephone'        => $user->telephone,
+                'adresse'          => $user->adresse,
+                'date_naissance'   => $user->date_naissance,
+                'sexe'             => $user->sexe,
+                'poids'            => $user->poids,
+                'taille'           => $user->taille,
+                'date_inscription' => $user->date_inscription,
+                'objectif'         => $user->objectif,
+                'niveau'           => $user->niveau,
+                'role'             => $user->role,
+                // ✅ path relatif fqt
+                'photo'            => $user->photo ?? null,
+            ],
+        ]);
+    }
+
+    // =========================================================
+    // POST /api/profile/photo  (Sanctum)
+    // =========================================================
+    public function updatePhoto(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $request->validate(['photo' => 'required|image|max:2048']);
+
+        if ($user->photo) {
+            Storage::disk('public')->delete($user->photo);
+        }
+
+        $path = $request->file('photo')->store('photos', 'public');
+        $user->update(['photo' => $path]);
+
+        return response()->json([
+            'message' => 'Photo mise à jour.',
+            'photo'   => $path,
         ]);
     }
 }

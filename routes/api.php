@@ -58,6 +58,8 @@ Route::get('/adherents/{adherent}',           [AdherentController::class, 'show'
 Route::put('/adherents/{adherent}',           [AdherentController::class, 'update']);
 Route::delete('/adherents/{adherent}',        [AdherentController::class, 'destroy']);
 Route::patch('/adherents/{adherent}/bloquer', [AdherentController::class, 'bloquer']);
+Route::put('/adherents/{adherent}', [AdherentController::class, 'update']);  // ← public
+Route::put('/profile',              [AdherentController::class, 'updateProfile']); // ← protected
 
 // Coachs
 Route::prefix('coachs')->group(function () {
@@ -98,10 +100,13 @@ Route::middleware('auth:sanctum')->group(function () {
     | 👤 Auth & Profile
     |--------------------------------------------------------------------------
     */
+    Route::post('/profile/photo', [AdherentController::class, 'updatePhoto']); 
+    // Route::put('/profile', [AdherentController::class, 'updateProfile']);
     Route::post('/logout',          [AuthController::class, 'logout']);
     Route::post('/change-password', [PasswordController::class, 'update']);
     Route::get('/profile',          [AdherentController::class, 'profile']);
     Route::put('/profile',          [AdherentController::class, 'updateProfile']);
+    Route::post('/profile',         [AdherentController::class, 'updateProfile']);
 
     /*
     |--------------------------------------------------------------------------
