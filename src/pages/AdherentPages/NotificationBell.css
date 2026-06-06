@@ -1,3 +1,27 @@
+/* ============================================================
+   NOTIFICATIONS — Style Coach
+   ============================================================ */
+
+:root {
+  --bg-page:   #13151b;
+  --bg-card:   #1c1f26;
+  --bg-input:  #252830;
+  --border:    rgba(255,255,255,0.07);
+  --border-h:  rgba(255,255,255,0.14);
+  --accent:    #4a5a4e;
+  --text-pri:  #e8e6e0;
+  --text-sec:  rgba(232,230,224,0.58);
+  --text-hint: rgba(232,230,224,0.32);
+  --green:     #a8b89e;
+  --green-bg:  rgba(74,90,78,0.2);
+  --green-bdr: rgba(74,90,78,0.35);
+  --amber:     #b09a6a;
+  --amber-bg:  rgba(176,154,106,0.15);
+  --danger:    #c06868;
+  --danger-bg: rgba(192,104,104,0.14);
+  --danger-bdr:rgba(192,104,104,0.22);
+}
+
 .nb-wrapper {
   position: relative;
   display: inline-block;
@@ -6,47 +30,43 @@
 /* Bell button */
 .nb-bell-btn {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  background: transparent;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #f36fff;
-  font-size: 20px;
-  transition: background 0.15s;
+  color: var(--green);
+  font-size: 18px;
+  transition: background 0.2s;
 }
-.nb-bell-btn:hover {
-  background: #f5f5f5;
-}
+
+.nb-bell-btn:hover { background: var(--green-bg); }
 
 /* Red dot */
 .nb-dot {
   position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 8px;
-  height: 8px;
+  top: 7px; right: 7px;
+  width: 8px; height: 8px;
   border-radius: 50%;
-  background: #E24B4A;
-  border: 2px solid #fff;
+  background: var(--danger);
+  border: 2px solid var(--bg-page);
 }
 
-/* Dropdown panel */
+/* Panel */
 .nb-panel {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
   width: 360px;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-h);
+  border-radius: 16px;
   overflow: hidden;
   z-index: 999;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
 }
 
 /* Panel header */
@@ -55,22 +75,24 @@
   align-items: center;
   gap: 8px;
   padding: 14px 16px;
-  border-bottom: 1px solid #f0f0f0;
-  font-size: 15px;
-  font-weight: 500;
-  color: #1a1a1a;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-pri);
 }
+
 .nb-panel-head i {
   font-size: 16px;
-  color: #888;
+  color: var(--text-hint);
 }
 
 /* Badge count */
 .nb-count {
-  background: #FCEBEB;
-  color: #A32D2D;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-bdr);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 700;
   border-radius: 99px;
   padding: 2px 8px;
 }
@@ -80,7 +102,7 @@
   padding: 2rem;
   text-align: center;
   font-size: 14px;
-  color: #999;
+  color: var(--text-hint);
 }
 
 /* Notification row */
@@ -89,39 +111,39 @@
   gap: 12px;
   align-items: flex-start;
   padding: 14px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
 }
-.nb-notif:last-child {
-  border-bottom: none;
-}
+
+.nb-notif:last-child { border-bottom: none; }
+.nb-notif:hover      { background: rgba(255,255,255,0.02); }
 
 /* Icon circle */
 .nb-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  width: 36px; height: 36px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 17px;
+  font-size: 16px;
 }
-.ic-danger { background: #FCEBEB; color: #A32D2D; }
-.ic-warn   { background: #FAEEDA; color: #BA7517; }
-.ic-ok     { background: #EAF3DE; color: #3B6D11; }
-.ic-info   { background: #E6F1FB; color: #185FA5; }
+
+.ic-danger { background: var(--danger-bg);           color: var(--danger); }
+.ic-warn   { background: var(--amber-bg);            color: var(--amber);  }
+.ic-ok     { background: var(--green-bg);            color: var(--green);  }
+.ic-info   { background: rgba(74,90,78,0.12);        color: var(--green);  }
 
 /* Body */
-.nb-body {
-  flex: 1;
-  min-width: 0;
-}
+.nb-body { flex: 1; min-width: 0; }
+
 .nb-msg {
   font-size: 13px;
-  color: #1a1a1a;
+  color: var(--text-pri);
   line-height: 1.45;
   margin-bottom: 6px;
 }
+
 .nb-meta {
   display: flex;
   align-items: center;
@@ -132,31 +154,37 @@
 /* Status pills */
 .nb-pill {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 700;
   padding: 2px 9px;
   border-radius: 99px;
 }
-.pill-expired  { background: #FCEBEB; color: #A32D2D; }
-.pill-expiring { background: #FAEEDA; color: #854F0B; }
-.pill-active   { background: #EAF3DE; color: #3B6D11; }
+
+.pill-expired  { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-bdr); }
+.pill-expiring { background: var(--amber-bg);  color: var(--amber);  border: 1px solid rgba(176,154,106,0.25); }
+.pill-active   { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green-bdr); }
 
 /* Date range */
 .nb-dates {
   font-size: 11px;
-  color: #aaa;
+  color: var(--text-hint);
   display: flex;
   align-items: center;
   gap: 4px;
 }
-.nb-dates i {
-  font-size: 12px;
-}
+
+.nb-dates i { font-size: 12px; }
 
 /* Time */
 .nb-time {
   font-size: 11px;
-  color: #bbb;
+  color: var(--text-hint);
   white-space: nowrap;
   padding-top: 2px;
   flex-shrink: 0;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar             { width: 6px; height: 6px; }
+::-webkit-scrollbar-track       { background: transparent; }
+::-webkit-scrollbar-thumb       { background: rgba(255,255,255,0.08); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(74,90,78,0.4); }

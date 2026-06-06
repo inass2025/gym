@@ -1,64 +1,81 @@
-/* ===== Layout ===== */
+/* ============================================================
+   MES RÉSERVATIONS — Style Coach
+   ============================================================ */
+
+:root {
+  --bg-page:   #13151b;
+  --bg-card:   #1c1f26;
+  --bg-input:  #252830;
+  --border:    rgba(255,255,255,0.07);
+  --border-h:  rgba(255,255,255,0.14);
+  --accent:    #4a5a4e;
+  --text-pri:  #e8e6e0;
+  --text-sec:  rgba(232,230,224,0.58);
+  --text-hint: rgba(232,230,224,0.32);
+  --green:     #a8b89e;
+  --green-bg:  rgba(74,90,78,0.2);
+  --green-bdr: rgba(74,90,78,0.35);
+  --amber:     #b09a6a;
+  --amber-bg:  rgba(176,154,106,0.15);
+  --danger:    #c06868;
+  --danger-bg: rgba(192,104,104,0.14);
+  --danger-bdr:rgba(192,104,104,0.22);
+}
+
 .my-reservations {
   max-width: 720px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
 .page-title {
   font-size: 1.6rem;
-  font-weight: 600;
-  color: #E2D2CE;
+  font-weight: 700;
+  color: var(--text-pri);
   margin: 0 0 0.25rem;
 }
 
 .page-sub {
   font-size: 0.9rem;
-  color: #73795D;
+  color: var(--text-sec);
   margin: 0 0 1.5rem;
 }
 
-/* ===== Card ===== */
+/* Card */
 .res-card {
   display: flex;
   align-items: center;
   gap: 16px;
-  background: #38362F;
-  border: 1px solid rgba(255,255,255,0.07);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1rem 1.25rem;
   margin-bottom: 12px;
-  transition: box-shadow 0.2s ease;
+  transition: border-color 0.2s;
 }
 
-.res-card:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-}
+.res-card:hover { border-color: var(--border-h); }
 
-/* ===== Avatar ===== */
+/* Avatar */
 .res-avatar {
-  width: 48px;
-  height: 48px;
+  width: 48px; height: 48px;
   border-radius: 50%;
-  background: #3D4F5A;
+  background: linear-gradient(135deg, #4a5a4e, #6b7a5e);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
-/* ===== Info ===== */
-.res-info {
-  flex: 1;
-  min-width: 0;
-}
+/* Info */
+.res-info { flex: 1; min-width: 0; }
 
 .res-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #F0EDE8;
+  color: var(--text-pri);
   margin: 0 0 6px;
 }
 
@@ -67,15 +84,13 @@
   flex-wrap: wrap;
   gap: 8px 16px;
   font-size: 0.82rem;
-  color: #73795D;
+  color: var(--text-sec);
   margin-bottom: 8px;
 }
 
-.res-meta span {
-  white-space: nowrap;
-}
+.res-meta span { white-space: nowrap; }
 
-/* ===== Footer (badge + date) ===== */
+/* Footer */
 .res-footer {
   display: flex;
   align-items: center;
@@ -83,12 +98,9 @@
   flex-wrap: wrap;
 }
 
-.res-date {
-  font-size: 0.78rem;
-  color: #73795D;
-}
+.res-date { font-size: 0.78rem; color: var(--text-hint); }
 
-/* ===== Badges ===== */
+/* Badges */
 .badge {
   display: inline-block;
   padding: 3px 12px;
@@ -99,57 +111,63 @@
 }
 
 .badge-ok {
-  background: rgba(115,121,93,0.25);
-  color: #E2D2CE;
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green-bdr);
 }
 
 .badge-cancel {
-  background: rgba(61,79,90,0.4);
-  color: #E2D2CE;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-bdr);
 }
 
-/* ===== Button Annuler ===== */
+/* Bouton annuler */
 .btn-cancel {
   flex-shrink: 0;
-  padding: 8px 16px;
-  border: 1px solid #E2D2CE;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: transparent;
-  color: #E2D2CE;
+  background: rgba(255,255,255,0.04);
+  color: var(--text-sec);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: rgba(226,210,206,0.12);
+  border-color: var(--danger-bdr);
+  color: var(--danger);
+  background: var(--danger-bg);
 }
 
 .btn-cancel:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
-  border-color: #73795D;
-  color: #73795D;
 }
 
-/* ===== States ===== */
+/* States */
 .loading,
 .empty {
   text-align: center;
   padding: 3rem 1rem;
-  color: #73795D;
+  color: var(--text-hint);
   font-size: 0.95rem;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 520px) {
-  .res-card {
-    flex-wrap: wrap;
-  }
+/* Scrollbar */
+::-webkit-scrollbar             { width: 6px; height: 6px; }
+::-webkit-scrollbar-track       { background: transparent; }
+::-webkit-scrollbar-thumb       { background: rgba(255,255,255,0.08); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(74,90,78,0.4); }
 
-  .btn-cancel {
-    width: 100%;
-    text-align: center;
-  }
+/* Responsive */
+@media (max-width: 520px) {
+  .res-card { flex-wrap: wrap; }
+  .btn-cancel { width: 100%; text-align: center; justify-content: center; }
 }

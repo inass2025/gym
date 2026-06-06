@@ -380,12 +380,12 @@ export default function CoachGestion() {
                         ✎ Modifier
                       </button>
 
-                      <button
+                      {/* <button
                         className={`cg-btn-action ${coach.bloque ? "cg-btn-debloquer" : "cg-btn-bloquer"}`}
                         onClick={() => bloquerCoach(coach.id)}
                       >
                         {coach.bloque ? "↑ Débloquer" : "⊘ Bloquer"}
-                      </button>
+                      </button> */}
 
                       <button
                         className="cg-btn-action cg-btn-danger"

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import api from "./api";
 import "./message.css";
 
-// ── Helpers ────────────────────────────────────────────────────────────────
 const ME_ID = () => JSON.parse(localStorage.getItem("user") || "{}").id || 1;
 
 const fmtTime = (d) =>
@@ -14,7 +13,6 @@ const getColor = (id) => COLORS[id % COLORS.length];
 const initials = (nom = "") =>
   nom.split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase()).join("");
 
-// ── Avatar ─────────────────────────────────────────────────────────────────
 function Avatar({ nom, id, size = 40 }) {
   return (
     <div className="ch-avatar" style={{ width: size, height: size, background: getColor(id) }}>
@@ -23,7 +21,6 @@ function Avatar({ nom, id, size = 40 }) {
   );
 }
 
-// ── Composant principal ────────────────────────────────────────────────────
 export default function Chat() {
   const [coaches, setCoaches]         = useState([]);
   const [activeCoach, setActiveCoach] = useState(null);
@@ -34,12 +31,10 @@ export default function Chat() {
   const bottomRef  = useRef(null);
   const adherentId = ME_ID();
 
-  // ── Fetch coaches depuis API ─────────────────────────────────────────────
   useEffect(() => {
     async function fetchCoaches() {
       try {
-        const res = await api.get("/coaches"); // ← adherents role=coach
-        // Laravel retourne soit res.data directement soit res.data.data
+        const res = await api.get("/coaches");
         const list = Array.isArray(res.data) ? res.data : res.data.data || [];
         setCoaches(list);
         if (list.length > 0) setActiveCoach(list[0]);
@@ -52,7 +47,6 @@ export default function Chat() {
     fetchCoaches();
   }, []);
 
-  // ── Fetch messages quand coach change ────────────────────────────────────
   useEffect(() => {
     if (!activeCoach) return;
     fetchMessages();
@@ -81,7 +75,7 @@ export default function Chat() {
         content,
         adherent_id: adherentId,
         coach_id:    activeCoach.id,
-        sender: 'adherent'
+        sender: "adherent",
       });
       setContent("");
       fetchMessages();
@@ -92,7 +86,6 @@ export default function Chat() {
     }
   }
 
-  // preview dernier message dans sidebar
   const preview = (coachId) => {
     if (!activeCoach || activeCoach.id !== coachId || messages.length === 0)
       return "Démarrer une conversation...";
@@ -102,11 +95,9 @@ export default function Chat() {
       : last.content;
   };
 
-  // ── Render ─────────────────────────────────────────────────────────────
   return (
     <div className="ch-wrap">
 
-      {/* ── Sidebar ── */}
       <aside className="ch-sidebar">
         <div className="ch-sidebar-header">
           <span className="ch-sidebar-title">Conversations</span>
@@ -142,13 +133,11 @@ export default function Chat() {
         )}
       </aside>
 
-      {/* ── Panel ── */}
       <main className="ch-panel">
         {!activeCoach ? (
           <div className="ch-empty-panel">Sélectionnez un coach</div>
         ) : (
           <>
-            {/* Header */}
             <div className="ch-panel-header">
               <Avatar nom={activeCoach.nom} id={activeCoach.id} size={42} />
               <div>
@@ -157,13 +146,13 @@ export default function Chat() {
               </div>
             </div>
 
-            {/* Messages */}
             <div className="ch-messages">
               {messages.length === 0 && (
                 <p className="ch-empty">Aucun message — commencez la conversation !</p>
               )}
               {messages.map((msg, i) => {
-                const mine     = msg.adherent_id === adherentId;
+                // ✅ FIX: utiliser sender au lieu de adherent_id
+                const mine = msg.sender === "adherent";
                 const showTime = i === 0 ||
                   fmtTime(messages[i - 1].date_envoie) !== fmtTime(msg.date_envoie);
                 return (
@@ -182,7 +171,6 @@ export default function Chat() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Input */}
             <div className="ch-input-bar">
               <input
                 className="ch-input"

@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import api from "../../Api/Axios.js";
 import {
   LayoutDashboard,
@@ -8,19 +9,38 @@ import {
   CalendarDays,
   MessageSquare,
   LogOut,
-  Sun,
-  Moon,
   Dumbbell,
 } from "lucide-react";
 import "./CoachSidebar.css";
 
 export default function CoachSidebar() {
   const navigate = useNavigate();
-  // const { theme, toggleTheme } = useTheme();
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const photo = user.photo
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
+
+    useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(JSON.parse(localStorage.getItem("user") || "{}"));
+    };
+    
+    window.addEventListener("storage", handleStorageChange);
+    const interval = setInterval(() => {
+      const fresh = JSON.parse(localStorage.getItem("user") || "{}");
+      setUser(prev => 
+        prev.photo !== fresh.photo || prev.nom !== fresh.nom 
+          ? fresh 
+          : prev
+      );
+    }, 500);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+    const photo = user.photo
     ? `http://localhost:8000/storage/${user.photo}`
     : null;
+
 
   const handleLogout = async () => {
     try {

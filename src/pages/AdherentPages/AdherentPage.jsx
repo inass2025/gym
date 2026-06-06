@@ -25,7 +25,6 @@ export default function AdherentPage() {
   const [photoFile, setPhotoFile]       = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
 
-  // ── Charger le profil ────────────────────────────────────────────────────
   useEffect(() => {
     axios.get(`${API}/profile`, { headers: authHeaders() })
       .then(res => { setUser(res.data); fillForm(res.data) })
@@ -49,7 +48,6 @@ export default function AdherentPage() {
     })
   }
 
-  // ── IMC ──────────────────────────────────────────────────────────────────
   const imc = form.poids && form.taille
     ? (form.poids / ((form.taille / 100) ** 2)).toFixed(1)
     : null
@@ -59,7 +57,6 @@ export default function AdherentPage() {
     imc < 25   ? 'Normale' :
     imc < 30   ? 'Surpoids' : 'Obésité'
 
-  // ── Initiales avatar ─────────────────────────────────────────────────────
   const initials = user
     ? `${user.nom?.[0] ?? ''}${user.prenom?.[0] ?? ''}`.toUpperCase()
     : '?'
@@ -70,19 +67,17 @@ export default function AdherentPage() {
     setError(null)
   }
 
-  // ── Sauvegarder ──────────────────────────────────────────────────────────
   const handleSave = () => {
     setSaving(true)
     const data = new FormData()
     Object.keys(form).forEach(key => { data.append(key, form[key] ?? '') })
     if (photoFile) data.append('photo', photoFile)
+    data.append('_method', 'PUT')
 
-    // ✅ FIX : POST simple vers updateProfile, sans ?_method=PUT
     axios.post(`${API}/profile`, data, {
       headers: { ...authHeaders(), 'Content-Type': 'multipart/form-data' },
     })
       .then(res => {
-        // ✅ FIX : la réponse retourne { user: {...} } depuis updateProfile
         const updated = res.data.user ?? res.data
         setUser(updated)
         fillForm(updated)
@@ -90,6 +85,7 @@ export default function AdherentPage() {
         setSuccess(true)
         setPhotoFile(null)
         setPhotoPreview(null)
+        // ✅ update localStorage b path relatif
         const stored = JSON.parse(localStorage.getItem('user') || '{}')
         localStorage.setItem('user', JSON.stringify({
           ...stored,
@@ -97,7 +93,8 @@ export default function AdherentPage() {
           prenom: updated.prenom,
           photo:  updated.photo,
         }))
-        window.dispatchEvent(new Event('user-updated'))
+        // ✅ trigger sidebar update
+        window.dispatchEvent(new Event('storage'))
       })
       .catch(err => {
         console.log(err.response?.data)
@@ -157,9 +154,10 @@ export default function AdherentPage() {
       })
   }
 
+  // ✅ FIX — avatarSrc dima kaybni URL mn path relatif
   const avatarSrc = photoPreview
     || (user?.photo
-      ? (user.photo.startsWith('http') ? user.photo : `http://localhost:8000/storage/${user.photo}`)
+      ? `http://localhost:8000/storage/${user.photo}`
       : null)
 
   const abonnement = user?.abonnement ?? { formule: '—', dateExpiration: '—', actif: false }
@@ -189,19 +187,15 @@ export default function AdherentPage() {
   return (
     <div className="coach-profil">
 
-      {/* ════ HEADER ════ */}
       <div className="coach-profil__header">
         <h1>Mon <span>Profil</span></h1>
         <p>Gérez vos informations personnelles et paramètres de sécurité</p>
       </div>
 
-      {/* ════ CONTENT ════ */}
       <div className="coach-profil__content">
 
         {/* ── COLONNE GAUCHE ── */}
         <div className="coach-profil__left">
-
-          {/* Avatar */}
           <div className="coach-profil__avatar" style={{ position: 'relative' }}>
             {avatarSrc
               ? <img src={avatarSrc} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
@@ -227,7 +221,6 @@ export default function AdherentPage() {
 
           <div style={{ width: '100%', height: 1, background: 'rgba(255,255,255,0.07)', margin: '24px 0' }} />
 
-          {/* Abonnement */}
           <div style={{ width: '100%', textAlign: 'left' }}>
             <div style={{ color: '#73795D', fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', marginBottom: 12 }}>
               👑 ABONNEMENT
@@ -254,7 +247,7 @@ export default function AdherentPage() {
         {/* ── COLONNE DROITE ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-          {/* ── 1. Informations personnelles ── */}
+          {/* 1. Informations personnelles */}
           <div className="coach-profil__right">
             <div className="coach-profil__right-header">
               <h3>👤 Informations personnelles</h3>
@@ -302,7 +295,6 @@ export default function AdherentPage() {
                 </div>
               ))}
 
-              {/* Sexe */}
               <div className="coach-profil__field">
                 <label>SEXE</label>
                 {editing
@@ -319,7 +311,7 @@ export default function AdherentPage() {
             </div>
           </div>
 
-          {/* ── 2. Informations de santé ── */}
+          {/* 2. Informations de santé */}
           <div className="coach-profil__right">
             <div className="coach-profil__right-header">
               <h3>🏃 Informations de santé</h3>
@@ -330,13 +322,10 @@ export default function AdherentPage() {
                 <label>POIDS (KG)</label>
                 <input name="poids" type="number" value={form.poids} onChange={handleChange} disabled={!editing} />
               </div>
-
               <div className="coach-profil__field">
                 <label>TAILLE (CM)</label>
                 <input name="taille" type="number" value={form.taille} onChange={handleChange} disabled={!editing} />
               </div>
-
-              {/* Objectif */}
               <div className="coach-profil__field">
                 <label>OBJECTIF</label>
                 {editing
@@ -352,8 +341,6 @@ export default function AdherentPage() {
                   : <input value={user.objectif || '—'} disabled />
                 }
               </div>
-
-              {/* Niveau */}
               <div className="coach-profil__field">
                 <label>NIVEAU</label>
                 {editing
@@ -370,7 +357,6 @@ export default function AdherentPage() {
               </div>
             </div>
 
-            {/* IMC */}
             {imc && (
               <div style={{
                 marginTop: 24,
@@ -400,7 +386,7 @@ export default function AdherentPage() {
             )}
           </div>
 
-          {/* ── 3. Documents médicaux ── */}
+          {/* 3. Documents médicaux */}
           <div className="coach-profil__right">
             <div className="coach-profil__right-header">
               <h3>📄 Documents médicaux</h3>
@@ -437,7 +423,6 @@ export default function AdherentPage() {
               border: '1px dashed rgba(226,210,206,0.3)',
               color: '#E2D2CE', fontSize: 13, fontWeight: 600,
               borderRadius: 10, padding: '10px 20px',
-              transition: 'background 0.2s',
             }}>
               ＋ Télécharger un document
               <input type="file" accept=".pdf,.jpg,.png" style={{ display: 'none' }} onChange={handleDocUpload} />
@@ -445,7 +430,7 @@ export default function AdherentPage() {
             <p style={{ color: '#73795D', fontSize: 12, marginTop: 8 }}>PDF, JPG ou PNG. Max 2 Mo.</p>
           </div>
 
-          {/* ── 4. Sécurité ── */}
+          {/* 4. Sécurité */}
           <div className="coach-profil__right">
             <div className="coach-profil__right-header">
               <h3>🔒 Sécurité</h3>
@@ -488,8 +473,8 @@ export default function AdherentPage() {
             )}
           </div>
 
-        </div>{/* fin colonne droite */}
-      </div>{/* fin content */}
+        </div>
+      </div>
     </div>
   )
 }

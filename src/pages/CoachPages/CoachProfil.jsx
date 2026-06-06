@@ -24,18 +24,19 @@ import {
 import './CoachProfil.css';
 
 export default function CoachProfil() {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
+  const rawUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const [user, setUser] = useState(rawUser.coach || rawUser);
   const [activeTab, setActiveTab] = useState('infos');
 
   // --- Tab Infos ---
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
-    nom: user.nom || '',
-    prenom: user.prenom || '',
-    email: user.email || '',
-    telephone: user.telephone || '',
+    nom:        user.nom        || '',
+    prenom:     user.prenom     || '',
+    email:      user.email      || '',
+    telephone:  user.telephone  || '',
     specialite: user.specialite || '',
-    bio: user.bio || '',
+    bio:        user.bio        || '',
   });
   const [photo, setPhoto] = useState(
     user.photo ? `http://localhost:8000/storage/${user.photo}` : null
@@ -44,24 +45,42 @@ export default function CoachProfil() {
 
   // --- Tab Sécurité ---
   const [pwForm, setPwForm] = useState({
-    current_password: '',
-    new_password: '',
+    current_password:          '',
+    new_password:              '',
     new_password_confirmation: '',
   });
-  const [pwShow, setPwShow] = useState({ cur: false, nw: false, conf: false });
+  const [pwShow, setPwShow]   = useState({ cur: false, nw: false, conf: false });
   const [pwAlert, setPwAlert] = useState({ type: '', msg: '' });
 
   // --- Tab Certificats ---
   const [certifs, setCertifs] = useState(
-    user.certifs ? (typeof user.certifs === 'string' ? JSON.parse(user.certifs) : user.certifs) : []
+    user.certifs
+      ? (typeof user.certifs === 'string' ? JSON.parse(user.certifs) : user.certifs)
+      : []
   );
   const [exps, setExps] = useState(
-    user.experiences ? (typeof user.experiences === 'string' ? JSON.parse(user.experiences) : user.experiences) : []
+    user.experiences
+      ? (typeof user.experiences === 'string' ? JSON.parse(user.experiences) : user.experiences)
+      : []
   );
   const [showCertForm, setShowCertForm] = useState(false);
-  const [showExpForm, setShowExpForm] = useState(false);
+  const [showExpForm,  setShowExpForm]  = useState(false);
   const [certForm, setCertForm] = useState({ titre: '', organisme: '', annee: '' });
-  const [expForm, setExpForm] = useState({ poste: '', lieu: '', debut: '', fin: '' });
+  const [expForm,  setExpForm]  = useState({ poste: '', lieu: '', debut: '', fin: '' });
+
+  // =====================
+  // HELPERS
+  // =====================
+  const saveUserToStorage = (updated) => {
+    // Merge m3a user li kayn bach manfdouch token o role o ay champ khor
+    const fullUser = { ...user, ...updated };
+    localStorage.setItem('user', JSON.stringify(fullUser));
+    setUser(fullUser);
+    return fullUser;
+  };
+
+  const extractCoach = (resData) =>
+    resData.coach ? resData.coach : resData;
 
   // =====================
   // TAB INFOS
@@ -82,23 +101,25 @@ export default function CoachProfil() {
       if (photoFile) formData.append('photo', photoFile);
       formData.append('_method', 'PUT');
 
-      const res = await api.post(`/api/coach/${user.id}`, formData, {
+      const res = await api.post(`/api/coachs/${user.id}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      const updated = res.data;
-      localStorage.setItem('user', JSON.stringify(updated));
-      setUser(updated);
+      const updated  = extractCoach(res.data);
+      const fullUser = saveUserToStorage(updated);
+
       setForm({
-        nom: updated.nom || '',
-        prenom: updated.prenom || '',
-        email: updated.email || '',
-        telephone: updated.telephone || '',
-        specialite: updated.specialite || '',
-        bio: updated.bio || '',
+        nom:        fullUser.nom        || '',
+        prenom:     fullUser.prenom     || '',
+        email:      fullUser.email      || '',
+        telephone:  fullUser.telephone  || '',
+        specialite: fullUser.specialite || '',
+        bio:        fullUser.bio        || '',
       });
-      setPhoto(updated.photo ? `http://localhost:8000/storage/${updated.photo}` : null);
+      setPhoto(fullUser.photo ? `http://localhost:8000/storage/${fullUser.photo}` : null);
+      setPhotoFile(null);
       setEditing(false);
+
     } catch (err) {
       alert(JSON.stringify(err.response?.data));
     }
@@ -118,7 +139,7 @@ export default function CoachProfil() {
     if (pwForm.new_password.length < 6)
       return setPwAlert({ type: 'err', msg: 'Minimum 6 caractères' });
     try {
-      await api.put(`/api/coach/${user.id}/password`, pwForm);
+      await api.put(`/api/coachs/${user.id}/password`, pwForm);
       setPwAlert({ type: 'ok', msg: 'Mot de passe modifié avec succès !' });
       setPwForm({ current_password: '', new_password: '', new_password_confirmation: '' });
     } catch (err) {
@@ -130,54 +151,13 @@ export default function CoachProfil() {
   // =====================
   // TAB CERTIFS
   // =====================
-  const handleAddCertif = () => {
-    if (!certForm.titre) return;
-    const updated = [...certifs, { ...certForm, id: Date.now() }];
-    setCertifs(updated);
-    saveCertifsToApi(updated);
-    const updatedUser = { ...user, certifs: updated };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    setCertForm({ titre: '', organisme: '', annee: '' });
-    setShowCertForm(false);
-  };
-
-  const handleAddExp = () => {
-    if (!expForm.poste) return;
-    const updated = [...exps, { ...expForm, id: Date.now() }];
-    setExps(updated);
-    saveExpsToApi(updated);
-    const updatedUser = { ...user, experiences: updated };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    setExpForm({ poste: '', lieu: '', debut: '', fin: '' });
-    setShowExpForm(false);
-  };
-
-  const handleDeleteCertif = (id) => {
-    const updated = certifs.filter(c => c.id !== id);
-    setCertifs(updated);
-    saveCertifsToApi(updated);
-    const updatedUser = { ...user, certifs: updated };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-  };
-
-  const handleDeleteExp = (id) => {
-    const updated = exps.filter(e => e.id !== id);
-    setExps(updated);
-    saveExpsToApi(updated);
-    const updatedUser = { ...user, experiences: updated };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-  };
-
   const saveCertifsToApi = async (data) => {
     try {
       const formData = new FormData();
       formData.append('_method', 'PUT');
       formData.append('certifs', JSON.stringify(data));
-      await api.post(`/api/coach/${user.id}`, formData);
+      const res = await api.post(`/api/coachs/${user.id}`, formData);
+      saveUserToStorage(extractCoach(res.data));
     } catch (err) { console.log(err.response?.data); }
   };
 
@@ -186,8 +166,39 @@ export default function CoachProfil() {
       const formData = new FormData();
       formData.append('_method', 'PUT');
       formData.append('experiences', JSON.stringify(data));
-      await api.post(`/api/coach/${user.id}`, formData);
+      const res = await api.post(`/api/coachs/${user.id}`, formData);
+      saveUserToStorage(extractCoach(res.data));
     } catch (err) { console.log(err.response?.data); }
+  };
+
+  const handleAddCertif = () => {
+    if (!certForm.titre) return;
+    const updated = [...certifs, { ...certForm, id: Date.now() }];
+    setCertifs(updated);
+    saveCertifsToApi(updated);
+    setCertForm({ titre: '', organisme: '', annee: '' });
+    setShowCertForm(false);
+  };
+
+  const handleDeleteCertif = (id) => {
+    const updated = certifs.filter(c => c.id !== id);
+    setCertifs(updated);
+    saveCertifsToApi(updated);
+  };
+
+  const handleAddExp = () => {
+    if (!expForm.poste) return;
+    const updated = [...exps, { ...expForm, id: Date.now() }];
+    setExps(updated);
+    saveExpsToApi(updated);
+    setExpForm({ poste: '', lieu: '', debut: '', fin: '' });
+    setShowExpForm(false);
+  };
+
+  const handleDeleteExp = (id) => {
+    const updated = exps.filter(e => e.id !== id);
+    setExps(updated);
+    saveExpsToApi(updated);
   };
 
   const tabs = [
@@ -237,7 +248,13 @@ export default function CoachProfil() {
                 </div>
               )}
             </div>
-            <input id="photo-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoChange} />
+            <input
+              id="photo-input"
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handlePhotoChange}
+            />
             <h3>{user.prenom} {user.nom}</h3>
             <span className="coach-profil__badge">COACH</span>
             <p className="coach-profil__specialite">
@@ -318,9 +335,9 @@ export default function CoachProfil() {
 
             <div className="coach-profil__grid" style={{ gridTemplateColumns: '1fr' }}>
               {[
-                { label: 'MOT DE PASSE ACTUEL',      name: 'current_password', key: 'cur' },
-                { label: 'NOUVEAU MOT DE PASSE',      name: 'new_password',     key: 'nw' },
-                { label: 'CONFIRMER LE MOT DE PASSE', name: 'new_password_confirmation', key: 'conf' },
+                { label: 'MOT DE PASSE ACTUEL',       name: 'current_password',          key: 'cur'  },
+                { label: 'NOUVEAU MOT DE PASSE',       name: 'new_password',              key: 'nw'   },
+                { label: 'CONFIRMER LE MOT DE PASSE',  name: 'new_password_confirmation', key: 'conf' },
               ].map(({ label, name, key }) => (
                 <div className="coach-profil__field" key={name}>
                   <label>{label}</label>
@@ -403,9 +420,7 @@ export default function CoachProfil() {
             ) : (
               certifs.map(c => (
                 <div key={c.id} className="coach-profil__cert-item">
-                  <div className="coach-profil__cert-icon">
-                    <Award size={18} />
-                  </div>
+                  <div className="coach-profil__cert-icon"><Award size={18} /></div>
                   <div style={{ flex: 1 }}>
                     <h4>{c.titre}</h4>
                     <p>{c.organisme}</p>
@@ -471,9 +486,7 @@ export default function CoachProfil() {
             ) : (
               exps.map(e => (
                 <div key={e.id} className="coach-profil__cert-item">
-                  <div className="coach-profil__cert-icon">
-                    <Briefcase size={18} />
-                  </div>
+                  <div className="coach-profil__cert-icon"><Briefcase size={18} /></div>
                   <div style={{ flex: 1 }}>
                     <h4>{e.poste}</h4>
                     <p>{e.lieu}</p>

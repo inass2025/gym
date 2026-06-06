@@ -239,10 +239,10 @@ export default function GestionAdherent() {
                   <td className="td-tel">{a.objectif || "—"}</td>
 
                   <td>
-                    {a.bloque
+                    {/* {a.bloque
                       ? <span className="badge-bloque"><span className="badge-dot" /> Bloqué</span>
                       : <span className="badge-actif"><span className="badge-dot" /> Actif</span>
-                    }
+                    } */}
                   </td>
 
                   <td>
@@ -256,12 +256,12 @@ export default function GestionAdherent() {
                       <button className="ag-btn-action ag-btn-notif" onClick={() => ouvrirNotif(a)}>
                         <Bell size={13} /> Notifier
                       </button>
-                      <button
+                      {/* <button
                         className={`ag-btn-action ${a.bloque ? "ag-btn-debloquer" : "ag-btn-bloquer"}`}
                         onClick={() => handleBloquer(a)}
                       >
                         <Ban size={13} /> {a.bloque ? "Débloquer" : "Bloquer"}
-                      </button>
+                      </button> */}
                       <button className="ag-btn-action ag-btn-danger" onClick={() => setDeleteTarget(a)}>
                         <Trash2 size={13} /> Supprimer
                       </button>

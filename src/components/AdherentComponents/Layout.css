@@ -1,90 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600&display=swap');
-
 /* ===========================
-   ROOT VARIABLES
+   ADHERENT LAYOUT — compatible coach style
    =========================== */
-:root {
-  --bg-base:       #0e0e0e;
-  --bg-sidebar:    #111111;
-  --bg-navbar:     #0e0e0e;
-  --accent:        #3D4F5A ;
-  --accent-dim:    #1c2600;
-  --red:           #dfc7ff;
-  --blue:          #7ec8e3;
-  --text:          #ffffff;
-  --muted:         #6b6b6b;
-  --label:         #3a3a3a;
-  --border:        #222222;
-  --sidebar-w:     200px;
-  --navbar-h:      64px;
-}
 
-/* Modal simple */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
-}
-
-.modal-header h3 {
-  margin: 0;
-  color: #333;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: #999;
-  padding: 0 5px;
-}
-
-.modal-close:hover {
-  color: #333;
-}
-
-
-
-/* ===========================
-   LAYOUT WRAPPER
-   =========================== */
 .ad-layout {
   display: flex;
   min-height: 100vh;
+  background: #13151b;
+  color: var(--text-primary);
 }
 
-/* ===========================
-   RIGHT SIDE (navbar + main)
-   =========================== */
 .ad-layout__right {
-  margin-left: var(--sidebar-w);
+  margin-left: 260px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -98,10 +24,10 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  height: var(--navbar-h);
-  background: var(--bg-navbar);
+  height: 64px;
+  background: #13151b;
   border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
+  padding: 0 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -110,21 +36,20 @@
 .ad-navbar__left {
   display: flex;
   flex-direction: column;
-  
 }
 
 .ad-navbar__title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 0.1em;
-  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
   line-height: 1;
 }
 
 .ad-navbar__date {
   font-size: 0.72rem;
-  color: var(--muted);
+  color: var(--text-muted);
   font-weight: 400;
+  margin-top: 3px;
 }
 
 .ad-navbar__right {
@@ -133,7 +58,6 @@
   gap: 1rem;
 }
 
-/* Bell button */
 .ad-navbar__notif {
   position: relative;
   background: transparent;
@@ -141,45 +65,42 @@
   cursor: pointer;
   font-size: 1.1rem;
   padding: 6px;
-  color: var(--muted);
+  color: var(--text-secondary);
   transition: color 0.15s;
 }
 
 .ad-navbar__notif:hover {
-  color: var(--text);
+  color: var(--text-primary);
 }
 
 .notif-badge {
   position: absolute;
   top: 0;
   right: 0;
-  background: var(--red);
-  color: #fff;
+  background: var(--text-primary);
+  color: #13151b;
   font-size: 0.5rem;
   font-weight: 700;
   border-radius: 999px;
   padding: 1px 4px;
   line-height: 1.4;
-  font-family: 'Barlow', sans-serif;
 }
 
-/* Reserve button */
 .ad-navbar__reserve {
-  background: #3D4F5A  ;
-  color: #000;
-  border: none;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(241, 234, 234, 0.07) ;
+  border: 1px solid var(--border);
   padding: 0.45rem 1.1rem;
   border-radius: 6px;
-  font-family: 'Barlow', sans-serif;
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   letter-spacing: 0.02em;
-  transition: opacity 0.15s, transform 0.1s;
+  transition: background 0.15s, transform 0.1s;
 }
 
 .ad-navbar__reserve:hover {
-  opacity: 0.88;
+  background: rgba(255, 255, 255, 0.361);
   transform: translateY(-1px);
 }
 
@@ -188,7 +109,7 @@
    =========================== */
 .ad-main {
   flex: 1;
-  padding: 2rem;
-  background: var(--bg-base);
+  padding: 40px;
+  background: #13151b;
   overflow-y: auto;
 }
